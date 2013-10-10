@@ -1,4 +1,5 @@
-compgraf
+Projeto de Computação Gráfica
 ========
 
-Graphics Computing Classes
+
+O projeto será composto por vários sub-módulos que podem ser usado para facilitar o desenvolvimento do trabalho final.
