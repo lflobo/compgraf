@@ -32,7 +32,25 @@ import com.jogamp.common.nio.PointerBuffer;
 
 public class GL2Wrapper implements GL2 {
 
+	public static final float GL_PI = (float) Math.PI;
+	
 	private GL2 current;
+	
+	public float sinf(float angle) {
+		return (float) Math.sin(angle);
+	}
+	
+	public float cosf(float angle) {
+		return (float) Math.cos(angle);
+	}
+	
+	public double sin(double angle) {
+		return Math.sin(angle);
+	}
+	
+	public double cos(double angle) {
+		return Math.cos(angle);
+	}
 	
 	protected void setCurrent(GL2 current) {
 		this.current = current;

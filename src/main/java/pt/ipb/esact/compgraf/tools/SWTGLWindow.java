@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 
@@ -78,13 +80,17 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		});
 
 		canvas.addKeyListener(new KeyListener() {
+			
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keycodes.remove(e.keyCode);
+				onKeyUp(e);
 			}
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if(!keycodes.contains(e.keyCode))
+					onKeyDown(e);
 				if(e.keyCode == SWT.ESC)
 					display.getActiveShell().close();
 				keycodes.add(e.keyCode);
@@ -111,6 +117,69 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		
 	}
 	
+	protected void onKeyUp(KeyEvent e) {
+
+	}
+
+	protected void onKeyDown(KeyEvent e) {
+		
+	}
+	
+	/**
+	 * Draw the selected text at the position described by left ant top
+	 * @param text The text to draw
+	 * @param left The distance to the left
+	 * @param top The distance to the top
+	 */
+	public void renderText(String text, int left, int top) {
+		renderText(text, GLUT.BITMAP_8_BY_13, left, top);
+//		renderText(text, GLUT.BITMAP_9_BY_15, left, top);
+//		renderText(text, GLUT.BITMAP_HELVETICA_10, left, top);
+//		renderText(text, GLUT.BITMAP_HELVETICA_12, left, top);
+//		renderText(text, GLUT.BITMAP_HELVETICA_18, left, top);
+//		renderText(text, GLUT.BITMAP_TIMES_ROMAN_10, left, top);
+//		renderText(text, GLUT.BITMAP_TIMES_ROMAN_24, left, top);
+	}
+	
+	public void renderText(String text, int bitmap, int left, int top) {
+		Iterable<String> lines = Splitter.on('\n').split(text);
+		
+		int height = canvas.getSize().y;
+		int width = canvas.getSize().x;
+		
+		// Set up 2D mode
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, width, 0, height, -1, 1);
+	
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+
+		// Render the text
+		int i = 0;
+		
+		glPushAttrib(GL_LIGHTING_BIT);
+	
+			glDisable(GL_LIGHTING);
+			for(String line : lines) {
+				glRasterPos2i(left, height - (top + i * 15));
+				for(char c : line.toCharArray()) 
+					glutBitmapCharacter(bitmap, c);
+				i++;
+			}
+			glEnable(GL_LIGHTING);
+			
+		glPopAttrib();
+			
+		// Break down 2D mode
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+	}
+
 	@Override
 	public void dispose() {
 		canvas.dispose();

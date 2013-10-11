@@ -35,8 +35,8 @@ public class HelloWorldOpenGL extends SWTGLWindow {
 		// Limpar os buffers de cor e profundidade
 		glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
-		// A cor da 'caneta' será cinza (RGBA={128, 128, 128, 255})
-		glColor4f(1f, 0f, 0f, 1f);
+		// A cor da 'caneta' será vermelha (RGBA={1, 0, 0, 255})
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
 		// Atualizamos o 'movimento'
 		updateMovement();
