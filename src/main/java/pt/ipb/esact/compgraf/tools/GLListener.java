@@ -24,6 +24,6 @@ public interface GLListener {
 	/**
 	 * Invocado no final da execucao (libertar recursos)
 	 */
-	void dispose();
+	void release();
 
 }

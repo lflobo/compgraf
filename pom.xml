@@ -30,6 +30,11 @@
 			<artifactId>jogl-all-main</artifactId>
 			<version>2.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -43,10 +48,7 @@
 				</dependency>
 			</dependencies>
 			<activation>
-				<os>
-					<name>Windows</name>
-					<arch>amd86</arch>
-				</os>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
 		<profile>

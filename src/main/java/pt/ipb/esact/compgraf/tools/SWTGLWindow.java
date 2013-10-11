@@ -20,13 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 
-public abstract class SWTGLWindow extends GLUTWrapper implements GLListener {
+import com.google.common.base.Preconditions;
 
-	private Display display;
-
-	private Shell shell;
+public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 
 	private Composite composite;
 
@@ -41,15 +38,14 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener {
 	private long lastTime = System.currentTimeMillis();
 	
 	private Set<Integer> keycodes = new HashSet<>();
-	
-	public SWTGLWindow(String caption, boolean continuous) {
-		display = new Display();
-		shell = new Shell(display);
-		shell.setText(caption);
-		shell.setLayout(new FillLayout());
-		shell.setSize(800, 600);
 
-		composite = new Composite(shell, SWT.NONE);
+	private Display display;
+	
+	public SWTGLWindow(Composite parent, boolean continuous) {
+		Preconditions.checkNotNull(parent, "The parent cannot be null");
+		display = parent.getDisplay();
+		
+		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new FillLayout());
 
 		GLProfile profile = GLProfile.getDefault();
@@ -90,7 +86,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.keyCode == SWT.ESC)
-					shell.close();
+					display.getActiveShell().close();
 				keycodes.add(e.keyCode);
 			}
 		});
@@ -113,15 +109,12 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener {
 				}
 			});
 		
-		shell.open();
-		
-		while (!shell.isDisposed())
-			if (!display.readAndDispatch())
-				display.sleep();
-		
-		dispose();
+	}
+	
+	@Override
+	public void dispose() {
 		canvas.dispose();
-		display.dispose();
+		release();
 	}
 	
 	protected void render() {
@@ -151,10 +144,19 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener {
 		canvas.setCurrent();
 	}
 	
+	/**
+	 * @return O tempo que passou desde que a última frame foi desenhada
+	 */
 	public float timeElapsed() {
 		return (float) elapsedTime / (1000.0f); // para segundos
 	}
 	
+	/**
+	 * Verifica se uma tecla foi premida
+	 * @param keyCode O 'code' da tecla a verificar
+	 * @return @c TRUE caso a tecla tenha sido premida
+	 * @see KeyEvent
+	 */
 	public boolean isKeyPressed(int keyCode) {
 		return keycodes.contains(keyCode);
 	}

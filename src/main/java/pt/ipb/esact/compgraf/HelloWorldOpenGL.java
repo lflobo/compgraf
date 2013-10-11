@@ -2,20 +2,18 @@ package pt.ipb.esact.compgraf;
 
 import javax.media.opengl.GL;
 
+import org.eclipse.swt.widgets.Composite;
+
+import pt.ipb.esact.compgraf.tools.GLDisplay;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 
-import com.jogamp.opengl.util.FPSAnimator;
+public class HelloWorldOpenGL extends SWTGLWindow {
 
-public class ModeloOpenGL extends SWTGLWindow {
+	// Variável que irá armazenar o valor do ângulo de rotação
+	private float angle = 0.0f;
 
-	FPSAnimator animator;
-	
-	public static void main(String[] args) {
-		new ModeloOpenGL();
-	}
-
-	public ModeloOpenGL() {
-		super("Modelo OpenGL", true);
+	public HelloWorldOpenGL(Composite parent) {
+		super(parent, true);
 	}
 	
 	@Override
@@ -28,10 +26,10 @@ public class ModeloOpenGL extends SWTGLWindow {
 	}
 
 	@Override
-	public void dispose() {
+	public void release() {
 		// Libertar recursos
 	}
-
+	
 	@Override
 	public void render(int width, int height) {
 		// Limpar os buffers de cor e profundidade
@@ -39,9 +37,15 @@ public class ModeloOpenGL extends SWTGLWindow {
 		
 		// A cor da 'caneta' será cinza (RGBA={128, 128, 128, 255})
 		glColor4f(1f, 0f, 0f, 1f);
-		
+
+		// Atualizamos o 'movimento'
+		updateMovement();
+
 		// Guardar o estado actual das transformações
 		glPushMatrix();
+		
+			// Aplicar a rotação armazenada na variável 'angle'
+			glRotatef(angle, 0, 1.0f, 0);
 		
 			// Efectuar transformações para o desenho
 			glScalef(1f, 1f, 3f);
@@ -50,6 +54,21 @@ public class ModeloOpenGL extends SWTGLWindow {
 			glutWireCube(50f);
 
 		glPopMatrix();
+	}
+
+	private void updateMovement() {
+		// Aumentar o angle em 30graus por segundo (... conseguido multiplicanto por timeElapsed())
+		float increment = 30.0f;
+		
+		// Se a tecla r está premida duplicar a velocidade do angulo
+		if(isKeyPressed('r'))
+			increment *= 2.0f;
+		
+		// Aplicar o incremento
+		angle += increment * timeElapsed();
+		
+		// Garantir que o angulo está sempre entre 0 e 360
+		angle %= 360.0f;
 	}
 
 	@Override
@@ -86,5 +105,10 @@ public class ModeloOpenGL extends SWTGLWindow {
 		
 	}
 
+	// Função main confere capacidade de executável ao .java atual
+	public static void main(String[] args) {
+		GLDisplay display = new GLDisplay("Modelo OpenGL");
+		display.start(new HelloWorldOpenGL(display.getShell()));
+	}
 
 }
