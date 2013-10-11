@@ -52,6 +52,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 		GLProfile profile = GLProfile.getDefault();
 		GLData glData = new GLData();
+		glData.depthSize = 16;
 		glData.doubleBuffer = true;
 		canvas = new GLCanvas(composite, SWT.NO_BACKGROUND, glData);
 		setCurrent();

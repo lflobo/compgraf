@@ -87,13 +87,13 @@ public class HelloWorldOpenGL extends SWTGLWindow {
 		float fAspect = (float) width / (float) height;
 		
 		// Projecção em Perspectiva
-		// gluPerspective(100f, fAspect, 1.0f, volume * 2f);
+		gluPerspective(100f, fAspect, 1.0f, volume * 20f);
 		
 		// Projecção Ortogonal
-		 if(width <= height) 
-		 	glOrtho(-volume, volume, -volume, volume / fAspect, volume * 5f, -volume * 5f);
-		 else
-		 	glOrtho(-volume * fAspect, volume * fAspect, -volume, volume, volume * 5f, -volume * 5f);
+		// if(width <= height) 
+		// 	glOrtho(-volume, volume, -volume, volume / fAspect, volume * 5f, -volume * 5f);
+		// else
+		// 	glOrtho(-volume * fAspect, volume * fAspect, -volume, volume, volume * 5f, -volume * 5f);
 		
 		// Mudar para a matriz de MODELVIEW
 		glMatrixMode(GL_MODELVIEW);

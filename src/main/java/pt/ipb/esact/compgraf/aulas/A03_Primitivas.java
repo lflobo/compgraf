@@ -2,8 +2,6 @@ package pt.ipb.esact.compgraf.aulas;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL;
-
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
@@ -21,6 +19,32 @@ public class A03_Primitivas extends SWTGLWindow {
 
 	// Armazena a última tecla premida (por omissão = 1)
 	int key = '1';
+	
+	
+	/*
+	 * Explicação da utilização dos FloatBuffer's
+	 * -----------------------------------------------------------------
+	 * Nas linguagens puramente orientadas a objetos, não existem variáveis de saída nas funções.
+	 * Por esta razão, num exemplo deste tipo:
+	 * <code>
+	 * float[] array = new float[10];
+	 * umaFuncao(array);
+	 * </code>
+	 * 
+	 * A variável array nunca poderia ser escrita dentro de uma funcção.
+	 * 
+	 *  Como é resolvido o problema no Java ?
+	 *  
+	 *  Utilizando um objeto que 'mimetiza' o funcionamento das variáveis de saída - Buffers:
+	 *  Exemplo:
+	 *  
+	 *  float[] array = new float[3];
+	 *  
+	 *  É equivalente a:
+	 *  
+	 *  FloatBuffer array = FloatBuffer.allocate(3);
+	 * 
+	 */
 
 	void drawPoints() {
 		float angle, x, z;
@@ -284,7 +308,7 @@ public class A03_Primitivas extends SWTGLWindow {
 	@Override
 	public void render(int width, int height) {
 		// Limpar os buffers de cor e profundidade
-		glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// A cor da 'caneta' será bracne (RGBA={255, 255, 255, 255})
 		glColor4f(1f, 1f, 1f, 1f);
