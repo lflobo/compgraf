@@ -43,6 +43,8 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 	private Display display;
 	
+	private GLDemo demo;
+	
 	public SWTGLWindow(Composite parent, boolean continuous) {
 		Preconditions.checkNotNull(parent, "The parent cannot be null");
 		display = parent.getDisplay();
@@ -116,6 +118,13 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 				}
 			});
 		
+		// Tools
+		demo = new GLDemo();
+		
+	}
+	
+	protected GLDemo demo() {
+		return demo;
 	}
 	
 	protected void onKeyUp(KeyEvent e) {

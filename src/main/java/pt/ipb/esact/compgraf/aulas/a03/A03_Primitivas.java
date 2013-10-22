@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas;
+package pt.ipb.esact.compgraf.aulas.a03;
 
 import java.nio.FloatBuffer;
 
