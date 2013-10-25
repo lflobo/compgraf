@@ -5,9 +5,9 @@ import org.eclipse.swt.widgets.Composite;
 import pt.ipb.esact.compgraf.tools.GLDisplay;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 
-public class A04_Shading extends SWTGLWindow {
+public class A04_RGBColorSpace extends SWTGLWindow {
 
-	public A04_Shading(Composite parent) {
+	public A04_RGBColorSpace(Composite parent) {
 		super(parent, true);
 	}
 
@@ -95,7 +95,7 @@ public class A04_Shading extends SWTGLWindow {
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
 		GLDisplay display = new GLDisplay("A04 Shading");
-		display.start(new A04_Shading(display.getShell()));
+		display.start(new A04_RGBColorSpace(display.getShell()));
 	}
 
 }
