@@ -105,18 +105,6 @@ public class VectorList extends ArrayList<Vector> {
 			gl.glVertex3f(v.x, v.y, v.z);
 		}
 		gl.glEnd();
-
-		if(paintNormals) {
-			gl.glPushAttrib(GL2.GL_CURRENT_BIT);
-				gl.glColor3f(1.0f, 0.0f, 0.0f);
-				gl.glBegin(GL2.GL_LINE_STRIP);
-				for(int i=0; i<size(); i++) {
-					Vector v = get(i);
-					gl.glVertex3f(v.x, v.y, v.z);
-				}
-				gl.glEnd();
-			gl.glPopAttrib();
-		}
 	}
 
 	/**

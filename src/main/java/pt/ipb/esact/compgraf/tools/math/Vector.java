@@ -42,27 +42,27 @@ public class Vector extends Vector3f {
 		if(lengthSquared() == 0)
 			return;
 
-			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-				gl.glDisable(GL2.GL_TEXTURE_2D);
-				gl.glDisable(GL2.GL_LIGHTING);
+		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+			gl.glDisable(GL2.GL_TEXTURE_2D);
+			gl.glDisable(GL2.GL_LIGHTING);
+
+			gl.glPushAttrib(GL2.GL_CURRENT_BIT | GL2.GL_LIGHTING_BIT);
+				color.set();
+				gl.glPushMatrix();
+					if(!at.isOrigin())
+						gl.glTranslatef(at.x, at.y, at.z);
 	
-				gl.glPushAttrib(GL2.GL_CURRENT_BIT);
-					color.set();
+					gl.glBegin(GL2.GL_LINES);
+						gl.glVertex3f(0.0f, 0.0f, 0.0f);
+						gl.glVertex3f(x, y, z);
+					gl.glEnd();
+	
 					gl.glPushMatrix();
-						if(!at.isOrigin())
-							gl.glTranslatef(at.x, at.y, at.z);
-		
-						gl.glBegin(GL2.GL_LINES);
-							gl.glVertex3f(0.0f, 0.0f, 0.0f);
-							gl.glVertex3f(x, y, z);
-						gl.glEnd();
-		
-						gl.glPushMatrix();
-							gl.glTranslatef(x, y, z);
-							GLPrimitives.drawSphere(0.05f, 10, 10);
-						gl.glPopMatrix();
+						gl.glTranslatef(x, y, z);
+						GLPrimitives.drawSphere(0.05f, 10, 10);
 					gl.glPopMatrix();
-				gl.glPopAttrib();
+				gl.glPopMatrix();
+			gl.glPopAttrib();
 		gl.glPopAttrib();
 	}
 

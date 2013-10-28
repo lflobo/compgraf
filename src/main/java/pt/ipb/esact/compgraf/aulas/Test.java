@@ -1,5 +1,6 @@
 package pt.ipb.esact.compgraf.aulas;
 
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
 import pt.ipb.esact.compgraf.tools.GLDisplay;
@@ -24,7 +25,6 @@ public class Test extends SWTGLWindow {
 		
 		// Configurar Color Tracking
 		configureColorTracking();
-
 	}
 
 	@Override
@@ -38,18 +38,8 @@ public class Test extends SWTGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 64);
 		
 		// Global Color
-		glColor3f(0.0f, 0.0f, 1.0f);
-
-		glPushMatrix();
-			glTranslatef(30.0f, 0.0f, 0.0f);
-			glPushAttrib(GL_CURRENT_BIT);
-				glColor3f(0.0f, 1.0f, 1.0f);
-				glutSolidCube(40.0f);
-			glPopAttrib();
-		glPopMatrix();
-		
-		// Com o color tracking, a esfera toma a cor da 'caneta' atual
-		glutSolidSphere(40.0f, 32, 32);
+		glColor3f(0.5f, 0.5f, 0.5f);
+		demo().drawPlain(true);
 	
 	}
 
@@ -83,6 +73,7 @@ public class Test extends SWTGLWindow {
 	public void configureColorTracking() {
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+		glColorMaterial(GL_FRONT, GL_SPECULAR);
 	}
 
 	@Override
