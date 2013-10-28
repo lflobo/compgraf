@@ -33,9 +33,9 @@ public class A04_Material extends SWTGLWindow {
 		// Este é o array com o RGB da luz difusa
 		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
 		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
+		float[] specularLight = { 0.0f, 0.0f, 1.0f, 1.0f };
 		// Array com a posição da luz
-		float[] positionLitght0 = { 50.0f, 50.0f, 50.0f, 1.0f };
+		float[] positionLitght0 = { -50.0f, 50.0f, 50.0f, 1.0f };
 
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
@@ -65,14 +65,14 @@ public class A04_Material extends SWTGLWindow {
 		
 		// Usar a cor em cima com cor do material
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color, 0);
-		glMateriali(GL_FRONT, GL_SHININESS, 10);
+		glMateriali(GL_FRONT, GL_SHININESS, 64);
 
 		// Definir a especularidade do material
 		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
 
 		// Desenhar o nosso objeto
-		glutSolidSphere(40.0f, 32, 32);
+		glutSolidSphere(40.0f, 132, 132);
 	}
 
 	@Override

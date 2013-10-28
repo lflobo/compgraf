@@ -12,6 +12,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GL2ES2;
+import javax.media.opengl.GL2ES3;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GL3ES3;
@@ -953,14 +954,6 @@ public class GL2Wrapper implements GL2 {
 	}
 
 	/**
-	 * @return
-	 * @see javax.media.opengl.GLBase#glIsVBOArrayEnabled()
-	 */
-	public boolean glIsVBOArrayEnabled() {
-		return getCurrent().glIsVBOArrayEnabled();
-	}
-
-	/**
 	 * @param tenv
 	 * @param pname
 	 * @param params
@@ -969,14 +962,6 @@ public class GL2Wrapper implements GL2 {
 	 */
 	public void glGetTexEnvfv(int tenv, int pname, float[] params, int params_offset) {
 		getCurrent().glGetTexEnvfv(tenv, pname, params, params_offset);
-	}
-
-	/**
-	 * @return
-	 * @see javax.media.opengl.GLBase#glIsVBOElementArrayEnabled()
-	 */
-	public boolean glIsVBOElementArrayEnabled() {
-		return getCurrent().glIsVBOElementArrayEnabled();
 	}
 
 	/**
@@ -3532,14 +3517,6 @@ public class GL2Wrapper implements GL2 {
 	}
 
 	/**
-	 * @return
-	 * @see javax.media.opengl.GL2ES3#glIsPBOPackEnabled()
-	 */
-	public boolean glIsPBOPackEnabled() {
-		return getCurrent().glIsPBOPackEnabled();
-	}
-
-	/**
 	 * @param shader
 	 * @param count
 	 * @param string
@@ -3548,14 +3525,6 @@ public class GL2Wrapper implements GL2 {
 	 */
 	public void glShaderSource(int shader, int count, String[] string, IntBuffer length) {
 		getCurrent().glShaderSource(shader, count, string, length);
-	}
-
-	/**
-	 * @return
-	 * @see javax.media.opengl.GL2ES3#glIsPBOUnpackEnabled()
-	 */
-	public boolean glIsPBOUnpackEnabled() {
-		return getCurrent().glIsPBOUnpackEnabled();
 	}
 
 	/**
@@ -23554,6 +23523,36 @@ public class GL2Wrapper implements GL2 {
 	 */
 	public void glFreeMemoryNV(ByteBuffer pointer) {
 		getCurrent().glFreeMemoryNV(pointer);
+	}
+
+	@Override
+	public boolean isGL2ES3() {
+		return getCurrent().isGL2ES3();
+	}
+
+	@Override
+	public GL2ES3 getGL2ES3() throws GLException {
+		return getCurrent().getGL2ES3();
+	}
+
+	@Override
+	public boolean glIsVBOArrayBound() {
+		return getCurrent().glIsVBOArrayBound();
+	}
+
+	@Override
+	public boolean glIsVBOElementArrayBound() {
+		return getCurrent().glIsVBOElementArrayBound();
+	}
+
+	@Override
+	public boolean glIsPBOPackBound() {
+		return getCurrent().glIsPBOPackBound();
+	}
+
+	@Override
+	public boolean glIsPBOUnpackBound() {
+		return getCurrent().glIsPBOUnpackBound();
 	}
 	
 	

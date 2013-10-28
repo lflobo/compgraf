@@ -1,13 +1,13 @@
-package pt.ipb.esact.compgraf.aulas.a04;
+package pt.ipb.esact.compgraf.aulas;
 
 import org.eclipse.swt.widgets.Composite;
 
 import pt.ipb.esact.compgraf.tools.GLDisplay;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 
-public class A04_ColorTracking extends SWTGLWindow {
+public class Test extends SWTGLWindow {
 
-	public A04_ColorTracking(Composite parent) {
+	public Test(Composite parent) {
 		super(parent, true);
 	}
 
@@ -24,6 +24,33 @@ public class A04_ColorTracking extends SWTGLWindow {
 		
 		// Configurar Color Tracking
 		configureColorTracking();
+
+	}
+
+	@Override
+	public void render(int width, int height) {
+		// Limpar os buffers de cor e profundidade
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+		// Especularidade/shininess do material definida explicitamente! mesmo com color tracking
+		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMateriali(GL_FRONT, GL_SHININESS, 64);
+		
+		// Global Color
+		glColor3f(0.0f, 0.0f, 1.0f);
+
+		glPushMatrix();
+			glTranslatef(30.0f, 0.0f, 0.0f);
+			glPushAttrib(GL_CURRENT_BIT);
+				glColor3f(0.0f, 1.0f, 1.0f);
+				glutSolidCube(40.0f);
+			glPopAttrib();
+		glPopMatrix();
+		
+		// Com o color tracking, a esfera toma a cor da 'caneta' atual
+		glutSolidSphere(40.0f, 32, 32);
+	
 	}
 
 	private void configureLighting() {
@@ -64,27 +91,6 @@ public class A04_ColorTracking extends SWTGLWindow {
 	}
 	
 	@Override
-	public void render(int width, int height) {
-		// Limpar os buffers de cor e profundidade
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Especularidade/shininess do material definida explicitamente! mesmo com color tracking
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
-		glMateriali(GL_FRONT, GL_SHININESS, 64);
-		
-		// Com o color tracking, a esfera toma a cor da 'caneta' atual
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glutSolidSphere(40.0f, 32, 32);
-
-		glPushMatrix();
-			glTranslatef(30.0f, 0.0f, 0.0f);
-			glColor3f(0.0f, 1.0f, 1.0f);
-			glutSolidCube(40.0f);
-		glPopMatrix();
-	}
-
-	@Override
 	public void resize(int width, int height) {
 		if (height == 0)
 			height = 1; // prevnir divisão por 0
@@ -117,7 +123,7 @@ public class A04_ColorTracking extends SWTGLWindow {
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
 		GLDisplay display = new GLDisplay("A04 Lighting");
-		display.start(new A04_ColorTracking(display.getShell()));
+		display.start(new Test(display.getShell()));
 	}
 
 }
