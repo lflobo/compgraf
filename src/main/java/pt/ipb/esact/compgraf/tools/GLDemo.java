@@ -142,4 +142,67 @@ public class GLDemo extends GL2Wrapper {
 		glPopMatrix();
 	}
 
+	public void drawGround(int mode, float extent, int cells, float texZoom) {
+		sync();
+
+		float y = 0.0f;
+		float strip, run;
+		float step = extent / (float) cells;
+
+		float s = 0.0f;
+		float t = 0.0f;
+
+		float texStep = texZoom / (float) cells;
+
+		glPushAttrib(GL_TEXTURE_BIT);
+		
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
+			for (strip = -extent; strip <= extent; strip += step) {
+				t = 0.0f;
+				glBegin(mode);
+					for (run = extent; run >= -extent; run -= step) {
+						glTexCoord2f(s, t);
+						glNormal3f(0.0f, 1.0f, 0.0f);
+						glVertex3f(strip, y, run);
+	
+						glTexCoord2f(s + texStep, t);
+						glNormal3f(0.0f, 1.0f, 0.0f);
+						glVertex3f(strip + step, y, run);
+	
+						t += texStep;
+					}
+				glEnd();
+	
+				s += texStep;
+			}
+			
+		glPopAttrib();
+	}
+	
+	public void drawFloor(float extent, int cells) {
+		drawFloor(extent, cells, 1.0f, false);
+	}
+	
+	public void drawFloor(float extent, int cells, float texZoom, boolean drawLines) {
+		sync();
+		
+		// Desenhar em 2 passos
+
+		// 1 Chão com polígonos
+		drawGround(GL_TRIANGLE_STRIP, extent, cells, texZoom);
+
+		if(!drawLines)
+			return;
+
+		// 2 Desenhar linhas para ver os polígonos
+		glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
+			glEnable(GL_LINE_SMOOTH);
+			glDisable(GL_LIGHTING);
+			new Color(0.6f, 0.6f, 0.6f, 0.5f).set();
+			drawGround(GL_LINE_STRIP, extent, cells, texZoom);
+		glPopAttrib();
+	}
+
 }

@@ -9,6 +9,9 @@ public class Vector extends Vector3f {
 	
 	public static final Vector ZERO = new Vector();
 	public static final Vector ORIGIN = new Vector(0.0f, 0.0f, 0.0f);
+	public static final Vector UP = new Vector(0.0f, 1.0f, 0.0f);;
+	public static final Vector LEFT = new Vector(-1.0f, 0.0f, 0.0f);;
+	public static final Vector FORWARD = new Vector(0.0f, 0.0f, 1.0f);;
 
 	public Vector() {
 	}
@@ -72,6 +75,12 @@ public class Vector extends Vector3f {
 		return v;
 	}
 
+	public Vector add(Vector other) {
+		Vector v = new Vector(this);
+		v.add(this, other);
+		return v;
+	}
+
 	public Vector cross(Vector other) {
 		Vector v = new Vector(this);
 		v.cross(this, other);
@@ -80,6 +89,10 @@ public class Vector extends Vector3f {
 
 	public boolean isOrigin() {
 		return equals(ORIGIN);
+	}
+
+	public float[] toArray() {
+		return new float[] {x, y, z};
 	}
 	
 }

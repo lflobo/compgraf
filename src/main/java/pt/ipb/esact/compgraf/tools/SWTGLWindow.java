@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.tools;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +12,9 @@ import javax.media.opengl.GLProfile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -21,12 +26,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import pt.ipb.esact.compgraf.tools.math.Vector;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
-
+	
 	private Composite composite;
 
 	private GLCanvas canvas;
@@ -45,9 +53,22 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	
 	private GLDemo demo;
 	
+	private boolean mouseDown = false;
+	
+	private boolean mousePan = false;
+
+	private boolean mouseZoom = false;
+	
+	private Point lastMouseLocation = null;
+	
+	private int zoom = 0;
+	
 	public SWTGLWindow(Composite parent, boolean continuous) {
 		Preconditions.checkNotNull(parent, "The parent cannot be null");
 		display = parent.getDisplay();
+
+		// Setup initial camera
+		Cameras.addDefaultCamera();
 		
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new FillLayout());
@@ -56,6 +77,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		GLData glData = new GLData();
 		glData.depthSize = 16;
 		glData.doubleBuffer = true;
+		glData.samples = 2;
 		canvas = new GLCanvas(composite, SWT.NO_BACKGROUND, glData);
 		setCurrent();
 
@@ -83,7 +105,6 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		});
 
 		canvas.addKeyListener(new KeyListener() {
-			
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keycodes.remove(e.keyCode);
@@ -97,6 +118,33 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 				if(e.keyCode == SWT.ESC)
 					display.getActiveShell().close();
 				keycodes.add(e.keyCode);
+			}
+		});
+		
+		canvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				zoom = e.count;
+			}
+		});
+		
+		canvas.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				mouseDown = false;
+				onMouseUp(e);
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				mouseDown = true;
+				lastMouseLocation = MouseInfo.getPointerInfo().getLocation();
+				onMouseDown(e);
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+
 			}
 		});
 		
@@ -121,6 +169,56 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		// Tools
 		demo = new GLDemo();
 		
+	}
+	
+	protected void onMouseDown(MouseEvent e) {
+		
+	}
+
+	protected void onMouseUp(MouseEvent e) {
+		
+	}
+
+	public void setMousePan(boolean mousePan) {
+		this.mousePan = mousePan;
+	}
+	
+	public void setMouseZoom(boolean mouseZoom) {
+		this.mouseZoom = mouseZoom;
+	}
+	
+	public void setProjectionPerspective(int width, int height, float fovy, float near, float far) {
+		if (height == 0)
+			height = 1;
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		float aspect = (float) width / (float) height;
+		gluPerspective(90.0f, aspect, near, far);
+	}
+	
+	public void setProjectionOrtho(int width, int height, float volume, float near, float far) {
+		if (height == 0)
+			height = 1;
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		float aspect = (float) width / (float) height;
+		glOrtho(-volume, volume, -volume/aspect, volume/aspect, near, far);
+	}
+
+	public void setupCamera() {
+		// Use the current camera
+		Camera camera = Cameras.getCurrent();
+		
+		// Mudar para a matriz de MODELVIEW
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(
+			camera.eye.x, camera.eye.y, camera.eye.z,
+			camera.at.x, camera.at.y, camera.at.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
 	}
 	
 	protected GLDemo demo() {
@@ -205,10 +303,74 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		currentTime = System.currentTimeMillis();
 		elapsedTime = currentTime - lastTime;
 		lastTime = currentTime;
+		
+		Point location = null;
+		if(mousePan && mouseDown) {
+			location = MouseInfo.getPointerInfo().getLocation();
+			
+			float xdiff = lastMouseLocation.x - location.x;
+			float ydiff = lastMouseLocation.y - location.y;
+			if(xdiff!=0 || ydiff!=0)
+				rotateScene(xdiff * 0.01f, ydiff * 0.01f);
+			
+		}
+
+		if(mouseZoom && zoom != 0) {
+			zoomScene(zoom);
+			zoom = 0;
+		}
+
 		render(rectangle.width, rectangle.height);
+
+		if(mousePan && mouseDown) {
+			lastMouseLocation = location;
+		}
 		
 		canvas.swapBuffers();
 		context.release();		
+	}
+	
+	/*
+	 * 
+	 * 		Game::Camera * c = Game::Camera::current();
+		Vector p = c->position() - c->at();
+		Vector cup = c->up();
+		Vector left = Quaternion(90.0f, Vector::Up) * p;
+		left.setY(0.0f);
+		p = Quaternion(offset.y() / 10.0f, left) * p;
+		p = Quaternion(offset.x() / 10.0f, cup) * p;
+		c->setPosition(p);
+	} else {
+	 */
+
+	private void zoomScene(int zoom) {
+		float d = zoom;
+		float signal = d / Math.abs(d);
+		float percent = 0.1f * signal;
+		
+		Camera c = Cameras.getCurrent();
+		Vector inc = c.at.sub(c.eye);
+		inc.scale(percent);
+		c.eye = c.eye.add(inc);
+		setupCamera();
+	}
+
+	public void rotateScene(float hrot, float vrot) {
+		Camera camera = Cameras.getCurrent();
+		Vector p = camera.eye.sub(camera.at);
+		Vector cup = camera.up;
+
+		float[] parr = p.toArray();
+		Vector left = new Vector(new Quaternion(Vector.UP.toArray(), 90.0f).mult(parr));
+		left.y = 0.0f;
+		
+		Quaternion qx = new Quaternion(cup.toArray(), hrot);
+		Vector eye = new Vector(qx.mult(parr));
+
+		Quaternion qy = new Quaternion(left.toArray(), vrot);
+		camera.eye = new Vector(qy.mult(eye.toArray()));
+		
+		setupCamera();
 	}
 
 	public GLCanvas getCanvas() {
