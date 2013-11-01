@@ -207,7 +207,7 @@ public class A05_Mirror extends SWTGLWindow {
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
 
 
-		// Desenhar depois objetos transparentes
+		// Desenhar depois objetos reais
 		drawWorld();
 		
 	}
