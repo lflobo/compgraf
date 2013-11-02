@@ -170,6 +170,7 @@ public class A05_Blending extends SWTGLWindow {
 			
 		glPopAttrib();
 
+		renderText("t - toggle transparency", 10, 20);
 	}
 	
 	@Override

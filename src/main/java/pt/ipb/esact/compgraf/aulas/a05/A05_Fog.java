@@ -105,6 +105,25 @@ public class A05_Fog extends SWTGLWindow {
 		
 		// Configurar os materiais
 		configureMaterials();
+		
+		// Configurar o Fog
+		configureFog();
+	}
+
+	private void configureFog() {
+		glEnable(GL_FOG);
+		
+		// Cor do nevoeiro
+		float[] fogColor = {0.25f, 0.25f, 0.25f, 1.0f};
+		
+		// Definir a cor do nevoeiro
+		glFogfv(GL_FOG_COLOR, fogColor, 0);
+		// A que distância os objectos começam a ser afetados
+		glFogf(GL_FOG_START, 1.0f);
+		// A que distância o FOG toma conta por completo
+		glFogf(GL_FOG_END, 30.0f);
+		// Curva para o cálculo do Fog
+		glFogi(GL_FOG_MODE, GL_LINEAR);
 	}
 
 	private void configureMaterials() {
@@ -188,7 +207,7 @@ public class A05_Fog extends SWTGLWindow {
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
 
 
-		// Desenhar depois objetos transparentes
+		// Desenhar depois objetos reais
 		drawWorld();
 		
 	}
