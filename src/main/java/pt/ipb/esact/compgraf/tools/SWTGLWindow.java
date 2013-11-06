@@ -2,11 +2,18 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLDrawableFactory;
+import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
 import org.eclipse.swt.SWT;
@@ -171,6 +178,23 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		
 	}
 	
+	public BufferedImage loadImage(String name) {
+		try (InputStream stream = getClass().getResourceAsStream(name)) {
+			return ImageIO.read(stream);
+		} catch (IOException e) {
+			throw new GLException(e.getMessage(), e);
+		}
+	}
+	
+	public byte[] toByteArray(BufferedImage image) {
+		DataBuffer buffer = image.getRaster().getDataBuffer();
+		if (buffer instanceof DataBufferByte) {
+			DataBufferByte bb = (DataBufferByte) buffer;
+			return bb.getData();
+		}
+		return null;
+	}
+	
 	protected void onMouseDown(MouseEvent e) {
 		
 	}
@@ -205,6 +229,15 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		glLoadIdentity();
 		float aspect = (float) width / (float) height;
 		glOrtho(-volume, volume, -volume/aspect, volume/aspect, near, far);
+	}
+
+	public void setProjectionOrtho2D(int width, int height) {
+		if (height == 0)
+			height = 1;
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, width, 0, height);
 	}
 
 	public void setupCamera() {

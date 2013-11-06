@@ -123,7 +123,9 @@ public class A05_Fog extends SWTGLWindow {
 		// A que distância o FOG toma conta por completo
 		glFogf(GL_FOG_END, 30.0f);
 		// Curva para o cálculo do Fog
-		glFogi(GL_FOG_MODE, GL_LINEAR);
+		glFogi(GL_FOG_MODE, GL_EXP);
+		
+		glFogf(GL_FOG_DENSITY, 0.1f);
 	}
 
 	private void configureMaterials() {
