@@ -107,7 +107,7 @@ public class A04_Material extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Lighting");
+		GLDisplay display = new GLDisplay("A04 Material");
 		display.start(new A04_Material(display.getShell()));
 	}
 

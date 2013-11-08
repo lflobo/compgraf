@@ -192,7 +192,7 @@ public class A05_Blending extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Lighting");
+		GLDisplay display = new GLDisplay("A05 Blending");
 		display.start(new A05_Blending(display.getShell()));
 	}
 

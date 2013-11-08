@@ -6,12 +6,13 @@ import java.nio.IntBuffer;
 
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
+import javax.media.opengl.glu.gl2.GLUgl2;
 
 import com.jogamp.opengl.util.glsl.ShaderState;
 
 public class GLUWrapper extends GL2Wrapper {
 	
-	private GLU glu = new GLU();
+	private GLU glu = new GLUgl2();
 
 	/**
 	 * @param gluFunctionName

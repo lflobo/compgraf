@@ -94,7 +94,7 @@ public class A04_RGBColorSpace extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Shading");
+		GLDisplay display = new GLDisplay("A04 RGB Color Space");
 		display.start(new A04_RGBColorSpace(display.getShell()));
 	}
 

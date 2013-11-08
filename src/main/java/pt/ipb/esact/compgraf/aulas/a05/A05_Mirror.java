@@ -211,7 +211,7 @@ public class A05_Mirror extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Lighting");
+		GLDisplay display = new GLDisplay("A05 Mirror");
 		display.start(new A05_Mirror(display.getShell()));
 	}
 

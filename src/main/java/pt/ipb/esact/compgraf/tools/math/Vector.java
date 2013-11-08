@@ -87,12 +87,28 @@ public class Vector extends Vector3f {
 		return v;
 	}
 
+	/**
+	 * Verifica se o vector atual corresponde à origam
+	 * @return Se o vector corresponde à origem
+	 */
 	public boolean isOrigin() {
 		return equals(ORIGIN);
 	}
 
+	/**
+	 * Converter o vector num array de floats
+	 * @return O array de floats que representa o vector atual
+	 */
 	public float[] toArray() {
 		return new float[] {x, y, z};
+	}
+	
+	/**
+	 * Invoca a função glVertex3f(...) com as coordenadas do vector atual
+	 */
+	public void vertex() {
+		GL2 gl = gl();
+		gl.glVertex3f(x, y, z);
 	}
 	
 }

@@ -108,13 +108,13 @@ public class VectorList extends ArrayList<Vector> {
 	}
 
 	/**
-	 * Define as normais do polígono representados pelos 3 vectores
+	 * Define a normal do polígono representado pelos 3 vectores
 	 * 
 	 * @param one Um vector
 	 * @param two Outro vector
 	 * @param three Outro vector
 	 */
-	public static void glNormal(Vector one, Vector two, Vector three) {
+	public static void normal(Vector one, Vector two, Vector three) {
 		VectorList list = new VectorList();
 		list.append(one);
 		list.append(two);
@@ -129,6 +129,13 @@ public class VectorList extends ArrayList<Vector> {
 		return GLContext.getCurrentGL().getGL2();
 	}
 
+	/**
+	 * Adiciona o vector definido pelas suas coordenadas à lista atual
+	 * @param x Coordenada X do vector
+	 * @param y Coordenada Y do vector
+	 * @param z Coordenada > do vector
+	 * @return O vector que foi adicionado
+	 */
 	public Vector append(float x, float y, float z) {
 		Vector v = new Vector(x, y, z);
 		append(v);

@@ -116,7 +116,7 @@ public class A04_ColorTracking extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Lighting");
+		GLDisplay display = new GLDisplay("A04 Color Tracking");
 		display.start(new A04_ColorTracking(display.getShell()));
 	}
 

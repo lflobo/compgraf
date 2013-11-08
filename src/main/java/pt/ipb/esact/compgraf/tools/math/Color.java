@@ -13,6 +13,7 @@ public class Color extends Color4f {
 	public static final Color WHITE = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 	public static final Color GRAY = new Color(0.5f, 0.5f, 0.5f, 1.0f);
 	public static final Color LIGHT_GRAY = new Color(0.8f, 0.8f, 0.8f, 1.0f);
+	public static final Color DARKGRAY = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 
 	private GL2 gl() {
 		return GLContext.getCurrentGL().getGL2();

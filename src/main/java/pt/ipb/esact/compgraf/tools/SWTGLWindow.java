@@ -2,18 +2,11 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLDrawableFactory;
-import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
 
 import org.eclipse.swt.SWT;
@@ -32,6 +25,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import pt.ipb.esact.compgraf.tools.math.Vector;
 
@@ -69,8 +64,11 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	private Point lastMouseLocation = null;
 	
 	private int zoom = 0;
+
+	private Composite parent;
 	
 	public SWTGLWindow(Composite parent, boolean continuous) {
+		this.parent = parent;
 		Preconditions.checkNotNull(parent, "The parent cannot be null");
 		display = parent.getDisplay();
 
@@ -178,21 +176,16 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		
 	}
 	
-	public BufferedImage loadImage(String name) {
-		try (InputStream stream = getClass().getResourceAsStream(name)) {
-			return ImageIO.read(stream);
-		} catch (IOException e) {
-			throw new GLException(e.getMessage(), e);
-		}
+	public void exit() {
+		System.exit(0);
 	}
 	
-	public byte[] toByteArray(BufferedImage image) {
-		DataBuffer buffer = image.getRaster().getDataBuffer();
-		if (buffer instanceof DataBufferByte) {
-			DataBufferByte bb = (DataBufferByte) buffer;
-			return bb.getData();
-		}
-		return null;
+	public void exit(String error) {
+		MessageBox box = new MessageBox(new Shell(display));
+		box.setText("Error");
+		box.setMessage(error);
+		box.open();
+		System.exit(0);
 	}
 	
 	protected void onMouseDown(MouseEvent e) {
@@ -301,8 +294,9 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		// Render the text
 		int i = 0;
 		
-		glPushAttrib(GL_LIGHTING_BIT);
+		glPushAttrib(GL_LIGHTING_BIT | GL_ENABLE_BIT);
 	
+			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
 			for(String line : lines) {
 				glRasterPos2i(left, height - (top + i * 15));
