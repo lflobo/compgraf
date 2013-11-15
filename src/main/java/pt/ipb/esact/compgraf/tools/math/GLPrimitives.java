@@ -9,6 +9,20 @@ public class GLPrimitives {
 		return GLContext.getCurrentGL().getGL2();
 	}
 	
+	public static void drawCircle(float radius, Color color, Vector at) {
+		GL2 gl = gl();
+		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
+			gl.glPushMatrix();
+				gl.glTranslatef(at.x, at.y, at.z);
+				color.set();
+				gl.glBegin(GL2.GL_LINE_LOOP);
+				for(float angle = 0.0f; angle <= 2.0f * Math.PI; angle += 0.1f)
+					gl.glVertex3f(radius * (float) Math.sin(angle), 0.0f, radius * (float) Math.cos(angle));
+				gl.glEnd();
+			gl.glPopMatrix();
+		gl.glPopAttrib();
+	}
+	
 	public static void drawSphere(float radius, int slices, int stacks) {
 		GL2 gl = gl();
 		

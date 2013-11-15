@@ -57,6 +57,14 @@ public class GL2Wrapper implements GL2 {
 		this.current = current;
 	}
 	
+	public float toDegrees(float radians) {
+		return (float) Math.toDegrees(radians);
+	}
+	
+	public float toRadians(float degrees) {
+		return (float) Math.toRadians(degrees);
+	}
+	
 	public GL2 getCurrent() {
 		if(current == null)
 			throw new RuntimeException("Current GL2 is null, did you forget to invoke setCurrent()?");

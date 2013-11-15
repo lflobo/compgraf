@@ -2,6 +2,9 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +37,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.spi.PNGImage;
 
 public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 	
@@ -67,6 +71,12 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 	private Composite parent;
 	
+	// Flags e valores do GPU
+	private boolean anisotropicAvailable = false;
+
+	private float maxAnisotropy = 1.0f;
+
+	
 	public SWTGLWindow(Composite parent, boolean continuous) {
 		this.parent = parent;
 		Preconditions.checkNotNull(parent, "The parent cannot be null");
@@ -88,18 +98,25 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 		context = GLDrawableFactory.getFactory(profile).createExternalGLContext();
 		
-		{
-			setCurrent();
-			context.makeCurrent();
-			setCurrent(context.getGL().getGL2());
-			init();
-			context.release();
-			currentTime = System.nanoTime();
-		}
-		
 		canvas.addListener(SWT.Resize, new Listener() {
+			
+			private boolean init = true;
+			
 			@Override
 			public void handleEvent(Event e) {
+				if(init) {
+					setCurrent();
+					context.makeCurrent();
+					setCurrent(context.getGL().getGL2());
+					init();
+					context.release();
+					currentTime = System.nanoTime();
+					
+					internalInit();
+					
+					init = false;
+				}
+				
 				Rectangle rectangle = canvas.getClientArea();
 				setCurrent();
 				context.makeCurrent();
@@ -108,7 +125,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 				context.release();
 			}
 		});
-
+		
 		canvas.addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -174,6 +191,66 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		// Tools
 		demo = new GLDemo();
 		
+	}
+	
+	/**
+	 * Carrega uma textura a partir da package da classe atual
+	 * @param path A path dentro da package atual
+	 * @param textureId O ID do Texture Object
+	 */
+	public void loadPackageTexture(String path, int textureId) {
+		PNGImage image = null;
+		ByteBuffer buffer = null;
+		
+		// Tentar carregar a imagem a partir do package atual
+		try(InputStream stream = getClass().getResourceAsStream(path)) {
+			image = PNGImage.read(stream);
+			buffer = image.getData();
+		} catch (Exception e) {
+			// Ocorreu um erro --> Terminar o programa
+			exit("Foi impossivel carregar a imagem '" + path + "'");
+		}
+		
+		// Fazer o bind do estado da textura ao identificador
+		glBindTexture(GL_TEXTURE_2D, textureId);
+
+		// Carregar os mipmaps para a textura
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
+
+		// Parametros da textura (ignorar para ja)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		// Configurar a anisotropy para a nossa textura
+		if(isAnisotropicAvailable())
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+	}
+
+
+	protected void internalInit() {
+		// Verificar se a extensão está disponível
+		anisotropicAvailable = isExtensionAvailable("GL_EXT_texture_filter_anisotropic");
+		
+		// Se não está disponível parar por aqui
+		if(!anisotropicAvailable) {
+			System.out.println("Anisotropic filterina não está disponível.");
+			return;
+		}
+		
+		// Obter o valor mínimo/máximo de anisotropia suportado
+		FloatBuffer values = FloatBuffer.allocate(1);
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, values);
+		maxAnisotropy = values.get(0);
+	}
+
+	public float getMaxAnisotropy() {
+		return maxAnisotropy;
+	}
+	
+	public boolean isAnisotropicAvailable() {
+		return anisotropicAvailable;
 	}
 	
 	public void exit() {
@@ -356,19 +433,6 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		canvas.swapBuffers();
 		context.release();		
 	}
-	
-	/*
-	 * 
-	 * 		Game::Camera * c = Game::Camera::current();
-		Vector p = c->position() - c->at();
-		Vector cup = c->up();
-		Vector left = Quaternion(90.0f, Vector::Up) * p;
-		left.setY(0.0f);
-		p = Quaternion(offset.y() / 10.0f, left) * p;
-		p = Quaternion(offset.x() / 10.0f, cup) * p;
-		c->setPosition(p);
-	} else {
-	 */
 
 	private void zoomScene(int zoom) {
 		float d = zoom;
@@ -384,18 +448,20 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 	public void rotateScene(float hrot, float vrot) {
 		Camera camera = Cameras.getCurrent();
-		Vector p = camera.eye.sub(camera.at);
-		Vector cup = camera.up;
+		Vector forward = camera.eye.sub(camera.at);
+		Vector up = camera.up;
 
-		float[] parr = p.toArray();
-		Vector left = new Vector(new Quaternion(Vector.UP.toArray(), 90.0f).mult(parr));
+		float[] forwardArray = forward.toArray();
+		float[] upArray = up.toArray();
+		Vector left = new Vector(new Quaternion(upArray, 90.0f).mult(forwardArray));
 		left.y = 0.0f;
 		
-		Quaternion qx = new Quaternion(cup.toArray(), hrot);
-		Vector eye = new Vector(qx.mult(parr));
+		float[] leftArray = left.toArray();
+		Quaternion qx = new Quaternion(upArray, hrot);
+		Vector eye = new Vector(qx.mult(forwardArray));
 
-		Quaternion qy = new Quaternion(left.toArray(), vrot);
-		camera.eye = new Vector(qy.mult(eye.toArray()));
+		Quaternion qy = new Quaternion(leftArray, vrot);
+		camera.eye = new Vector(qy.mult(eye.toArray())).add(camera.at);
 		
 		setupCamera();
 	}
