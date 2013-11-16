@@ -9,29 +9,17 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.GLDisplay;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Color;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
-import pt.ipb.esact.compgraf.tools.math.Vector;
 
-public class A06_SecondaryColor extends SWTGLWindow {
+public class A07_Texgen extends SWTGLWindow {
 
 	// Array com a posição da luz
-	float[] positionLitght0 = { -20.0f, 0.0f, 0.0f, 1.0f };
-
-	// Variaveis das rotações dos objetos
-	private float earthRot = 0.0f;
-	private float earthRotSpeed = 0.01f * GL_PI;
-
-	private float moonEarthDistance = 3.0f;
-	private float moonTilt = 0.1f * GL_PI;
-
-	private float moonRot = 0.0f;
-	private float moonRotSpeed = 0.02f * GL_PI;
-
-	private float moonTrl = 0.0f;
-	private float moonTrlSpeed = 0.005f * GL_PI;
-
-	public A06_SecondaryColor(Composite parent) {
+	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
+	
+	// Texto que diz qual o metodo de texgen usago
+	private String text = "Texgen: Object Linear Mapping";
+	
+	public A07_Texgen(Composite parent) {
 		super(parent, true);
 		
 		setMousePan(true);
@@ -40,7 +28,7 @@ public class A06_SecondaryColor extends SWTGLWindow {
 		Camera camera = new Camera();
 		camera.eye.x = 0.0f;
 		camera.eye.y = 0.0f;
-		camera.eye.z = 4.0f;
+		camera.eye.z = 10.0f;
 		
 		camera.at.y = 0.0f;
 		
@@ -67,8 +55,10 @@ public class A06_SecondaryColor extends SWTGLWindow {
 		
 		// Configurar as texturas
 		configureTextures();
-	}
 
+		// Configurar TexGen
+		setObjectLinear();
+	}
 
 	private void configureMaterials() {
 		// Configurar Color Tracking
@@ -89,7 +79,7 @@ public class A06_SecondaryColor extends SWTGLWindow {
 		float[] ambientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
 		float[] ambientLowLight = { 0.5f, 0.5f, 0.5f, 1.0f };
 		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.8f, 0.8f, 0.0f, 1.0f };
+		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
 		// Este é o array com o RGB da luz especular
 		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
 
@@ -106,8 +96,9 @@ public class A06_SecondaryColor extends SWTGLWindow {
 	}
 	
 	// Representam as posições (identificadores) das texturas
-	private int TEX_EARTH;
-	private int TEX_MOON;
+	private int TEX_STRIPES;
+	private int TEX_ENVIRONMENT;
+	private int currentTex;
 	
 	// Array com os IDs dos texture objects ('gavetas')
 	private IntBuffer textures; 
@@ -120,31 +111,55 @@ public class A06_SecondaryColor extends SWTGLWindow {
 		glGenTextures(textureCount, textures);
 		
 		// Associar os IDs às variáveis
-		TEX_EARTH = textures.get(0);
-		TEX_MOON = textures.get(1);
+		TEX_STRIPES = textures.get(0);
+		TEX_ENVIRONMENT = textures.get(1);
 		
-		// Setup das texturas
-		loadPackageTexture("earth.png", TEX_EARTH);
-		loadPackageTexture("moon.png", TEX_MOON);
+		// Carregar as texturas
+		loadPackageTexture("texgen/stripes.png", TEX_STRIPES);
+		loadPackageTexture("texgen/environment.png", TEX_ENVIRONMENT);
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	// Flag que dita se o separate color está enabled
-	private boolean separateColor = true;
-	
+
 	@Override
 	protected void onKeyUp(KeyEvent e) {
-		switch(e.keyCode) {
-			case 's':
-				glLightModeli(
-					GL_LIGHT_MODEL_COLOR_CONTROL,
-					separateColor ? GL_SEPARATE_SPECULAR_COLOR : GL_SINGLE_COLOR
-				);
-				separateColor = ! separateColor;
-			break;
+		switch (e.keyCode) {
+			case '1': setObjectLinear(); break;
+			case '2': setEyeLinear(); break;
+			case '3': setSphereMap(); break;
 		}
+	}
+
+	void setObjectLinear() {
+		text = "Texgen: Object Linear Mapping";
+		currentTex = TEX_STRIPES;
+		glBindTexture(GL_TEXTURE_2D, currentTex);
+		float[] zPlane = { 1.0f, 0.0f, 0.0f, 0.0f };
+		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glTexGenfv(GL_S, GL_OBJECT_PLANE, zPlane, 0);
+		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+		glTexGenfv(GL_T, GL_OBJECT_PLANE, zPlane, 0);
+	}
+	
+	void setEyeLinear() {
+		text = "Texgen: Eye Linear Mapping";
+		currentTex = TEX_STRIPES;
+		glBindTexture(GL_TEXTURE_2D, currentTex);
+		float[] zPlane = { 0.0f, 0.0f, 1.0f, 0.0f };
+		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+		glTexGenfv(GL_S, GL_EYE_PLANE, zPlane, 0);
+		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
+		glTexGenfv(GL_T, GL_EYE_PLANE, zPlane, 0);
+	}
+	
+	void setSphereMap() {
+		text = "Texgen: Sphere Mapping";
+		currentTex = TEX_ENVIRONMENT;
+		glBindTexture(GL_TEXTURE_2D, currentTex);
+		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	}
 	
 	@Override
@@ -160,74 +175,49 @@ public class A06_SecondaryColor extends SWTGLWindow {
 		// Reposicionar a luz
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
 		
-		// Utilizar cor cinza onde não há textura
-		glColor3f(0.5f, 0.5f, 0.5f);
+		// Utilizar cor branca onde não há textura
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glBindTexture(GL_TEXTURE_2D, currentTex);
 
-		// Desenhar a Terra
-		glPushMatrix();
+		glPushAttrib(GL_ENABLE_BIT);
+			// Activar a Geração de Coordenadas
+			glEnable(GL_TEXTURE_GEN_S);
+			glEnable(GL_TEXTURE_GEN_T);
 
-			// Desenhar e rodar a Terra
 			glPushMatrix();
-				glBindTexture(GL_TEXTURE_2D, TEX_EARTH);
-				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-				/*
-				 * Por causa do rotate 90º em X -> o eixo vertical é agora o Z
-				 */
-				glRotatef(toDegrees(earthRot), 0.0f, 0.0f, 1.0f);
-				glScalef(1.0f, 1.0f, 0.8f); // Achatar ligeiramente os polos
-				GLPrimitives.drawSphere(1.0f, 100, 100);
+				glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+				glTranslatef(-4.0f, 0.0f, 0.0f);
+				glutSolidTorus(0.9f, 2.8f, 30, 30);
 			glPopMatrix();
-
-			// Estamos no sítio certo para desenhar a lua
-			// Aplicar o tilt da lua
-			glRotatef(toDegrees(moonTilt), 1.0f, 0.0f, 0.0f);
-
-			// Desenhar a orbita da lua
-			drawOrbit(moonEarthDistance);
-
-			// Avançar e transladar a Lua
-			glRotatef(toDegrees(moonTrl), 0.0f, 1.0f, 0.0f);
-			glTranslatef(moonEarthDistance, 0.0f, 0.0f);
-
-			// Desenhar e rodar a Lua
-			glPushMatrix();
-				glBindTexture(GL_TEXTURE_2D, TEX_MOON);
-				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-				glRotatef(toDegrees(moonRot), 0.0f, 0.0f, 1.0f);
-				GLPrimitives.drawSphere(0.3f, 100, 100);
-			glPopMatrix();
-
-		glPopMatrix();
-
-		// Ataualizar as variáveis das rotações
-		updateRotations();
-		
-		renderText("s: toggle separate color", width - 200, 20);
-	}
-	
-	void drawOrbit(float radius) {
-		glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT | GL_ENABLE_BIT);
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_LIGHTING);
-			GLPrimitives.drawCircle(radius, Color.DARKGRAY, Vector.ORIGIN);
+			
 		glPopAttrib();
+
+		// Desenhar uma amostra da textura
+		glPushMatrix();
+			glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
+			glTranslatef(4.0f, 0.0f, 0.0f);
+			drawQuad(3.0f);
+		glPopMatrix();
+		
+		renderText(text, 10, 20);
+	}
+
+	private void drawQuad(float quadSize) {
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(-quadSize, -quadSize);
+
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(quadSize, -quadSize);
+
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(quadSize, quadSize);
+
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(-quadSize, quadSize);
+		glEnd();
 	}
 	
-	private float incrementRadians(float current, float increment) {
-		current += increment;
-		current %= 2.0f * GL_PI; // garantir que não passamos de 2PI
-		return current;
-	}
-
-	private void updateRotations() {
-		// Rotação
-		earthRot = incrementRadians(earthRot, earthRotSpeed);
-		moonRot = incrementRadians(moonRot, moonRotSpeed);
-
-		// Translação
-		moonTrl = incrementRadians(moonTrl, moonTrlSpeed);
-	}
-
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 30.0f);
@@ -236,8 +226,8 @@ public class A06_SecondaryColor extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Secondary Color");
-		display.start(new A06_SecondaryColor(display.getShell()));
+		GLDisplay display = new GLDisplay("A06 Texgen");
+		display.start(new A07_Texgen(display.getShell()));
 	}
 
 }

@@ -118,7 +118,8 @@ public class A06_Pyramid extends SWTGLWindow {
 		}
 		
 		// Definir a imagem carregada como a atual
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(),
+				0, image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
 
 		// Parametros da textura (ignorar para ja)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -159,13 +160,13 @@ public class A06_Pyramid extends SWTGLWindow {
 			cBackRight.vertex();
 			glTexCoord2f(0f, 0f);
 			cFrontLeft.vertex();
-			glTexCoord2f(0f, 1f);
+			glTexCoord2f(1f, 0f);
 			cBackLeft.vertex();
 			
 			// Bottom 1	    	
 			glTexCoord2f(1f, 1f);
 			cBackRight.vertex();
-			glTexCoord2f(1f, 0f);
+			glTexCoord2f(0f, 1f);
 			cFrontRight.vertex();
 			glTexCoord2f(0f, 0f);
 			cFrontLeft.vertex();

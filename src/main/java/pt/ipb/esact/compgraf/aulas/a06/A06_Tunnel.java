@@ -147,7 +147,8 @@ public class A06_Tunnel extends SWTGLWindow {
 		glBindTexture(GL_TEXTURE_2D, textureId);
 
 		// Carregar os mipmaps para a textura
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(),
+			image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
 
 		// Parametros da textura (ignorar para ja)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -247,17 +248,17 @@ public class A06_Tunnel extends SWTGLWindow {
 	private void drawWall() {
 		for (float z = 6f; z >= 0f; z -= 1f) {
 			glBegin(GL_QUADS);
-			glTexCoord2f(0f, 0f);
-			glVertex3f(-1f, 0f, z);
-
-			glTexCoord2f(0f, 1f);
-			glVertex3f(1f, 0f, z);
-
-			glTexCoord2f(1f, 1f);
-			glVertex3f(1f, 0f, z - 1f);
-
-			glTexCoord2f(1f, 0f);
-			glVertex3f(-1f, 0f, z - 1f);
+				glTexCoord2f(0f, 0f);
+				glVertex3f(-1f, 0f, z);
+	
+				glTexCoord2f(0f, 1f);
+				glVertex3f(1f, 0f, z);
+	
+				glTexCoord2f(1f, 1f);
+				glVertex3f(1f, 0f, z - 1f);
+	
+				glTexCoord2f(1f, 0f);
+				glVertex3f(-1f, 0f, z - 1f);
 			glEnd();
 		}
 	}

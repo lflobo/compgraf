@@ -12,12 +12,12 @@ import pt.ipb.esact.compgraf.tools.GLDisplay;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 
-public class A06_Matrix extends SWTGLWindow {
+public class A07_Matrix extends SWTGLWindow {
 	
 	// Current Matrix
 	private FloatBuffer mv = FloatBuffer.allocate(16);
 
-	public A06_Matrix(Composite parent) {
+	public A07_Matrix(Composite parent) {
 		super(parent, true);
 		
 		Camera camera = new Camera();
@@ -136,7 +136,7 @@ public class A06_Matrix extends SWTGLWindow {
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
 		GLDisplay display = new GLDisplay("A06 Matrix");
-		display.start(new A06_Matrix(display.getShell()));
+		display.start(new A07_Matrix(display.getShell()));
 	}
 
 }

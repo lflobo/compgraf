@@ -15,12 +15,12 @@ import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 
 import com.jogamp.opengl.util.texture.spi.PNGImage;
 
-public class A06_Anisotropic extends SWTGLWindow {
+public class A07_Anisotropic extends SWTGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
 	
-	public A06_Anisotropic(Composite parent) {
+	public A07_Anisotropic(Composite parent) {
 		super(parent, true);
 		
 		setMousePan(true);
@@ -82,7 +82,6 @@ public class A06_Anisotropic extends SWTGLWindow {
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, values);
 		maxAnisotropy = values.get(0);
 		System.out.println("Max anisotropy is: " + maxAnisotropy);
-		currentAnisotropy = maxAnisotropy;
 	}
 
 	private void configureMaterials() {
@@ -161,7 +160,7 @@ public class A06_Anisotropic extends SWTGLWindow {
 
 		// Carregar os mipmaps para a textura
 		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
-
+		
 		// Parametros da textura (ignorar para ja)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -245,7 +244,7 @@ public class A06_Anisotropic extends SWTGLWindow {
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
 		GLDisplay display = new GLDisplay("A06 Anisotropic");
-		display.start(new A06_Anisotropic(display.getShell()));
+		display.start(new A07_Anisotropic(display.getShell()));
 	}
 
 }

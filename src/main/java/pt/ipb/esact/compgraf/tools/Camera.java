@@ -9,5 +9,9 @@ public class Camera {
 	public Vector at = Vector.ORIGIN;
 	
 	public Vector up = Vector.UP;
+
+	public Vector forward() {
+		return eye.sub(at);
+	}
 	
 }
