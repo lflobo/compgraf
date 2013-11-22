@@ -197,7 +197,7 @@ public class A07_CubeMap extends SWTGLWindow {
 				glTexCoord2f(0, 1); glVertex3f(  scale,  scale, -scale );
 			glEnd();
 	
-			// Quad na direit
+			// Quad na direita
 			glBindTexture(GL_TEXTURE_2D, TEX_POSITIVE_X);
 			glBegin(mode);
 				glTexCoord2f(0, 0); glVertex3f(  scale, -scale,  scale );

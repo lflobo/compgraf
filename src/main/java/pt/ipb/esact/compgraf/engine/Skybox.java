@@ -3,10 +3,12 @@ package pt.ipb.esact.compgraf.engine;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
 
+import pt.ipb.esact.compgraf.tools.Camera;
+import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.math.Vector;
 
 public class Skybox implements ReleaseListener {
 
@@ -17,15 +19,15 @@ public class Skybox implements ReleaseListener {
 	private int TEX_NEGATIVE_Y;
 	private int TEX_NEGATIVE_Z;
 	
-	private SWTGLWindow window;
+	private SWTGLWindow gl;
 	private IntBuffer textures = IntBuffer.allocate(6);
 	
 	private int LIST;
 	
-	private float scale = 10.0f;
+	private float scale = 100.0f;
 
 	public Skybox(SWTGLWindow window) {
-		this.window = window;
+		this.gl = window;
 		window.addReleaseListener(this);
 	}
 	
@@ -38,8 +40,6 @@ public class Skybox implements ReleaseListener {
 	}
 	
 	public void load(String ddpx, String ddpy, String ddpz, String ddnx, String ddny, String ddnz) {
-		GL2 gl = gl();
-		
 		// Allocar as texturas
 		gl.glGenTextures(6, textures);
 		
@@ -52,22 +52,17 @@ public class Skybox implements ReleaseListener {
 		TEX_NEGATIVE_Z = textures.get(5);
 		
 		// Setup das texturas
-		window.loadPackageTexture(ddpx, TEX_POSITIVE_X);
-		window.loadPackageTexture(ddpy, TEX_POSITIVE_Y);
-		window.loadPackageTexture(ddpz, TEX_POSITIVE_Z);
-		window.loadPackageTexture(ddnx, TEX_NEGATIVE_X);
-		window.loadPackageTexture(ddny, TEX_NEGATIVE_Y);
-		window.loadPackageTexture(ddnz, TEX_NEGATIVE_Z);
+		gl.loadPackageTexture(ddpx, TEX_POSITIVE_X);
+		gl.loadPackageTexture(ddpy, TEX_POSITIVE_Y);
+		gl.loadPackageTexture(ddpz, TEX_POSITIVE_Z);
+		gl.loadPackageTexture(ddnx, TEX_NEGATIVE_X);
+		gl.loadPackageTexture(ddny, TEX_NEGATIVE_Y);
+		gl.loadPackageTexture(ddnz, TEX_NEGATIVE_Z);
 		
 		create();
 	}
 
-	private GL2 gl() {
-		return GLContext.getCurrentGL().getGL2();
-	}
-
 	private void create() {
-		GL2 gl = gl();
 		LIST = gl.glGenLists(1);
 		
 		gl.glNewList(LIST, GL2.GL_COMPILE);
@@ -76,6 +71,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnable(GL2.GL_TEXTURE_2D);
 			gl.glDisable(GL2.GL_LIGHTING);
 			gl.glDisable(GL2.GL_BLEND);
+			gl.glDisable(GL2.GL_DEPTH_TEST);
 	
 			// Ativar o CULLING para as faces de fora (hint: estamos dentro do cube)
 			gl.glCullFace(GL2.GL_FRONT);
@@ -146,13 +142,31 @@ public class Skybox implements ReleaseListener {
 	}
 	
 	public void render() {
-		GL2 gl = gl();
-		gl.glCallList(LIST);
+		Camera cam = Cameras.getCurrent();
+		if(cam == null)
+			return;
+		
+		Vector p = cam.at.sub(cam.eye);
+		p.normalize();
+
+		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+			gl.glEnable(GL2.GL_TEXTURE_2D);
+			gl.glPushMatrix();
+				gl.glLoadIdentity();
+				gl.gluLookAt(
+					0.0f, -p.y, 0.0f,
+					p.x, 0.0f, p.z,
+					0.0f, 1.0f, 0.0f
+				);
+				gl.glCallList(LIST);
+			gl.glPopMatrix();
+		gl.glPopAttrib();
 	}
 	
 	@Override
 	public void release(GL2 gl) {
 		gl.glDeleteTextures(textures.capacity(), textures);
+		gl.glDeleteLists(LIST, 1);
 	}
 	
 }

@@ -172,7 +172,7 @@ public class A07_SecondaryColor extends SWTGLWindow {
 			// Desenhar e rodar a Terra
 			glPushMatrix();
 				glBindTexture(GL_TEXTURE_2D, TEX_EARTH);
-				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+				glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 				/*
 				 * Por causa do rotate 90º em X -> o eixo vertical é agora o Z
 				 */
@@ -181,7 +181,6 @@ public class A07_SecondaryColor extends SWTGLWindow {
 				GLPrimitives.drawSphere(1.0f, 100, 100);
 			glPopMatrix();
 
-			// Estamos no sítio certo para desenhar a lua
 			// Aplicar o tilt da lua
 			glRotatef(toDegrees(moonTilt), 1.0f, 0.0f, 0.0f);
 
@@ -192,6 +191,7 @@ public class A07_SecondaryColor extends SWTGLWindow {
 			glRotatef(toDegrees(moonTrl), 0.0f, 1.0f, 0.0f);
 			glTranslatef(moonEarthDistance, 0.0f, 0.0f);
 
+			// Estamos no sítio certo para desenhar a lua
 			// Desenhar e rodar a Lua
 			glPushMatrix();
 				glBindTexture(GL_TEXTURE_2D, TEX_MOON);

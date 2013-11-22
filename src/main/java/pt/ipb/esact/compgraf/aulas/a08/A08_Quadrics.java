@@ -204,9 +204,6 @@ public class A08_Quadrics extends SWTGLWindow {
 		
 		// Secondary Color
 		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-		
-		// Activar a geração automática de normais
-		glEnable(GL_AUTO_NORMAL);
 	}
 	
 	// Representam as posições (identificadores) das texturas
@@ -329,7 +326,7 @@ public class A08_Quadrics extends SWTGLWindow {
 
 	@Override
 	public void resize(int width, int height) {
-		setProjectionPerspective(width, height, 50.0f, 0.001f, 100.0f);
+		setProjectionPerspective(width, height, 100.0f, 0.001f, 2000.0f);
 		setupCamera();
 	}
 
