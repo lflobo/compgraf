@@ -37,34 +37,10 @@ public class GL2Wrapper implements GL2 {
 	
 	private GL2 current;
 	
-	public float sinf(float angle) {
-		return (float) Math.sin(angle);
-	}
-	
-	public float cosf(float angle) {
-		return (float) Math.cos(angle);
-	}
-	
-	public double sin(double angle) {
-		return Math.sin(angle);
-	}
-	
-	public double cos(double angle) {
-		return Math.cos(angle);
-	}
-	
 	protected void setCurrent(GL2 current) {
 		this.current = current;
 	}
-	
-	public float toDegrees(float radians) {
-		return (float) Math.toDegrees(radians);
-	}
-	
-	public float toRadians(float degrees) {
-		return (float) Math.toRadians(degrees);
-	}
-	
+
 	public GL2 getCurrent() {
 		if(current == null)
 			throw new RuntimeException("Current GL2 is null, did you forget to invoke setCurrent()?");

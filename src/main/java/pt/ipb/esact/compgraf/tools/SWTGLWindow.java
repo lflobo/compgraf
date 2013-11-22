@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.media.opengl.GLContext;
@@ -35,6 +36,7 @@ import pt.ipb.esact.compgraf.tools.math.Vector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.spi.PNGImage;
@@ -69,16 +71,14 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	
 	private int zoom = 0;
 
-	private Composite parent;
-	
 	// Flags e valores do GPU
 	private boolean anisotropicAvailable = false;
 
 	private float maxAnisotropy = 1.0f;
 
+	List<ReleaseListener> releaseListeners = Lists.newArrayList();
 	
 	public SWTGLWindow(Composite parent, boolean continuous) {
-		this.parent = parent;
 		Preconditions.checkNotNull(parent, "The parent cannot be null");
 		display = parent.getDisplay();
 
@@ -193,6 +193,14 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		
 	}
 	
+	public void addReleaseListener(ReleaseListener listener) {
+		releaseListeners.add(listener);
+	}
+	
+	public void removeReleaseListener(ReleaseListener listener) {
+		releaseListeners.remove(listener);
+	}
+	
 	/**
 	 * Carrega uma textura a partir da package da classe atual
 	 * @param path A path dentro da package atual
@@ -208,7 +216,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 			buffer = image.getData();
 		} catch (Exception e) {
 			// Ocorreu um erro --> Terminar o programa
-			exit("Foi impossivel carregar a imagem '" + path + "'");
+			exit("Foi impossivel carregar a imagem '" + path + "':\n" + e.getMessage());
 		}
 		
 		// Fazer o bind do estado da textura ao identificador
@@ -396,6 +404,8 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	public void dispose() {
 		canvas.dispose();
 		release();
+		for(ReleaseListener l : releaseListeners)
+			l.release(getCurrent());
 	}
 	
 	protected void render() {
