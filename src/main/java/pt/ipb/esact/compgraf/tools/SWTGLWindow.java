@@ -2,9 +2,6 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +36,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.gl2.GLUT;
-import com.jogamp.opengl.util.texture.spi.PNGImage;
 
 public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 	
@@ -70,11 +66,6 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	private Point lastMouseLocation = null;
 	
 	private int zoom = 0;
-
-	// Flags e valores do GPU
-	private boolean anisotropicAvailable = false;
-
-	private float maxAnisotropy = 1.0f;
 
 	List<ReleaseListener> releaseListeners = Lists.newArrayList();
 	
@@ -207,58 +198,20 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	 * @param textureId O ID do Texture Object
 	 */
 	public void loadPackageTexture(String path, int textureId) {
-		PNGImage image = null;
-		ByteBuffer buffer = null;
-		
-		// Tentar carregar a imagem a partir do package atual
-		try(InputStream stream = getClass().getResourceAsStream(path)) {
-			image = PNGImage.read(stream);
-			buffer = image.getData();
-		} catch (Exception e) {
-			// Ocorreu um erro --> Terminar o programa
-			exit("Foi impossivel carregar a imagem '" + path + "':\n" + e.getMessage());
-		}
-		
-		// Fazer o bind do estado da textura ao identificador
-		glBindTexture(GL_TEXTURE_2D, textureId);
-
-		// Carregar os mipmaps para a textura
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
-
-		// Parametros da textura (ignorar para ja)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		// Configurar a anisotropy para a nossa textura
-		if(isAnisotropicAvailable())
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+		GlTools.loadPackageTexture(this, path, textureId);
 	}
 
 
 	protected void internalInit() {
-		// Verificar se a extensão está disponível
-		anisotropicAvailable = isExtensionAvailable("GL_EXT_texture_filter_anisotropic");
 		
-		// Se não está disponível parar por aqui
-		if(!anisotropicAvailable) {
-			System.out.println("Anisotropic filterina não está disponível.");
-			return;
-		}
-		
-		// Obter o valor mínimo/máximo de anisotropia suportado
-		FloatBuffer values = FloatBuffer.allocate(1);
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, values);
-		maxAnisotropy = values.get(0);
 	}
 
 	public float getMaxAnisotropy() {
-		return maxAnisotropy;
+		return GlTools.getMaxAnisotropy();
 	}
 	
 	public boolean isAnisotropicAvailable() {
-		return anisotropicAvailable;
+		return GlTools.isAnisotropicAvailable();
 	}
 	
 	public void exit() {
