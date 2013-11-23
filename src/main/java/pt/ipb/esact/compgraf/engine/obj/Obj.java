@@ -257,7 +257,7 @@ public class Obj {
 			if(m.matches()) {
 				List<String> tokens = Lists.newArrayList(Splitter.onPattern("[ ]+").split(m.group(1)));
 				int vertexCount = tokens.size();
-				
+
 				Vector fVerts[] = new Vector[vertexCount];
 				Vector fNorms[] = new Vector[vertexCount];
 				Vector fTexes[] = new Vector[vertexCount];
@@ -319,6 +319,7 @@ public class Obj {
 			IntBuffer data = IntBuffer.allocate(idxList.size());
 			for(int idx : idxList)
 				data.put(idx);
+			data.flip();
 			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * triIndexes.get(o).size(), data, GL2.GL_STATIC_DRAW);
 		}
 
@@ -330,6 +331,7 @@ public class Obj {
 			IntBuffer data = IntBuffer.allocate(idxList.size());
 			for(int idx : idxList)
 				data.put(idx);
+			data.flip();
 			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * quadIndexes.get(o).size(), data, GL2.GL_STATIC_DRAW);
 		}
 
@@ -407,6 +409,7 @@ public class Obj {
 			if(matchIdx == vertices.size() || !compress) {
 				if(count == 3) triIndexes.get(o).add(vertices.size());
 				if(count == 4) quadIndexes.get(o).add(vertices.size());
+				
 				vertices.add(v);
 				normals.add(n);
 				texcoords.add(t);

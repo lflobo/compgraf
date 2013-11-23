@@ -129,4 +129,12 @@ public class ObjMaterial {
 		if(!mkdset && !mbumpset)
 			gl.glDisable(GL2.GL_TEXTURE_2D);
 	}
+
+	@Override
+	public String toString() {
+		return "ObjMaterial [name=" + name + ", textureIds=" + textureIds + ", ka=" + ka + ", kd=" + kd + ", ks=" + ks + ", kaset=" + kaset + ", ksset=" + ksset + ", kdset=" + kdset + ", nsset=" + nsset + ", dset=" + dset + ", ns=" + ns + ", d=" + d + ", mkdset=" + mkdset + ", mbumpset=" + mbumpset + ", TEX_BUMP=" + TEX_BUMP + ", TEX_DIFFUSE=" + TEX_DIFFUSE + "]";
+	}
+	
+	
+	
 }
