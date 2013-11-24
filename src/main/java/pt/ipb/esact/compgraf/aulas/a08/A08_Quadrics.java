@@ -93,9 +93,8 @@ public class A08_Quadrics extends SWTGLWindow {
 			float gray = 0.5f + randomBinomial(0.25f);
 			glColor3f(gray, gray, gray);
 			glPushMatrix();
-			glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
-			
-			gluSphere(quad, aradius, 10, 5);
+				glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
+				gluSphere(quad, aradius, 10, 5);
 			glPopMatrix();
 		}
 		
@@ -305,7 +304,7 @@ public class A08_Quadrics extends SWTGLWindow {
 	}
 
 	private void drawAsteroids() {
-		aRot0 += aRot0Speed * timeElapsed();
+		aRot0 += aRot0Speed * timeElapsed() * 5.0f;
 		aRot0 %= 2.0f * GL_PI;
 
 		aRot1 += aRot1Speed * timeElapsed();

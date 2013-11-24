@@ -316,11 +316,11 @@ public class Obj {
 			int b = triBufferObjects.get(o);
 			gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, b);
 			Collection<Integer> idxList = triIndexes.get(o);
-			IntBuffer data = IntBuffer.allocate(idxList.size());
+			int i=0;
+			int[] buffer = new int[idxList.size()];
 			for(int idx : idxList)
-				data.put(idx);
-			data.flip();
-			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * triIndexes.get(o).size(), data, GL2.GL_STATIC_DRAW);
+				buffer[i++] = idx;
+			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * triIndexes.get(o).size(), IntBuffer.wrap(buffer), GL2.GL_STATIC_DRAW);
 		}
 
 		// Quad Indexes
@@ -328,11 +328,11 @@ public class Obj {
 			int b = quadBufferObjects.get(o);
 			gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, b);
 			Collection<Integer> idxList = quadIndexes.get(o);
-			IntBuffer data = IntBuffer.allocate(idxList.size());
+			int[] buffer = new int[idxList.size()];
+			int i=0;
 			for(int idx : idxList)
-				data.put(idx);
-			data.flip();
-			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * quadIndexes.get(o).size(), data, GL2.GL_STATIC_DRAW);
+				buffer[i++] = idx;
+			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * quadIndexes.get(o).size(), IntBuffer.wrap(buffer), GL2.GL_STATIC_DRAW);
 		}
 
 		System.out.println("vertices = " + vertices.size());
@@ -341,35 +341,35 @@ public class Obj {
 	}
 
 	private FloatBuffer vertsPointer() {
-		FloatBuffer ptr = FloatBuffer.allocate(vertices.size() * 3);
+		float[] buffer = new float[vertices.size() * 3];
 		for(int i=0; i<vertices.size(); i++) {
 			Vector v = vertices.get(i);
-			ptr.put(3 * i + 0, v.x);
-			ptr.put(3 * i + 1, v.y);
-			ptr.put(3 * i + 2, v.z);
+			buffer[3 * i + 0] = v.x;
+			buffer[3 * i + 1] = v.y;
+			buffer[3 * i + 2] = v.z;
 		}
-		return ptr;
+		return FloatBuffer.wrap(buffer);
 	}
 
 	private FloatBuffer normsPointer() {
-		FloatBuffer ptr = FloatBuffer.allocate(normals.size() * 3);
+		float[] buffer = new float[normals.size() * 3];
 		for(int i=0; i<normals.size(); i++) {
 			Vector v = normals.get(i);
-			ptr.put(3 * i + 0, v.x);
-			ptr.put(3 * i + 1, v.y);
-			ptr.put(3 * i + 2, v.z);
+			buffer[3 * i + 0] = v.x;
+			buffer[3 * i + 1] = v.y;
+			buffer[3 * i + 2] = v.z;
 		}
-		return ptr;
+		return FloatBuffer.wrap(buffer);
 	}
 	
 	private FloatBuffer texesPointer() {
-		FloatBuffer ptr = FloatBuffer.allocate(texcoords.size() * 2);
+		float[] buffer = new float[texcoords.size() * 2];
 		for(int i=0; i<texcoords.size(); i++) {
 			Vector v = texcoords.get(i);
-			ptr.put(2 * i + 0, v.x);
-			ptr.put(2 * i + 1, v.y);
+			buffer[2 * i + 0] = v.x;
+			buffer[2 * i + 1] = v.y;
 		}
-		return ptr;
+		return FloatBuffer.wrap(buffer);
 	}
 
 	private void addFace(Vector[] verts, Vector[] norms, Vector[] texes, int count, String o) {
@@ -485,14 +485,16 @@ public class Obj {
 			for(String o : objNames) {
 				if(!mesh) {
 					String mat = objMaterial.get(o);
-					if(material.containsKey(mat))
-						material.get(mat).set();
+					if(material.containsKey(mat)) {
+						ObjMaterial m = material.get(mat);
+						m.set();
+					}
 					gl.glShadeModel(shadeModel.get(o) ? GL2.GL_SMOOTH : GL2.GL_FLAT);
 				} else {
 					Color.WHITE.set();
 				}
 	
-				// Triangl.gle Indexes
+				// Triangle Indexes
 				if(triBufferObjects.containsKey(o)) {
 					int b = triBufferObjects.get(o);
 					gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, b);

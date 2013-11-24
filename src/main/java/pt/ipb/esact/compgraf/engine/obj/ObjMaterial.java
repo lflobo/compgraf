@@ -51,17 +51,17 @@ public class ObjMaterial {
 	
 	public void setKa(float r, float g, float b) {
 		kaset = true;
-		ka.put(new float[] {r, b, b, 1.0f});
+		ka = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
 	}
 
 	public void setKd(float r, float g, float b) {
 		kdset = true;
-		kd.put(new float[] {r, b, b, 1.0f});
+		kd = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
 	}
 
 	public void setKs(float r, float g, float b) {
 		ksset = true;
-		ks.put(new float[] {r, b, b, 1.0f});
+		ks = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
 	}
 
 	public void setMapKd(Object reference, String prefix, String value) {
@@ -98,12 +98,17 @@ public class ObjMaterial {
 
 	public void set() {
 		GL2 gl = GlTools.getGL2();
-		if(kdset) gl.glColor4fv(kd);
-
-		if(kaset) gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, ka);
-		if(kdset) gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, kd);
-		if(ksset) gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, ks);
-		if(nsset) gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, ns);
+		if(kdset)
+			gl.glColor4fv(kd);
+		
+		if(kaset)
+			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, ka);
+		if(kdset)
+			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, kd);
+		if(ksset)
+			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, ks);
+		if(nsset)
+			gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, ns);
 
 		if(dset && d < 1.0f) {
 			gl.glEnable(GL2.GL_BLEND);

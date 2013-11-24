@@ -22,9 +22,9 @@ public class A09_Obj extends SWTGLWindow {
 		setMouseZoom(true);
 		
 		Camera camera = new Camera();
-		camera.eye.x = 5.0f;
-		camera.eye.y = 7.0f;
-		camera.eye.z = 5.0f;
+		camera.eye.x = 3.0f;
+		camera.eye.y = 3.0f;
+		camera.eye.z = 3.0f;
 		
 		camera.at.y = 0.0f;
 		
@@ -51,6 +51,7 @@ public class A09_Obj extends SWTGLWindow {
 	
 		obj = new Obj();
 		obj.load(this, "jarvis/jarvis.obj", "jarvis/jarvis.mtl");
+//		obj.load(this, "moon/moon.obj", "moon/moon.mtl");
 	}
 
 	private void configureMaterials() {
@@ -111,8 +112,7 @@ public class A09_Obj extends SWTGLWindow {
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
 		
 		glColor3f(0.5f, 0.5f, 0.5f);
-
-		obj.render(true);
+		obj.render();
 	}
 
 	
