@@ -16,7 +16,7 @@ public class A09_Obj extends SWTGLWindow {
 	float[] positionLitght0 = { 0.0f, 3.0f, 0.0f, 1.0f };
 	
 	// .obj loaders
-	private ObjLoader jarvis;
+	private ObjLoader wheatley;
 	private ObjLoader moon;
 	private ObjLoader miniGun;
 	private ObjLoader floor;
@@ -59,8 +59,8 @@ public class A09_Obj extends SWTGLWindow {
 		configureMaterials();
 	
 		// Carregar os ficheiros .obj/.mtl
-		jarvis = new ObjLoader(this);
-		jarvis.load("jarvis/jarvis.obj", "jarvis/jarvis.mtl");
+		wheatley = new ObjLoader(this);
+		wheatley.load("wheatley/wheatley.obj", "wheatley/wheatley.mtl");
 		
 		moon = new ObjLoader(this);
 		moon.load("moon/moon.obj", "moon/moon.mtl");
@@ -124,7 +124,7 @@ public class A09_Obj extends SWTGLWindow {
 		// Libertar as texturas (GPU)z
 	}
 	
-	// Variavel para a rotação do jarvis
+	// Variavel para a rotação do wheatley
 	private float angle = 0.0f;
 
 	void updateRotation() {
@@ -161,10 +161,10 @@ public class A09_Obj extends SWTGLWindow {
 			moon.render();
 		glPopMatrix();
 
-		// Desenhar o Jarvis
+		// Desenhar o Wheatley
 		glPushMatrix();
 			glTranslatef(0.0f, 1.0f, 0.0f);
-			jarvis.render();
+			wheatley.render();
 		glPopMatrix();
 		
 		// Desenhar o Chão
