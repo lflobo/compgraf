@@ -165,7 +165,6 @@ public class A09_Obj extends SWTGLWindow {
 		
 		// Desenhar o Chão
 		floor.render();
-
 	}
 
 	

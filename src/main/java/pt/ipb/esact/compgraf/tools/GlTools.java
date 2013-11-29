@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.tools;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -14,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.spi.JPEGImage;
 import com.jogamp.opengl.util.texture.spi.PNGImage;
@@ -139,5 +142,23 @@ public class GlTools {
 	public static GLUT glut() {
 		return glut;
 	}
+	
+	private static final TextRenderer TEXT_RENDERER = new TextRenderer(new Font("SansSerif", Font.PLAIN, 10));
+	
+	public static void render3DText(String text, float x, float y, float z, float scale) {
+		GL2 gl = gl();
+		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+			gl.glDisable(GL2.GL_CULL_FACE);
+			gl.glDisable(GL2.GL_TEXTURE_2D);
+			TEXT_RENDERER.setColor(Color.white);
+			TEXT_RENDERER.begin3DRendering();
+			TEXT_RENDERER.draw3D(text, x, y, z, scale);
+			TEXT_RENDERER.end3DRendering();
+		gl.glPopAttrib();
+	}
+	
+
+	
+
 
 }

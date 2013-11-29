@@ -313,6 +313,14 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 //		renderText(text, GLUT.BITMAP_TIMES_ROMAN_24, left, top);
 	}
 	
+	public void render3DText(String text, float x, float y, float z) {
+		render3DText(text, x, y, z, 0.1f);
+	}
+	
+	public void render3DText(String text, float x, float y, float z, float scale) {
+		GlTools.render3DText(text, x, y, z, scale);
+	}
+	
 	public void renderText(String text, int bitmap, int left, int top) {
 		Iterable<String> lines = Splitter.on('\n').split(text);
 		
@@ -378,7 +386,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 			float xdiff = lastMouseLocation.x - location.x;
 			float ydiff = lastMouseLocation.y - location.y;
 			if(xdiff!=0 || ydiff!=0)
-				rotateScene(xdiff * 0.01f, ydiff * 0.01f);
+				rotateOrPanScene(xdiff * 0.01f, ydiff * 0.01f);
 			
 		}
 
@@ -409,7 +417,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		setupCamera();
 	}
 
-	public void rotateScene(float hrot, float vrot) {
+	public void rotateOrPanScene(float hrot, float vrot) {
 		Camera camera = Cameras.getCurrent();
 		Vector forward = camera.eye.sub(camera.at);
 		Vector up = camera.up;
@@ -418,13 +426,31 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		float[] upArray = up.toArray();
 		Vector left = new Vector(new Quaternion(upArray, 90.0f).mult(forwardArray));
 		left.y = 0.0f;
-		
-		float[] leftArray = left.toArray();
-		Quaternion qx = new Quaternion(upArray, hrot);
-		Vector eye = new Vector(qx.mult(forwardArray));
 
-		Quaternion qy = new Quaternion(leftArray, vrot);
-		camera.eye = new Vector(qy.mult(eye.toArray())).add(camera.at);
+		if(isKeyPressed(SWT.SHIFT)) {
+			left.scale(hrot);
+			camera.eye = camera.eye.add(left);
+			camera.at = camera.at.add(left);
+			
+			forward.scale(vrot);
+			if(!isKeyPressed(SWT.CTRL)) {
+				forward.y = 0.0f;
+			} else {
+				forward.x = 0.0f;
+				forward.z = 0.0f;
+				forward.y *= -1.0f;
+			}
+			camera.eye = camera.eye.add(forward);
+			camera.at = camera.at.add(forward);
+		} else {
+			
+			float[] leftArray = left.toArray();
+			Quaternion qx = new Quaternion(upArray, hrot);
+			Vector eye = new Vector(qx.mult(forwardArray));
+	
+			Quaternion qy = new Quaternion(leftArray, vrot);
+			camera.eye = new Vector(qy.mult(eye.toArray())).add(camera.at);
+		}
 		
 		setupCamera();
 	}

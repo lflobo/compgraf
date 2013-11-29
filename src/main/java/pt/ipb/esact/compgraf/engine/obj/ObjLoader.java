@@ -80,7 +80,7 @@ public class ObjLoader {
 	private static final Pattern rvn = Pattern.compile("^vn[ ]+([\\-0-9.]+)[ ]+([\\-0-9.]+)[ ]+([\\-0-9.]+)");
 	private static final Pattern rs = Pattern.compile("^s[ ]+(off|\\d+)$");
 	private static final Pattern rusemtl = Pattern.compile("^usemtl[ ]+(.+)$");
-
+	
 	public ObjLoader() {
 	}
 	
