@@ -16,10 +16,10 @@ public class A09_Obj extends SWTGLWindow {
 	float[] positionLitght0 = { 0.0f, 3.0f, 0.0f, 1.0f };
 	
 	// .obj loaders
-	private ObjLoader jarvis = new ObjLoader();
-	private ObjLoader moon = new ObjLoader();
-	private ObjLoader miniGun = new ObjLoader();
-	private ObjLoader floor = new ObjLoader();
+	private ObjLoader jarvis;
+	private ObjLoader moon;
+	private ObjLoader miniGun;
+	private ObjLoader floor;
 	
 	// skybox
 	private Skybox skybox;
@@ -59,14 +59,18 @@ public class A09_Obj extends SWTGLWindow {
 		configureMaterials();
 	
 		// Carregar os ficheiros .obj/.mtl
-		jarvis.load(this, "jarvis/jarvis.obj", "jarvis/jarvis.mtl");
+		jarvis = new ObjLoader(this);
+		jarvis.load("jarvis/jarvis.obj", "jarvis/jarvis.mtl");
 		
-		moon.load(this, "moon/moon.obj", "moon/moon.mtl");
+		moon = new ObjLoader(this);
+		moon.load("moon/moon.obj", "moon/moon.mtl");
 
+		miniGun = new ObjLoader(this);
 		miniGun.setScale(0.5f); // Opcionalmente definir a escala
-		miniGun.load(this, "minigun/MiniGun.obj", "minigun/MiniGun.mtl");
+		miniGun.load("minigun/MiniGun.obj", "minigun/MiniGun.mtl");
 
-		floor.load(this, "floor/floor.obj", "floor/floor.mtl");
+		floor = new ObjLoader(this);
+		floor.load("floor/floor.obj", "floor/floor.mtl");
 		
 		// carregar as texturas da skybox
 		skybox = new Skybox(this);

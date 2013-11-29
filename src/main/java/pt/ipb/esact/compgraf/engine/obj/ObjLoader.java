@@ -16,6 +16,8 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLException;
 
 import pt.ipb.esact.compgraf.tools.GlTools;
+import pt.ipb.esact.compgraf.tools.ReleaseListener;
+import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 import pt.ipb.esact.compgraf.tools.math.Vector;
@@ -28,7 +30,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class ObjLoader {
+public class ObjLoader implements ReleaseListener {
 
 	private static final int VERTS_DATA = 0;
 	
@@ -69,6 +71,8 @@ public class ObjLoader {
 	private Vector bbMax = new Vector();
 	
 	private Vector bbMin = new Vector();
+
+	private SWTGLWindow reference;
 	
 	private static final Pattern MAT_LINE_PATTERN = Pattern.compile("([^ ]*)[ ]+([^ ]*)(|[ ]+([^ ]*))(|[ ]+([^ ]*))");
 	
@@ -81,14 +85,16 @@ public class ObjLoader {
 	private static final Pattern rs = Pattern.compile("^s[ ]+(off|\\d+)$");
 	private static final Pattern rusemtl = Pattern.compile("^usemtl[ ]+(.+)$");
 	
-	public ObjLoader() {
+	public ObjLoader(SWTGLWindow reference) {
+		this.reference = reference;
+		reference.addReleaseListener(this);
 	}
 	
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
 	
-	public void load(Object reference, String model, String material) {
+	public void load(String model, String material) {
 		if(reference == null)
 			throw new GLException("The reference object cannot be null");
 		
@@ -107,18 +113,18 @@ public class ObjLoader {
 			List<String> materialLines = Lists.newArrayList();
 			while((line = materialStream.readLine()) != null)
 				materialLines.add(line);
-			parseMaterial(reference, materialLines, prefix);
+			parseMaterial(materialLines, prefix);
 
 			List<String> modelLines = Lists.newArrayList();
 			while((line = modelStream.readLine()) != null)
 				modelLines.add(line);
-			parse(reference, modelLines, prefix);
+			parse(modelLines, prefix);
 		} catch (IOException e) {
 			GlTools.exit(e.getMessage());
 		}
 	}
 	
-	private void parseMaterial(Object reference, List<String> lines, String prefix) {
+	private void parseMaterial(List<String> lines, String prefix) {
 		material.clear();
 		
 		String currentMtl = null;
@@ -181,7 +187,7 @@ public class ObjLoader {
 		}
 	}
 
-	private void parse(Object reference, List<String> lines, String prefix) {
+	private void parse(List<String> lines, String prefix) {
 		vertices.clear();
 		texcoords.clear();
 		normals.clear();
@@ -544,6 +550,21 @@ public class ObjLoader {
 				glut.glutWireCube(1.0f);
 			gl.glPopMatrix();
 			gl.glPopAttrib();
+	}
+
+	@Override
+	public void release(GL2 gl) {
+		gl.glDeleteBuffers(OBJ_BUFFER_COUNT, vboIds);
+
+		for(int id : triBufferObjects.values())
+			gl.glDeleteBuffers(1, new int[] { id }, 0);
+
+		for(int id : quadBufferObjects.values())
+			gl.glDeleteBuffers(1, new int[] { id }, 0);
+		
+		// Release material stuff
+		for(ObjMaterial mat : material.values())
+			mat.release(gl);
 	}
 	
 }

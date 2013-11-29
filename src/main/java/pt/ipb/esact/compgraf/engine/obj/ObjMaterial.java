@@ -8,13 +8,14 @@ import java.util.Set;
 import javax.media.opengl.GL2;
 
 import pt.ipb.esact.compgraf.tools.GlTools;
+import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
 import com.google.common.collect.Sets;
 
 
-public class ObjMaterial {
+public class ObjMaterial implements ReleaseListener {
 
 	private String name;
 
@@ -139,6 +140,14 @@ public class ObjMaterial {
 	@Override
 	public String toString() {
 		return "ObjMaterial [name=" + name + ", textureIds=" + textureIds + ", ka=" + ka + ", kd=" + kd + ", ks=" + ks + ", kaset=" + kaset + ", ksset=" + ksset + ", kdset=" + kdset + ", nsset=" + nsset + ", dset=" + dset + ", ns=" + ns + ", d=" + d + ", mkdset=" + mkdset + ", mbumpset=" + mbumpset + ", TEX_BUMP=" + TEX_BUMP + ", TEX_DIFFUSE=" + TEX_DIFFUSE + "]";
+	}
+
+	@Override
+	public void release(GL2 gl) {
+		if(mkdset)
+			gl.glDeleteTextures(1, new int[] { TEX_DIFFUSE }, 0);
+		if(mbumpset)
+			gl.glDeleteTextures(1, new int[] { TEX_BUMP }, 0);
 	}
 	
 	
