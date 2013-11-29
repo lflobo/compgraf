@@ -1,11 +1,11 @@
 package pt.ipb.esact.compgraf.aulas.a09;
 
-import pt.ipb.esact.compgraf.engine.obj.Obj;
+import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 
 public class Test {
 
 	public Test() {
-		Obj obj = new Obj();
+		ObjLoader obj = new ObjLoader();
 		obj.load(this, "jarvis/jarvis.obj", "jarvis/jarvis.mtl");
 	}
 	

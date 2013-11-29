@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.spi.JPEGImage;
 import com.jogamp.opengl.util.texture.spi.PNGImage;
 import com.jogamp.opengl.util.texture.spi.TGAImage;
@@ -25,6 +26,8 @@ public class GlTools {
 	private static float maxAnisotropy = 0.0f;
 	
 	private static GLU glu;
+
+	private static GLUT glut;
 
 	static {
 		// Verificar se a extensão está disponível
@@ -39,6 +42,7 @@ public class GlTools {
 		}
 		
 		glu = new GLUgl2();
+		glut = new GLUT();
 	}
 	
 	/**
@@ -115,10 +119,6 @@ public class GlTools {
 		return gl().isExtensionAvailable(extension);
 	}
 
-	private static GL2 gl() {
-		return GLContext.getCurrentGL().getGL2();
-	}
-
 	public static void exit(String error) {
 		Display display = Display.getCurrent();
 		if(display != null) {
@@ -132,8 +132,12 @@ public class GlTools {
 		System.exit(0);		
 	}
 
-	public static GL2 getGL2() {
-		return gl();
+	public static GL2 gl() {
+		return GLContext.getCurrentGL().getGL2();
+	}
+
+	public static GLUT glut() {
+		return glut;
 	}
 
 }

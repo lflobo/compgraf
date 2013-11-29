@@ -26,8 +26,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.jogamp.opengl.util.gl2.GLUT;
 
-public class Obj {
+public class ObjLoader {
 
 	private static final int VERTS_DATA = 0;
 	
@@ -80,7 +81,11 @@ public class Obj {
 	private static final Pattern rs = Pattern.compile("^s[ ]+(off|\\d+)$");
 	private static final Pattern rusemtl = Pattern.compile("^usemtl[ ]+(.+)$");
 
-	public Obj() {
+	public ObjLoader() {
+	}
+	
+	public void setScale(float scale) {
+		this.scale = scale;
 	}
 	
 	public void load(Object reference, String model, String material) {
@@ -191,7 +196,7 @@ public class Obj {
 
 		shadeModel.clear();
 		
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		
 		List<Vector> verts = Lists.newArrayList();
 		List<Vector> norms = Lists.newArrayList();
@@ -221,8 +226,8 @@ public class Obj {
 			m = rvt.matcher(line);
 			if(m.matches()) {
 				texes.add(new Vector(
-					Float.parseFloat(m.group(1)) * scale,
-					Float.parseFloat(m.group(2)) * scale,
+					Float.parseFloat(m.group(1)),
+					Float.parseFloat(m.group(2)),
 					0.0f
 				));
 			}
@@ -230,8 +235,8 @@ public class Obj {
 			m = rvt3.matcher(line);
 			if(m.matches()) {
 				texes.add(new Vector(
-					Float.parseFloat(m.group(1)) * scale,
-					Float.parseFloat(m.group(2)) * scale,
+					Float.parseFloat(m.group(1)),
+					Float.parseFloat(m.group(2)),
 					0.0f
 				));
 			}
@@ -239,9 +244,9 @@ public class Obj {
 			m = rvn.matcher(line);
 			if(m.matches()) {
 				norms.add(new Vector(
-					Float.parseFloat(m.group(1)) * scale,
-					Float.parseFloat(m.group(2)) * scale,
-					Float.parseFloat(m.group(3)) * scale
+					Float.parseFloat(m.group(1)),
+					Float.parseFloat(m.group(2)),
+					Float.parseFloat(m.group(3))
 				));
 			}
 			
@@ -264,24 +269,28 @@ public class Obj {
 				
 				for(int f=0; f<tokens.size(); f++) {
 					List<String> ns = Lists.newArrayList(Splitter.onPattern("/").split(tokens.get(f)));
+				
 					try {
 						int vx = Integer.parseInt(ns.get(0));
 						fVerts[f] = verts.get(vx-1);
-					} catch (NumberFormatException e) {
+					} catch (NumberFormatException|IndexOutOfBoundsException e) {
 						fVerts[f] = new Vector();
 					}
+					
 					try {
 						int tx = Integer.parseInt(ns.get(1));
 						fTexes[f] = texes.get(tx-1);
-					} catch (NumberFormatException e) {
+					} catch (NumberFormatException|IndexOutOfBoundsException e) {
 						fTexes[f] = new Vector();
 					}
+					
 					try {
 						int nx = Integer.parseInt(ns.get(2));
 						fNorms[f] = norms.get(nx-1);
-					} catch (NumberFormatException e) {
+					} catch (NumberFormatException|IndexOutOfBoundsException e) {
 						fNorms[f] = new Vector();
 					}
+					
 				}
 				
 				addFace(fVerts, fNorms, fTexes, vertexCount, oname);
@@ -334,10 +343,6 @@ public class Obj {
 				buffer[i++] = idx;
 			gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, INT_SIZE * quadIndexes.get(o).size(), IntBuffer.wrap(buffer), GL2.GL_STATIC_DRAW);
 		}
-
-		System.out.println("vertices = " + vertices.size());
-		System.out.println("normals = " + normals.size());		
-		System.out.println("texes = " + texes.size());		
 	}
 
 	private FloatBuffer vertsPointer() {
@@ -373,10 +378,8 @@ public class Obj {
 	}
 
 	private void addFace(Vector[] verts, Vector[] norms, Vector[] texes, int count, String o) {
-		if(count < 3 || count > 4) {
-			System.out.println(count + " not supported");
+		if(count < 3 || count > 4)
 			return;
-		}
 
 		for(int i=0; i<count; i++)
 			norms[i].normalize();
@@ -429,7 +432,7 @@ public class Obj {
 	private void addObject(String oname) {
 		objNames.add(oname);
 		
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		
 		IntBuffer buffer = IntBuffer.allocate(1);
 		
@@ -443,7 +446,7 @@ public class Obj {
 	}
 	
 	public void release() {
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		gl.glDeleteBuffers(OBJ_BUFFER_COUNT, vboIds);
 
 		for(String s: triBufferObjects.keySet()) {
@@ -462,7 +465,7 @@ public class Obj {
 	}
 	
 	public void render(boolean mesh) {
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		
 		gl.glPushAttrib(GL2.GL_LIGHTING_BIT | GL2.GL_ENABLE_BIT | GL2.GL_CURRENT_BIT);
 
@@ -498,14 +501,14 @@ public class Obj {
 				if(triBufferObjects.containsKey(o)) {
 					int b = triBufferObjects.get(o);
 					gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, b);
-					gl.glDrawElements(!mesh ? GL2.GL_TRIANGLES : GL2.GL_LINE_STRIP, triIndexes.get(o).size(), GL2.GL_UNSIGNED_INT, 0);
+					gl.glDrawElements(!mesh ? GL2.GL_TRIANGLES : GL2.GL_LINES, triIndexes.get(o).size(), GL2.GL_UNSIGNED_INT, 0);
 				}
 	
 				// Quads Indexes
 				if(quadBufferObjects.containsKey(o)) {
 					int b = quadBufferObjects.get(o);
 					gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, b);
-					gl.glDrawElements(!mesh ? GL2.GL_QUADS : GL2.GL_LINE_STRIP, quadIndexes.get(o).size(), GL2.GL_UNSIGNED_INT, 0);
+					gl.glDrawElements(!mesh ? GL2.GL_QUADS : GL2.GL_LINES, quadIndexes.get(o).size(), GL2.GL_UNSIGNED_INT, 0);
 				}
 	
 			}
@@ -519,6 +522,28 @@ public class Obj {
 				gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 
 		gl.glPopAttrib();
+	}
+	
+	public void drawBoundingBox() {
+		GL2 gl = GlTools.gl();
+		GLUT glut = GlTools.glut();
+		
+		float xSize = bbMax.x - bbMin.x;
+		float ySize = bbMax.y - bbMin.y;
+		float zSize = bbMax.z - bbMin.z;
+		Vector center = new Vector(bbMin.x + xSize / 2.0f, bbMin.y + ySize / 2.0f, bbMin.z + zSize / 2.0f);
+		gl.glPushAttrib(GL2.GL_CURRENT_BIT | GL2.GL_ENABLE_BIT);
+			gl.glDisable(GL2.GL_TEXTURE_2D);
+			gl.glDisable(GL2.GL_DEPTH_TEST);
+			gl.glDisable(GL2.GL_LIGHTING);
+			gl.glDisable(GL2.GL_BLEND);
+			Color.GREEN.set();
+			gl.glPushMatrix();
+				gl.glTranslatef(center.x, center.y, center.z);
+				gl.glScalef(xSize, ySize, zSize);
+				glut.glutWireCube(1.0f);
+			gl.glPopMatrix();
+			gl.glPopAttrib();
 	}
 	
 }

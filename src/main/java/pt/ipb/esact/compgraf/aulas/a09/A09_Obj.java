@@ -3,7 +3,8 @@ package pt.ipb.esact.compgraf.aulas.a09;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-import pt.ipb.esact.compgraf.engine.obj.Obj;
+import pt.ipb.esact.compgraf.engine.Skybox;
+import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.GLDisplay;
@@ -12,9 +13,17 @@ import pt.ipb.esact.compgraf.tools.SWTGLWindow;
 public class A09_Obj extends SWTGLWindow {
 
 	// Array com a posição da luz
-	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
-	private Obj obj;
+	float[] positionLitght0 = { 0.0f, 3.0f, 0.0f, 1.0f };
 	
+	// .obj loaders
+	private ObjLoader jarvis = new ObjLoader();
+	private ObjLoader moon = new ObjLoader();
+	private ObjLoader miniGun = new ObjLoader();
+	private ObjLoader floor = new ObjLoader();
+	
+	// skybox
+	private Skybox skybox;
+
 	public A09_Obj(Composite parent) {
 		super(parent, true);
 		
@@ -49,9 +58,19 @@ public class A09_Obj extends SWTGLWindow {
 		// Configurar os materiais
 		configureMaterials();
 	
-		obj = new Obj();
-		obj.load(this, "jarvis/jarvis.obj", "jarvis/jarvis.mtl");
-//		obj.load(this, "moon/moon.obj", "moon/moon.mtl");
+		// Carregar os ficheiros .obj/.mtl
+		jarvis.load(this, "jarvis/jarvis.obj", "jarvis/jarvis.mtl");
+		
+		moon.load(this, "moon/moon.obj", "moon/moon.mtl");
+
+		miniGun.setScale(0.5f); // Opcionalmente definir a escala
+		miniGun.load(this, "minigun/MiniGun.obj", "minigun/MiniGun.mtl");
+
+		floor.load(this, "floor/floor.obj", "floor/floor.mtl");
+		
+		// carregar as texturas da skybox
+		skybox = new Skybox(this);
+		skybox.load("skybox/dd-px.png", "skybox/dd-py.png", "skybox/dd-pz.png", "skybox/dd-nx.png", "skybox/dd-ny.png", "skybox/dd-nz.png");
 	}
 
 	private void configureMaterials() {
@@ -69,16 +88,16 @@ public class A09_Obj extends SWTGLWindow {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 		
+		// Definição do Modelo de luz para a luz ambiente
+		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+
 		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
-		float[] ambientLowLight = { 0.5f, 0.5f, 0.5f, 1.0f };
+		float[] ambientLight = { 0.2f, 0.2f, 0.2f, 1.0f };
 		// Este é o array com o RGB da luz difusa
 		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
 		// Este é o array com o RGB da luz especular
 		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-
-		// Definição do Modelo de luz para a luz ambiente
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
 
 		// Configurar e Activar a Luz 0
 		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
@@ -98,11 +117,18 @@ public class A09_Obj extends SWTGLWindow {
 
 	@Override
 	public void release() {
-		// Libertar as texturas (GPU)
+		// Libertar as texturas (GPU)z
 	}
 	
-	// Variavel para o bounce do ponto central
-	private float delta = 0.0f;
+	// Variavel para a rotação do jarvis
+	private float angle = 0.0f;
+
+	void updateRotation() {
+		// Actualizar o Angulo de Rotacao
+		angle += GL_PI / 10.0f * timeElapsed();
+		angle %= 2.0f * GL_PI;
+	}
+
 	
 	@Override
 	public void render(int width, int height) {
@@ -110,9 +136,36 @@ public class A09_Obj extends SWTGLWindow {
 		
 		// Reposicionar a luz
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
-		
 		glColor3f(0.5f, 0.5f, 0.5f);
-		obj.render();
+
+		// Atualizar as variaveis de rotação
+		updateRotation();
+		
+		skybox.render();
+
+		// Desenhar a MiniGun
+		glPushMatrix();
+			glTranslatef(-6.0f, 0.0f, -6.0f);
+			glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+			miniGun.render();
+		glPopMatrix();
+
+		// Desenhar a Lua
+		glPushMatrix();
+			glTranslatef(6.0f, 1.0f, 6.0f);
+			glRotatef(toDegrees(angle), 0.0f, 1.0f, 0.0f);
+			moon.render();
+		glPopMatrix();
+
+		// Desenhar o Jarvis
+		glPushMatrix();
+			glTranslatef(0.0f, 1.0f, 0.0f);
+			jarvis.render();
+		glPopMatrix();
+		
+		// Desenhar o Chão
+		floor.render();
+
 	}
 
 	

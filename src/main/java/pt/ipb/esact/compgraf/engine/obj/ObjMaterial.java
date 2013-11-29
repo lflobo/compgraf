@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.media.opengl.GL2;
 
 import pt.ipb.esact.compgraf.tools.GlTools;
+import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
 import com.google.common.collect.Sets;
@@ -67,7 +68,7 @@ public class ObjMaterial {
 	public void setMapKd(Object reference, String prefix, String value) {
 		mkdset = true;
 		String name = Paths.get(value).getFileName().toString();
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		
 		IntBuffer texture = IntBuffer.allocate(1);
 		gl.glGenTextures(1, texture);
@@ -78,7 +79,7 @@ public class ObjMaterial {
 	public void setMapBump(Object reference, String prefix, String value) {
 		mbumpset = true;
 		String name = Paths.get(value).getFileName().toString();
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		
 		IntBuffer texture = IntBuffer.allocate(1);
 		gl.glGenTextures(1, texture);
@@ -97,7 +98,7 @@ public class ObjMaterial {
 	}
 
 	public void set() {
-		GL2 gl = GlTools.getGL2();
+		GL2 gl = GlTools.gl();
 		if(kdset)
 			gl.glColor4fv(kd);
 		
@@ -122,12 +123,12 @@ public class ObjMaterial {
 		}
 
 		if(mbumpset) {
-//			gl.glActiveTexture(NormalMapIndex);
+			gl.glActiveTexture(Shader.NORMAL_MAP_INDEX);
 			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_BUMP);
 		}
 
 		if(mkdset) {
-//			gl.glActiveTexture(DiffuseMapIndex);
+			gl.glActiveTexture(Shader.DIFFUSE_MAP_INDEX);
 			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_DIFFUSE);
 		}
 
