@@ -24,6 +24,8 @@ public class A09_Obj extends SWTGLWindow {
 	// skybox
 	private Skybox skybox;
 
+	private ObjLoader glass;
+
 	public A09_Obj(Composite parent) {
 		super(parent, true);
 		
@@ -64,6 +66,9 @@ public class A09_Obj extends SWTGLWindow {
 		
 		moon = new ObjLoader(this);
 		moon.load("moon/moon.obj", "moon/moon.mtl");
+
+		glass = new ObjLoader(this);
+		glass.load("glass/glass.obj", "glass/glass.mtl");
 
 		miniGun = new ObjLoader(this);
 		miniGun.setScale(0.5f); // Opcionalmente definir a escala
@@ -154,13 +159,6 @@ public class A09_Obj extends SWTGLWindow {
 			miniGun.render();
 		glPopMatrix();
 
-		// Desenhar a Lua
-		glPushMatrix();
-			glTranslatef(6.0f, 1.0f, 6.0f);
-			glRotatef(toDegrees(angle), 0.0f, 1.0f, 0.0f);
-			moon.render();
-		glPopMatrix();
-
 		// Desenhar o Wheatley
 		glPushMatrix();
 			glTranslatef(0.0f, 1.0f, 0.0f);
@@ -169,6 +167,19 @@ public class A09_Obj extends SWTGLWindow {
 		
 		// Desenhar o Chão
 		floor.render();
+
+		// Desenhar a Lua
+		glPushMatrix();
+			glTranslatef(6.0f, 1.0f, 6.0f);
+			glRotatef(toDegrees(angle), 0.0f, 1.0f, 0.0f);
+			moon.render();
+		glPopMatrix();
+
+		// Desenhar o Copo
+		glPushMatrix();
+			glTranslatef(6.0f, 0.0f, -6.0f);
+			glass.render();
+		glPopMatrix();
 	}
 
 	
