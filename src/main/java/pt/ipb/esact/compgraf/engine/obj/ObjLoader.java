@@ -100,9 +100,9 @@ public class ObjLoader implements ReleaseListener {
 		
 		// extract prefix from model
 		String prefix = "";
-		int last = model.lastIndexOf(File.separatorChar);
+		int last = model.lastIndexOf('/');
 		if(last != -1)
-			prefix = model.substring(0, last) + "/";
+			prefix = model.substring(0, last) + '/';
 		
 		try (
 			BufferedReader modelStream = new BufferedReader(new InputStreamReader(reference.getClass().getResourceAsStream(model)));
