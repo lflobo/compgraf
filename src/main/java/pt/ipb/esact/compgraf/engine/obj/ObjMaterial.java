@@ -100,8 +100,12 @@ public class ObjMaterial implements ReleaseListener {
 
 	public void set() {
 		GL2 gl = GlTools.gl();
-		if(kdset)
+		
+		if(kdset) {
+			if(dset && d < 1.0f)
+				kd.put(3, d);
 			gl.glColor4fv(kd);
+		}
 		
 		if(kaset)
 			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, ka);
