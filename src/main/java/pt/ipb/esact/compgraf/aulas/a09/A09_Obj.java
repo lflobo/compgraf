@@ -26,6 +26,8 @@ public class A09_Obj extends SWTGLWindow {
 
 	private ObjLoader glass;
 
+	private ObjLoader tree;
+
 	public A09_Obj(Composite parent) {
 		super(parent, true);
 		
@@ -76,6 +78,9 @@ public class A09_Obj extends SWTGLWindow {
 
 		floor = new ObjLoader(this);
 		floor.load("floor/floor.obj", "floor/floor.mtl");
+		
+		tree = new ObjLoader(this);
+		tree.load("tree/arvore.obj", "tree/arvore.mtl");
 		
 		// carregar as texturas da skybox
 		skybox = new Skybox(this);
@@ -163,6 +168,7 @@ public class A09_Obj extends SWTGLWindow {
 		glPushMatrix();
 			glTranslatef(0.0f, 1.0f, 0.0f);
 			wheatley.render();
+			wheatley.drawBoundingBox();
 		glPopMatrix();
 		
 		// Desenhar o Chão
@@ -180,6 +186,8 @@ public class A09_Obj extends SWTGLWindow {
 			glTranslatef(6.0f, 0.0f, -6.0f);
 			glass.render();
 		glPopMatrix();
+		
+		tree.render();
 	}
 
 	
