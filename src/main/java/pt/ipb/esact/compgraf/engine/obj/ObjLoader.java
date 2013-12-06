@@ -1,7 +1,6 @@
 package pt.ipb.esact.compgraf.engine.obj;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
@@ -74,7 +73,7 @@ public class ObjLoader implements ReleaseListener {
 
 	private SWTGLWindow reference;
 	
-	private static final Pattern MAT_LINE_PATTERN = Pattern.compile("([^ ]*)[ ]+([^ ]*)(|[ ]+([^ ]*))(|[ ]+([^ ]*))");
+	private static final Pattern MAT_LINE_PATTERN = Pattern.compile("([^ ]*)[ ]+(.*)");
 	
 	private static final Pattern ro = Pattern.compile("^o[ ]+(.+)$");
 	private static final Pattern rf = Pattern.compile("^f[ ]+(.+)$");
@@ -100,9 +99,9 @@ public class ObjLoader implements ReleaseListener {
 		
 		// extract prefix from model
 		String prefix = "";
-		int last = model.lastIndexOf(File.separatorChar);
+		int last = model.lastIndexOf('/');
 		if(last != -1)
-			prefix = model.substring(0, last) + "/";
+			prefix = model.substring(0, last) + '/';
 		
 		try (
 			BufferedReader modelStream = new BufferedReader(new InputStreamReader(reference.getClass().getResourceAsStream(model)));
@@ -135,6 +134,8 @@ public class ObjLoader implements ReleaseListener {
 				continue;
 			
 			String prop = m.group(1);
+			String value = m.group(2);
+			List<String> values = Lists.newArrayList(value.split("[ ]+"));
 			
 			if("newmtl".equals(prop)) {
 				currentMtl = m.group(2);
@@ -145,43 +146,39 @@ public class ObjLoader implements ReleaseListener {
 				continue;
 			
 			if("Ka".equals(prop)) {
-				float r = GlMath.clamp(Float.parseFloat(m.group(2)), 0.0f, 1.0f);
-				float g = GlMath.clamp(Float.parseFloat(m.group(4)), 0.0f, 1.0f);
-				float b = GlMath.clamp(Float.parseFloat(m.group(6)), 0.0f, 1.0f);
+				float r = GlMath.clamp(Float.parseFloat(values.get(0)), 0.0f, 1.0f);
+				float g = GlMath.clamp(Float.parseFloat(values.get(1)), 0.0f, 1.0f);
+				float b = GlMath.clamp(Float.parseFloat(values.get(2)), 0.0f, 1.0f);
 				material.get(currentMtl).setKa(r, g, b);
 			}
 
 			if("Kd".equals(prop)) {
-				float r = GlMath.clamp(Float.parseFloat(m.group(2)), 0.0f, 1.0f);
-				float g = GlMath.clamp(Float.parseFloat(m.group(4)), 0.0f, 1.0f);
-				float b = GlMath.clamp(Float.parseFloat(m.group(6)), 0.0f, 1.0f);
+				float r = GlMath.clamp(Float.parseFloat(values.get(0)), 0.0f, 1.0f);
+				float g = GlMath.clamp(Float.parseFloat(values.get(1)), 0.0f, 1.0f);
+				float b = GlMath.clamp(Float.parseFloat(values.get(2)), 0.0f, 1.0f);
 				material.get(currentMtl).setKd(r, g, b);
 			}
 
 			if("Ks".equals(prop)) {
-				float r = GlMath.clamp(Float.parseFloat(m.group(2)), 0.0f, 1.0f);
-				float g = GlMath.clamp(Float.parseFloat(m.group(4)), 0.0f, 1.0f);
-				float b = GlMath.clamp(Float.parseFloat(m.group(6)), 0.0f, 1.0f);
+				float r = GlMath.clamp(Float.parseFloat(values.get(0)), 0.0f, 1.0f);
+				float g = GlMath.clamp(Float.parseFloat(values.get(1)), 0.0f, 1.0f);
+				float b = GlMath.clamp(Float.parseFloat(values.get(2)), 0.0f, 1.0f);
 				material.get(currentMtl).setKs(r, g, b);
 			}
 			
 			if("map_Kd".equals(prop)) {
-				String value = m.group(2);
 				material.get(currentMtl).setMapKd(reference, prefix, value);
 			}
 
 			if("map_Bump".equals(prop)) {
-				String value = m.group(2);
 				material.get(currentMtl).setMapBump(reference, prefix, value);
 			}
 
 			if("d".equals(prop)) {
-				String value = m.group(2);
 				material.get(currentMtl).setD(Float.parseFloat(value));
 			}
 			
 			if("Ns".equals(prop)) {
-				String value = m.group(2);
 				material.get(currentMtl).setNs(Float.parseFloat(value));
 			}
 		}

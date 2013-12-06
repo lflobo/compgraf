@@ -24,6 +24,10 @@ public class A09_Obj extends SWTGLWindow {
 	// skybox
 	private Skybox skybox;
 
+	private ObjLoader glass;
+
+	private ObjLoader tree;
+
 	public A09_Obj(Composite parent) {
 		super(parent, true);
 		
@@ -65,12 +69,18 @@ public class A09_Obj extends SWTGLWindow {
 		moon = new ObjLoader(this);
 		moon.load("moon/moon.obj", "moon/moon.mtl");
 
+		glass = new ObjLoader(this);
+		glass.load("glass/glass.obj", "glass/glass.mtl");
+
 		miniGun = new ObjLoader(this);
 		miniGun.setScale(0.5f); // Opcionalmente definir a escala
 		miniGun.load("minigun/MiniGun.obj", "minigun/MiniGun.mtl");
 
 		floor = new ObjLoader(this);
 		floor.load("floor/floor.obj", "floor/floor.mtl");
+		
+		tree = new ObjLoader(this);
+		tree.load("tree/arvore.obj", "tree/arvore.mtl");
 		
 		// carregar as texturas da skybox
 		skybox = new Skybox(this);
@@ -154,6 +164,16 @@ public class A09_Obj extends SWTGLWindow {
 			miniGun.render();
 		glPopMatrix();
 
+		// Desenhar o Wheatley
+		glPushMatrix();
+			glTranslatef(0.0f, 1.0f, 0.0f);
+			wheatley.render();
+			wheatley.drawBoundingBox();
+		glPopMatrix();
+		
+		// Desenhar o Chão
+		floor.render();
+
 		// Desenhar a Lua
 		glPushMatrix();
 			glTranslatef(6.0f, 1.0f, 6.0f);
@@ -161,14 +181,13 @@ public class A09_Obj extends SWTGLWindow {
 			moon.render();
 		glPopMatrix();
 
-		// Desenhar o Wheatley
+		// Desenhar o Copo
 		glPushMatrix();
-			glTranslatef(0.0f, 1.0f, 0.0f);
-			wheatley.render();
+			glTranslatef(6.0f, 0.0f, -6.0f);
+			glass.render();
 		glPopMatrix();
 		
-		// Desenhar o Chão
-		floor.render();
+		tree.render();
 	}
 
 	

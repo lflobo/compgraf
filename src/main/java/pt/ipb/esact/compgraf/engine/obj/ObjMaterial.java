@@ -2,7 +2,6 @@ package pt.ipb.esact.compgraf.engine.obj;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Paths;
 import java.util.Set;
 
 import javax.media.opengl.GL2;
@@ -68,7 +67,7 @@ public class ObjMaterial implements ReleaseListener {
 
 	public void setMapKd(Object reference, String prefix, String value) {
 		mkdset = true;
-		String name = Paths.get(value).getFileName().toString();
+		String name = findPath(value);
 		GL2 gl = GlTools.gl();
 		
 		IntBuffer texture = IntBuffer.allocate(1);
@@ -77,9 +76,21 @@ public class ObjMaterial implements ReleaseListener {
 		GlTools.loadPackageTexture(reference, prefix + name, TEX_DIFFUSE);
 	}
 
+	private String findPath(String value) {
+		if(value == null)
+			return null;
+		value = value.replace("\\\\", "\\");
+		int last = value.lastIndexOf('/');
+		if(last == -1)
+			last = value.lastIndexOf('\\');
+		if(last == -1)
+			return value;
+		return value.substring(last + 1);
+	}
+
 	public void setMapBump(Object reference, String prefix, String value) {
 		mbumpset = true;
-		String name = Paths.get(value).getFileName().toString();
+		String name = findPath(value);
 		GL2 gl = GlTools.gl();
 		
 		IntBuffer texture = IntBuffer.allocate(1);
@@ -100,8 +111,12 @@ public class ObjMaterial implements ReleaseListener {
 
 	public void set() {
 		GL2 gl = GlTools.gl();
-		if(kdset)
+		
+		if(kdset) {
+			if(dset && d < 1.0f)
+				kd.put(3, d);
 			gl.glColor4fv(kd);
+		}
 		
 		if(kaset)
 			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, ka);
