@@ -146,7 +146,6 @@ public class Skybox implements ReleaseListener {
 		if(cam == null)
 			return;
 		
-		
 		// p = Camera.at - Camera.eye = vetor direcao
 		Vector p = cam.at.sub(cam.eye);
 		p.normalize();

@@ -254,8 +254,15 @@ public class ObjLoader implements ReleaseListener {
 			}
 			
 			m = rs.matcher(line);
-			if(m.matches())
-				shadeModel.put(oname, Integer.parseInt(m.group(1)) == 1);
+			if(m.matches()) {
+				boolean smooth = false;
+				try {
+					smooth = Integer.parseInt(m.group(1)) == 1;
+				} catch(NumberFormatException e) {
+					smooth = "on".equals(m.group(1));
+				}
+				shadeModel.put(oname, smooth);
+			}
 			
 			m = rusemtl.matcher(line);
 			if(m.matches())

@@ -2,7 +2,9 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
@@ -93,7 +95,12 @@ public class GlTools {
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);
 
 		// Carregar os mipmaps para a textura
-		glu.gluBuild2DMipmaps(GL2.GL_TEXTURE_2D, GL2.GL_RGBA, width, height, format, GL2.GL_UNSIGNED_BYTE, buffer);
+		try {
+			glu.gluBuild2DMipmaps(GL2.GL_TEXTURE_2D, GL2.GL_RGBA, width, height, format, GL2.GL_UNSIGNED_BYTE, buffer);
+		} catch(BufferUnderflowException e) {
+			System.out.println(width * height * 3);
+			gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, width, height, 0, format, GL2.GL_UNSIGNED_BYTE, buffer);
+		}
 
 		// Parametros da textura (ignorar para ja)
 		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);

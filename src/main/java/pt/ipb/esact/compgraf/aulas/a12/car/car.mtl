@@ -1,0 +1,55 @@
+# Blender MTL File: 'car.blend'
+# Material Count: 5
+
+newmtl CarTexture_Car_Blue_Body.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Car_Blue_Body.png
+
+newmtl RearWindow_Car_Blue_RearWindow.p
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.201253 0.201253 0.201253
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Car_Blue_Body.png
+map_d Car_Blue_RearWindow.png
+
+newmtl WhiteStripe_WhiteStripe.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Car_Blue_Body.png
+
+newmtl WindShield_Car_Blue_WindShield.p
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Car_Blue_Body.png
+map_d Car_Blue_WindShield.png
+
+newmtl Windows_Car_Blue_SideWindow.p
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Car_Blue_Body.png
+map_d Car_Blue_SideWindow.png
