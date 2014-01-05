@@ -3,19 +3,16 @@ package pt.ipb.esact.compgraf.aulas.a06;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 import pt.ipb.esact.compgraf.tools.math.Vector;
 import pt.ipb.esact.compgraf.tools.math.VectorList;
 
 import com.jogamp.opengl.util.texture.spi.PNGImage;
 
-public class A06_Pyramid extends SWTGLWindow {
+public class A06_Pyramid extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
@@ -25,8 +22,8 @@ public class A06_Pyramid extends SWTGLWindow {
 	private Vector cFrontRight;
 	private Vector cFrontLeft;
 	
-	public A06_Pyramid(Composite parent) {
-		super(parent, true);
+	public A06_Pyramid() {
+		super("A06 Pyramid", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -218,8 +215,7 @@ public class A06_Pyramid extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Pyramid");
-		display.start(new A06_Pyramid(display.getShell()));
+		new A06_Pyramid();
 	}
 
 }

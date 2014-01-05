@@ -1,19 +1,16 @@
 package pt.ipb.esact.compgraf.aulas.a07;
 
+import java.awt.event.KeyEvent;
 import java.nio.IntBuffer;
-
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
 import pt.ipb.esact.compgraf.tools.math.Vector;
 
-public class A07_SecondaryColor extends SWTGLWindow {
+public class A07_SecondaryColor extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -20.0f, 0.0f, 0.0f, 1.0f };
@@ -31,8 +28,8 @@ public class A07_SecondaryColor extends SWTGLWindow {
 	private float moonTrl = 0.0f;
 	private float moonTrlSpeed = 0.005f * GL_PI;
 
-	public A07_SecondaryColor(Composite parent) {
-		super(parent, true);
+	public A07_SecondaryColor() {
+		super("A06 Secondary Color", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -139,7 +136,7 @@ public class A07_SecondaryColor extends SWTGLWindow {
 	
 	@Override
 	protected void onKeyUp(KeyEvent e) {
-		switch(e.keyCode) {
+		switch(e.getKeyChar()) {
 			case 's':
 				separateColor = ! separateColor;
 				glLightModeli(
@@ -240,8 +237,7 @@ public class A07_SecondaryColor extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Secondary Color");
-		display.start(new A07_SecondaryColor(display.getShell()));
+		new A07_SecondaryColor();
 	}
 
 }

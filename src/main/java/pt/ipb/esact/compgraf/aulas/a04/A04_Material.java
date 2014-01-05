@@ -1,14 +1,11 @@
 package pt.ipb.esact.compgraf.aulas.a04;
 
-import org.eclipse.swt.widgets.Composite;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+public class A04_Material extends DefaultGLWindow {
 
-public class A04_Material extends SWTGLWindow {
-
-	public A04_Material(Composite parent) {
-		super(parent, true);
+	public A04_Material() {
+		super("A04 Material", true);
 	}
 
 	@Override
@@ -107,8 +104,7 @@ public class A04_Material extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A04 Material");
-		display.start(new A04_Material(display.getShell()));
+		new A04_Material();
 	}
 
 }

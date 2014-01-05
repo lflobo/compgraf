@@ -16,7 +16,7 @@ import javax.media.opengl.GLException;
 
 import pt.ipb.esact.compgraf.tools.GlTools;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 import pt.ipb.esact.compgraf.tools.math.Vector;
@@ -71,7 +71,7 @@ public class ObjLoader implements ReleaseListener {
 	
 	private Vector bbMin = new Vector();
 
-	private SWTGLWindow reference;
+	private DefaultGLWindow reference;
 	
 	private static final Pattern MAT_LINE_PATTERN = Pattern.compile("([^ ]*)[ ]+(.*)");
 	
@@ -84,7 +84,7 @@ public class ObjLoader implements ReleaseListener {
 	private static final Pattern rs = Pattern.compile("^s[ ]+(off|\\d+)$");
 	private static final Pattern rusemtl = Pattern.compile("^usemtl[ ]+(.+)$");
 	
-	public ObjLoader(SWTGLWindow reference) {
+	public ObjLoader(DefaultGLWindow reference) {
 		this.reference = reference;
 		reference.addReleaseListener(this);
 	}

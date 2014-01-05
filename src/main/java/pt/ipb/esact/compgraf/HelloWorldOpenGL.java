@@ -2,18 +2,15 @@ package pt.ipb.esact.compgraf;
 
 import javax.media.opengl.GL;
 
-import org.eclipse.swt.widgets.Composite;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
-
-public class HelloWorldOpenGL extends SWTGLWindow {
+public class HelloWorldOpenGL extends DefaultGLWindow {
 
 	// Variável que irá armazenar o valor do ângulo de rotação
 	private float angle = 0.0f;
 
-	public HelloWorldOpenGL(Composite parent) {
-		super(parent, true);
+	public HelloWorldOpenGL() {
+		super("Modelo OpenGL", true);
 	}
 	
 	@Override
@@ -107,8 +104,7 @@ public class HelloWorldOpenGL extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("Modelo OpenGL");
-		display.start(new HelloWorldOpenGL(display.getShell()));
+		new HelloWorldOpenGL();
 	}
 
 }

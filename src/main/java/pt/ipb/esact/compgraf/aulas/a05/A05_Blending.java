@@ -1,17 +1,15 @@
 package pt.ipb.esact.compgraf.aulas.a05;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
+import java.awt.event.KeyEvent;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A05_Blending extends SWTGLWindow {
+public class A05_Blending extends DefaultGLWindow {
 
-	public A05_Blending(Composite parent) {
-		super(parent, true);
+	public A05_Blending() {
+		super("A05 Blending", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -176,7 +174,7 @@ public class A05_Blending extends SWTGLWindow {
 	@Override
 	protected void onKeyUp(KeyEvent e) {
 		// Ao premir 't' alternar a transparencia
-		if(e.keyCode == 't')
+		if(e.getKeyChar() == 't')
 			transOn = ! transOn;
 	}
 
@@ -192,8 +190,7 @@ public class A05_Blending extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A05 Blending");
-		display.start(new A05_Blending(display.getShell()));
+		new A05_Blending();
 	}
 
 }

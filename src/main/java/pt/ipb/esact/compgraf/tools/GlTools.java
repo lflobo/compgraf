@@ -2,7 +2,6 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -13,10 +12,6 @@ import javax.media.opengl.GLContext;
 import javax.media.opengl.GLException;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.gl2.GLUgl2;
-
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
@@ -130,15 +125,7 @@ public class GlTools {
 	}
 
 	public static void exit(String error) {
-		Display display = Display.getCurrent();
-		if(display != null) {
-			MessageBox box = new MessageBox(new Shell(display));
-			box.setText("Error");
-			box.setMessage(error);
-			box.open();
-		} else {
-			System.out.println(error);
-		}
+		System.out.println(error);
 		System.exit(0);		
 	}
 

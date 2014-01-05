@@ -1,46 +1,41 @@
 package pt.ipb.esact.compgraf.tools;
 
+import java.awt.BorderLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLContext;
-import javax.media.opengl.GLDrawableFactory;
+import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseWheelListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.opengl.GLCanvas;
-import org.eclipse.swt.opengl.GLData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JFrame;
 
 import pt.ipb.esact.compgraf.tools.math.Vector;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.jogamp.opengl.math.Quaternion;
+import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLWindow {
+public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 	
-	private Composite composite;
-
 	private GLCanvas canvas;
 
 	private GLContext context;
@@ -53,8 +48,6 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	
 	private Set<Integer> keycodes = new HashSet<>();
 
-	private Display display;
-	
 	private GLDemo demo;
 	
 	private boolean mouseDown = false;
@@ -68,119 +61,150 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	private int zoom = 0;
 
 	List<ReleaseListener> releaseListeners = Lists.newArrayList();
+
+	private JFrame frame;
 	
-	public SWTGLWindow(Composite parent, boolean continuous) {
-		Preconditions.checkNotNull(parent, "The parent cannot be null");
-		display = parent.getDisplay();
+	private final GLEventListener eventProxy = new GLEventListener() {
+		
+		@Override
+		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+			context = drawable.getContext();
+			setCurrent(drawable.getGL().getGL2());
+			resize(width, height);
+		}
+		
+		@Override
+		public void init(GLAutoDrawable drawable) {
+			context = drawable.getContext();
+			setCurrent(drawable.getGL().getGL2());
+			DefaultGLWindow.this.init();
+			currentTime = System.nanoTime();
+		}
+		
+		@Override
+		public void dispose(GLAutoDrawable drawable) {
+			context = drawable.getContext();
+			setCurrent(drawable.getGL().getGL2());
+			DefaultGLWindow.this.dispose();
+		}
+		
+		@Override
+		public void display(GLAutoDrawable drawable) {
+			context = drawable.getContext();
+			setCurrent(drawable.getGL().getGL2());
+			render();
+		}
+	};
+	
+	
+
+	private Animator animator;
+
+	private KeyListener keyProxy = new KeyAdapter() {
+		
+		@Override
+		public void keyReleased(KeyEvent e) {
+			keycodes.remove(e.getKeyCode());
+			if((e.getModifiers() & KeyEvent.CTRL_MASK) == 0) // ctrl is not pressed
+				keycodes.remove(KeyEvent.CTRL_MASK);
+			if((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0) // shift is not pressed
+				keycodes.remove(KeyEvent.SHIFT_MASK);
+			if((e.getModifiers() & KeyEvent.ALT_MASK) == 0) // alt is not pressed
+				keycodes.remove(KeyEvent.ALT_MASK);
+			
+			context.makeCurrent();
+			onKeyUp(e);
+			context.release();
+		}
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if(!keycodes.contains(e.getKeyCode()))
+				keycodes.add(e.getKeyCode());
+			if((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) // ctrl is not pressed
+				if(!keycodes.contains(KeyEvent.CTRL_MASK))
+					keycodes.add(KeyEvent.CTRL_MASK);
+			if((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) // shift is not pressed
+				if(!keycodes.contains(KeyEvent.SHIFT_MASK))
+					keycodes.add(KeyEvent.SHIFT_MASK);
+			if((e.getModifiers() & KeyEvent.ALT_MASK) != 0) // alt is not pressed
+				if(!keycodes.contains(KeyEvent.ALT_MASK))
+					keycodes.add(KeyEvent.ALT_MASK);
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				exit();
+			
+			context.makeCurrent();
+			onKeyDown(e);
+			context.release();
+		}
+	};
+
+	private MouseListener mouseProxy = new MouseAdapter() {
+		public void mousePressed(MouseEvent e) {
+			mouseDown = true;
+			lastMouseLocation = MouseInfo.getPointerInfo().getLocation();
+			onMouseDown(e);
+		};
+		
+		public void mouseReleased(MouseEvent e) {
+			mouseDown = false;
+			onMouseUp(e);
+		};
+		
+	};
+
+	private MouseWheelListener scrollProxy = new MouseWheelListener() {
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			zoom = e.getWheelRotation();
+		}
+	};
+	
+	public DefaultGLWindow(String caption, boolean continuous) {
+		frame = new JFrame(caption);
+		
+
+		GLProfile profile = GLProfile.getMaxFixedFunc(true);
+		GLCapabilities capabilities = new GLCapabilities(profile);
+
+		capabilities.setDepthBits(16);
+		capabilities.setDoubleBuffered(true);
+		capabilities.setNumSamples(2);
+
+		canvas = new GLCanvas(capabilities);
+		
+		canvas.addGLEventListener(eventProxy);
+		canvas.addKeyListener(keyProxy);
+		canvas.addMouseListener(mouseProxy);
+		canvas.addMouseWheelListener(scrollProxy);
+		
+		frame.setLayout(new BorderLayout());
+		canvas.setSize(800, 600);
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.pack();
+		
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+		});
+		
+		animator = new Animator();
+		animator.setRunAsFastAsPossible(true);
+		animator.add(canvas);
+		
 
 		// Setup initial camera
 		Cameras.addDefaultCamera();
 		
-		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new FillLayout());
-
-		GLProfile profile = GLProfile.getDefault();
-		GLData glData = new GLData();
-		glData.depthSize = 16;
-		glData.doubleBuffer = true;
-		glData.samples = 2;
-		canvas = new GLCanvas(composite, SWT.NO_BACKGROUND, glData);
-		setCurrent();
-
-		context = GLDrawableFactory.getFactory(profile).createExternalGLContext();
-		
-		canvas.addListener(SWT.Resize, new Listener() {
-			
-			private boolean init = true;
-			
-			@Override
-			public void handleEvent(Event e) {
-				if(init) {
-					setCurrent();
-					context.makeCurrent();
-					setCurrent(context.getGL().getGL2());
-					init();
-					context.release();
-					currentTime = System.nanoTime();
-					
-					internalInit();
-					
-					init = false;
-				}
-				
-				Rectangle rectangle = canvas.getClientArea();
-				setCurrent();
-				context.makeCurrent();
-				setCurrent(context.getGL().getGL2());
-				resize(rectangle.width, rectangle.height);
-				context.release();
-			}
-		});
-		
-		canvas.addKeyListener(new KeyListener() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				keycodes.remove(e.keyCode);
-				onKeyUp(e);
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!keycodes.contains(e.keyCode))
-					onKeyDown(e);
-				if(e.keyCode == SWT.ESC)
-					display.getActiveShell().close();
-				keycodes.add(e.keyCode);
-			}
-		});
-		
-		canvas.addMouseWheelListener(new MouseWheelListener() {
-			@Override
-			public void mouseScrolled(MouseEvent e) {
-				zoom = e.count;
-			}
-		});
-		
-		canvas.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				mouseDown = false;
-				onMouseUp(e);
-			}
-			
-			@Override
-			public void mouseDown(MouseEvent e) {
-				mouseDown = true;
-				lastMouseLocation = MouseInfo.getPointerInfo().getLocation();
-				onMouseDown(e);
-			}
-			
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-
-			}
-		});
-		
-		if(continuous)
-			display.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					if(!canvas.isDisposed()) {
-						render();
-						display.asyncExec(this);
-					}
-				}
-			});
-		else
-			canvas.addPaintListener(new PaintListener() {
-				@Override
-				public void paintControl(PaintEvent e) {
-					render();
-				}
-			});
-		
 		// Tools
 		demo = new GLDemo();
+		
+		frame.setVisible(true);
+		canvas.requestFocus();
+		animator.start();
+
 		
 	}
 	
@@ -219,11 +243,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	}
 	
 	public void exit(String error) {
-		MessageBox box = new MessageBox(new Shell(display));
-		box.setText("Error");
-		box.setMessage(error);
-		box.open();
-		System.exit(0);
+		GlTools.exit(error);
 	}
 	
 	protected void onMouseDown(MouseEvent e) {
@@ -324,8 +344,8 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	public void renderText(String text, int bitmap, int left, int top) {
 		Iterable<String> lines = Splitter.on('\n').split(text);
 		
-		int height = canvas.getSize().y;
-		int width = canvas.getSize().x;
+		int height = canvas.getSize().height;
+		int width = canvas.getSize().width;
 		
 		// Set up 2D mode
 		glMatrixMode(GL_PROJECTION);
@@ -363,16 +383,13 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 	@Override
 	public void dispose() {
-		canvas.dispose();
 		release();
 		for(ReleaseListener l : releaseListeners)
 			l.release(getCurrent());
 	}
 	
 	protected void render() {
-		Rectangle rectangle = canvas.getClientArea();
-		setCurrent();
-		context.makeCurrent();
+		Rectangle rectangle = canvas.getBounds();
 		setCurrent(context.getGL().getGL2());
 
 		currentTime = System.currentTimeMillis();
@@ -397,12 +414,8 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 
 		render(rectangle.width, rectangle.height);
 
-		if(mousePan && mouseDown) {
+		if(mousePan && mouseDown)
 			lastMouseLocation = location;
-		}
-		
-		canvas.swapBuffers();
-		context.release();		
 	}
 
 	private void zoomScene(int zoom) {
@@ -427,13 +440,13 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 		Vector left = new Vector(new Quaternion(upArray, 90.0f).mult(forwardArray));
 		left.y = 0.0f;
 
-		if(isKeyPressed(SWT.SHIFT)) {
+		if(isKeyPressed(KeyEvent.SHIFT_MASK)) {
 			left.scale(hrot);
 			camera.eye = camera.eye.add(left);
 			camera.at = camera.at.add(left);
 			
 			forward.scale(vrot);
-			if(!isKeyPressed(SWT.CTRL)) {
+			if(!isKeyPressed(KeyEvent.CTRL_MASK)) {
 				forward.y = 0.0f;
 			} else {
 				forward.x = 0.0f;
@@ -458,15 +471,7 @@ public abstract class SWTGLWindow extends GLUTWrapper implements GLListener, GLW
 	public GLCanvas getCanvas() {
 		return canvas;
 	}
-	
-	public void addListener(int eventType, Listener listener) {
-		canvas.addListener(eventType, listener);
-	}
 
-	private void setCurrent() {
-		canvas.setCurrent();
-	}
-	
 	/**
 	 * @return O tempo que passou desde que a última frame foi desenhada
 	 */

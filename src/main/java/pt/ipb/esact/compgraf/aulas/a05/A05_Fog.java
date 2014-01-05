@@ -1,22 +1,18 @@
 package pt.ipb.esact.compgraf.aulas.a05;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A05_Fog extends SWTGLWindow {
+public class A05_Fog extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { 0.0f, 20.0f, 0.0f, 1.0f };
 	
 	float[] positionLitght0Inverted = { 0.0f, -20.0f, 0.0f, 1.0f };
 	
-	public A05_Fog(Composite parent) {
-		super(parent, true);
+	public A05_Fog() {
+		super("A05 Fog", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -168,9 +164,6 @@ public class A05_Fog extends SWTGLWindow {
 		// Libertar recursos
 	}
 	
-	// Variavel que indica se a transparencia esta ativa
-	private boolean transOn = false;
-	
 	@Override
 	public void render(int width, int height) {
 		// Limpar os buffers de cor e profundidade
@@ -215,13 +208,6 @@ public class A05_Fog extends SWTGLWindow {
 	}
 	
 	@Override
-	protected void onKeyUp(KeyEvent e) {
-		// Ao premir 't' alternar a transparencia
-		if(e.keyCode == 't')
-			transOn = ! transOn;
-	}
-
-	@Override
 	public void resize(int width, int height) {
 		float near = 0.001f; // muito perto do olho
 		float far = 130.0f; // tem que ter em conta onde está o observador
@@ -232,8 +218,7 @@ public class A05_Fog extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A05 Fog");
-		display.start(new A05_Fog(display.getShell()));
+		new A05_Fog();
 	}
 
 }

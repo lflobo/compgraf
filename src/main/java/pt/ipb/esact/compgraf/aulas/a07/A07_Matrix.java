@@ -1,24 +1,20 @@
 package pt.ipb.esact.compgraf.aulas.a07;
 
+import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Color;
 
-public class A07_Matrix extends SWTGLWindow {
+public class A07_Matrix extends DefaultGLWindow {
 	
 	// Current Matrix
 	private FloatBuffer mv = FloatBuffer.allocate(16);
 
-	public A07_Matrix(Composite parent) {
-		super(parent, true);
+	public A07_Matrix() {
+		super("A07 Matrix", true);
 		
 		Camera camera = new Camera();
 		camera.eye.x = 0.0f;
@@ -40,17 +36,18 @@ public class A07_Matrix extends SWTGLWindow {
 
 	@Override
 	protected void onKeyUp(KeyEvent e) {
-		float signal = (e.stateMask & SWT.SHIFT) != 0 ? -0.25f : 0.25f;
-		
+		float signal = e.isShiftDown() ? -0.25f : 0.25f;
+
 		// Obter a matriz atual
 		readMatrix();
 		
-		switch(e.keyCode) {
+		// lower case por causa do SHIFT
+		switch(Character.toLowerCase(e.getKeyChar())) {
 			// Eixo X
-			case '1': incrementMatrix(0, signal); break;
-			case '2': incrementMatrix(4, signal);  break;
-			case '3': incrementMatrix(8, signal);  break;
-			case '4': incrementMatrix(12, signal);  break;
+			case '1': case '!': incrementMatrix(0, signal); break;
+			case '2': case '"': incrementMatrix(4, signal);  break;
+			case '3': case '#': incrementMatrix(8, signal);  break;
+			case '4': case '$': incrementMatrix(12, signal);  break;
 
 			// Eixo Y
 			case 'q': incrementMatrix(1, signal); break;
@@ -78,7 +75,6 @@ public class A07_Matrix extends SWTGLWindow {
 
 	private void incrementMatrix(int index, float value) {
 		mv.put(index, mv.get(index) + value);
-		glLoadMatrixf(mv);
 	}
 
 	@Override
@@ -89,6 +85,9 @@ public class A07_Matrix extends SWTGLWindow {
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Aplicar a matriz alterada
+		glLoadMatrixf(mv);
 
 		Color.BLUE.set();
 		glutWireTeapot(2.0);
@@ -135,8 +134,7 @@ public class A07_Matrix extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Matrix");
-		display.start(new A07_Matrix(display.getShell()));
+		new A07_Matrix();
 	}
 
 }

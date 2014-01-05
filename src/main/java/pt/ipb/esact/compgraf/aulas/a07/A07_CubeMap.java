@@ -2,21 +2,17 @@ package pt.ipb.esact.compgraf.aulas.a07;
 
 import java.nio.IntBuffer;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A07_CubeMap extends SWTGLWindow {
+public class A07_CubeMap extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -40.0f, 10.0f, -100.0f, 1.0f };
 
-	public A07_CubeMap(Composite parent) {
-		super(parent, true);
+	public A07_CubeMap() {
+		super("A06 Cube Map", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -133,22 +129,6 @@ public class A07_CubeMap extends SWTGLWindow {
 		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 	}
 
-	// Flag que dita se o separate color está enabled
-	private boolean separateColor = true;
-	
-	@Override
-	protected void onKeyUp(KeyEvent e) {
-		switch(e.keyCode) {
-			case 's':
-				separateColor = ! separateColor;
-				glLightModeli(
-					GL_LIGHT_MODEL_COLOR_CONTROL,
-					separateColor ? GL_SEPARATE_SPECULAR_COLOR : GL_SINGLE_COLOR
-				);
-			break;
-		}
-	}
-	
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
@@ -254,8 +234,7 @@ public class A07_CubeMap extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Cube Map");
-		display.start(new A07_CubeMap(display.getShell()));
+		new A07_CubeMap();
 	}
 
 }

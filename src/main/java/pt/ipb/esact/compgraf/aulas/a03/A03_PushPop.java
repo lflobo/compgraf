@@ -1,18 +1,15 @@
 package pt.ipb.esact.compgraf.aulas.a03;
 
-import org.eclipse.swt.widgets.Composite;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
-
-public class A03_PushPop extends SWTGLWindow {
+public class A03_PushPop extends DefaultGLWindow {
 
 	// Variáveies que armazenam os valores das rotações dos planetas
 	float rotEarth = 0.0f;
 	float rotMoon = 0.0f;
 
-	public A03_PushPop(Composite parent) {
-		super(parent, true);
+	public A03_PushPop() {
+		super("A03 Push Pop", true);
 	}
 	
 	@Override
@@ -125,8 +122,7 @@ public class A03_PushPop extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("Modelo OpenGL");
-		display.start(new A03_PushPop(display.getShell()));
+		new A03_PushPop();
 	}
 
 }

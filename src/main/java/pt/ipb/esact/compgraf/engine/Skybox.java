@@ -7,7 +7,7 @@ import javax.media.opengl.GL2;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Vector;
 
 public class Skybox implements ReleaseListener {
@@ -19,14 +19,14 @@ public class Skybox implements ReleaseListener {
 	private int TEX_NEGATIVE_Y;
 	private int TEX_NEGATIVE_Z;
 	
-	private SWTGLWindow gl;
+	private DefaultGLWindow gl;
 	private IntBuffer textures = IntBuffer.allocate(6);
 	
 	private int LIST;
 	
 	private float scale = 100.0f;
 
-	public Skybox(SWTGLWindow window) {
+	public Skybox(DefaultGLWindow window) {
 		this.gl = window;
 		window.addReleaseListener(this);
 	}

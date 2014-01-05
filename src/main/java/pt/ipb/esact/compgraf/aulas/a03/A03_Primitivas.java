@@ -1,12 +1,9 @@
 package pt.ipb.esact.compgraf.aulas.a03;
 
+import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 /**
  * Esta classe demonstra as primitivas mais importantes e como podemos usá-las
@@ -15,10 +12,10 @@ import pt.ipb.esact.compgraf.tools.SWTGLWindow;
  * 
  * @author Luis Lobo <lflobo@gmail.com>
  */
-public class A03_Primitivas extends SWTGLWindow {
+public class A03_Primitivas extends DefaultGLWindow {
 
 	// Armazena a última tecla premida (por omissão = 1)
-	int key = '1';
+	char key = '1';
 	
 	
 	/*
@@ -287,8 +284,8 @@ public class A03_Primitivas extends SWTGLWindow {
 	 * Eventos/Callbacks do 'OpenGL'
 	 ******************************************************************************************/
 	
-	public A03_Primitivas(Composite parent) {
-		super(parent, true);
+	public A03_Primitivas() {
+		super("Aula 03 - Primitivas e Buffers", true);
 	}
 	
 	@Override
@@ -334,8 +331,8 @@ public class A03_Primitivas extends SWTGLWindow {
 		 */
 		
 		// Ignorar todas as teclas que não interessam
-		if(e.keyCode >= '1' && e.keyCode <= '7')
-			key = e.keyCode;
+		if(e.getKeyChar() >= '1' && e.getKeyChar() <= '7')
+			key = e.getKeyChar();
 	}
 
 	@Override
@@ -372,8 +369,7 @@ public class A03_Primitivas extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("Aula 03 - Primitivas e Buffers");
-		display.start(new A03_Primitivas(display.getShell()));
+		new A03_Primitivas();
 	}
 
 }

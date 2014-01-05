@@ -1,16 +1,12 @@
 package pt.ipb.esact.compgraf.aulas.a12;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A12_Math1 extends SWTGLWindow {
+public class A12_Math1 extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader car;
@@ -19,8 +15,8 @@ public class A12_Math1 extends SWTGLWindow {
 	// skybox
 	private Skybox skybox;
 
-	public A12_Math1(Composite parent) {
-		super(parent, true);
+	public A12_Math1() {
+		super("A12 Math1", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -55,7 +51,7 @@ public class A12_Math1 extends SWTGLWindow {
 
 		// Carregar os ficheiros .obj/.mtl
 		car = new ObjLoader(this);
-		car.load("car/car3.obj", "car/car3.mtl");
+		car.load("car/car.obj", "car/car.mtl");
 		
 		floor = new ObjLoader(this);
 		floor.load("track/track.obj", "track/track.mtl");
@@ -100,12 +96,6 @@ public class A12_Math1 extends SWTGLWindow {
 	}
 	
 	@Override
-	protected void onKeyUp(KeyEvent e) {
-		switch (e.keyCode) {
-		}
-	}
-
-	@Override
 	public void release() {
 		// Libertar as texturas (GPU)z
 	}
@@ -142,8 +132,7 @@ public class A12_Math1 extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A12 Math1");
-		display.start(new A12_Math1(display.getShell()));
+		new A12_Math1();
 	}
 
 }

@@ -3,15 +3,11 @@ package pt.ipb.esact.compgraf.aulas.a08;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A08_Bezier3D extends SWTGLWindow {
+public class A08_Bezier3D extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
@@ -62,8 +58,8 @@ public class A08_Bezier3D extends SWTGLWindow {
 	private static final float V_MIN = 0.0f;
 	private static final float V_MAX = 100.0f;
 	
-	public A08_Bezier3D(Composite parent) {
-		super(parent, true);
+	public A08_Bezier3D() {
+		super("A08 Bezier 3D", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -159,13 +155,6 @@ public class A08_Bezier3D extends SWTGLWindow {
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
-	}
-
-
-	@Override
-	protected void onKeyUp(KeyEvent e) {
-		switch (e.keyCode) {
-		}
 	}
 
 	@Override
@@ -277,8 +266,7 @@ public class A08_Bezier3D extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A08 Bezier 3D");
-		display.start(new A08_Bezier3D(display.getShell()));
+		new A08_Bezier3D();
 	}
 
 }

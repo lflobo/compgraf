@@ -2,17 +2,13 @@ package pt.ipb.esact.compgraf.aulas.a11;
 
 import java.nio.IntBuffer;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A11_ResolucaoExercicio extends SWTGLWindow {
+public class A11_ResolucaoExercicio extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
@@ -22,8 +18,8 @@ public class A11_ResolucaoExercicio extends SWTGLWindow {
 	private Skybox skybox;
 	private int sphereDisplayList;
 
-	public A11_ResolucaoExercicio(Composite parent) {
-		super(parent, true);
+	public A11_ResolucaoExercicio() {
+		super("A11 Resolucao Exercicio", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -174,13 +170,6 @@ public class A11_ResolucaoExercicio extends SWTGLWindow {
 		glFogf(GL_FOG_DENSITY, 0.1f);
 	}
 
-
-	@Override
-	protected void onKeyUp(KeyEvent e) {
-		switch (e.keyCode) {
-		}
-	}
-
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)z
@@ -253,8 +242,7 @@ public class A11_ResolucaoExercicio extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A09 Obj");
-		display.start(new A11_ResolucaoExercicio(display.getShell()));
+		new A11_ResolucaoExercicio();
 	}
 
 }

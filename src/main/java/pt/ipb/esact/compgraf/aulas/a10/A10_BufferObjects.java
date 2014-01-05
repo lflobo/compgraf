@@ -3,22 +3,19 @@ package pt.ipb.esact.compgraf.aulas.a10;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.common.nio.Buffers;
 
-public class A10_BufferObjects extends SWTGLWindow {
+public class A10_BufferObjects extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { 0.0f, 3.0f, 7.0f, 1.0f };
 	
-	public A10_BufferObjects(Composite parent) {
-		super(parent, true);
+	public A10_BufferObjects() {
+		super("A10 Buffer Objects", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -250,8 +247,7 @@ public class A10_BufferObjects extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A10 Buffer Objects");
-		display.start(new A10_BufferObjects(display.getShell()));
+		new A10_BufferObjects();
 	}
 
 }

@@ -1,26 +1,23 @@
 package pt.ipb.esact.compgraf.aulas.a06;
 
+import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Composite;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.GLDisplay;
-import pt.ipb.esact.compgraf.tools.SWTGLWindow;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.spi.PNGImage;
 
-public class A06_Tunnel extends SWTGLWindow {
+public class A06_Tunnel extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
 	
-	public A06_Tunnel(Composite parent) {
-		super(parent, true);
+	public A06_Tunnel() {
+		super("A06 Tunnel", true);
 		
 		setMousePan(true);
 		setMouseZoom(true);
@@ -167,7 +164,7 @@ public class A06_Tunnel extends SWTGLWindow {
 	@Override
 	protected void onKeyUp(KeyEvent e) {
 		
-		switch (e.keyCode) {
+		switch (e.getKeyChar()) {
 			case '1':
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				currentFiltering = "GL_NEAREST";
@@ -271,8 +268,7 @@ public class A06_Tunnel extends SWTGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		GLDisplay display = new GLDisplay("A06 Tunnel");
-		display.start(new A06_Tunnel(display.getShell()));
+		new A06_Tunnel();
 	}
 
 }
