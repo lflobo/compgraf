@@ -137,13 +137,7 @@ public class A12_Shaders2 extends DefaultGLWindow {
 		
 		if(useShaders)
 			diffuseShader.bind();
-//		floor.render();
-		
-		glPushMatrix();
-			glTranslatef(0.0f, -15.0f, 0.0f);
-			glutSolidCube(30.0f);
-		glPopMatrix();
-		
+		floor.render();
 		if(useShaders)
 			diffuseShader.unbind();
 
