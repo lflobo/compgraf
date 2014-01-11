@@ -3,11 +3,20 @@ package pt.ipb.esact.compgraf.tools;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+
 public class Shader {
 
+	private static final Logger logger = LoggerFactory.getLogger(Shader.class);
+	
 	int program = 0;
 
 	private int diffuseUniform;
@@ -60,6 +69,9 @@ public class Shader {
 				lines.append(line).append("\n");
 			gl.glShaderSource(shader, 1, new String[] { lines.toString() }, (int[]) null, 0);
 			gl.glCompileShader(shader);
+			String info = getInfo(gl, shader);
+			if(!Strings.isNullOrEmpty(info))
+				logger.error("{}:\n{}", path, info);
 		} catch (IOException e) {
 			GlTools.exit(e.getMessage());
 		}
@@ -67,7 +79,16 @@ public class Shader {
 		return shader;
 	}
 
-	public void use() {
+	private String getInfo(GL2 gl, int shader) {
+		IntBuffer length = IntBuffer.allocate(1);
+		gl.glGetShaderiv(shader, GL2.GL_INFO_LOG_LENGTH, length);
+		ByteBuffer infolog =  ByteBuffer.allocate(length.get(0));
+		gl.glGetShaderInfoLog(shader, 200, length, infolog);
+		
+		return new String(infolog.array());
+	}
+
+	public void bind() {
 		GL2 gl = GlTools.gl();
 		
 		gl.glUniform1i(diffuseUniform, DIFFUSE_MAP_INDEX - GL2.GL_TEXTURE0);
@@ -75,6 +96,11 @@ public class Shader {
 		gl.glUniform1i(specularUniform, SPECULAR_MAP_INDEX - GL2.GL_TEXTURE0);
 		
 		gl.glUseProgram(program);
+	}
+	
+	public void unbind() {
+		GL2 gl = GlTools.gl();
+		gl.glUseProgram(0);
 	}
 	
 }

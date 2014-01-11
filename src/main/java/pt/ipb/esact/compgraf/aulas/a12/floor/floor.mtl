@@ -1,0 +1,13 @@
+# Blender MTL File: 'floor-piece.blend'
+# Material Count: 1
+newmtl M_FloorPiece_concrete.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.467027 0.467027 0.467027
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /Volumes/Data/Users/luislobo/Documents/Aulas/2012-2013/DJD/compgraf/models/floor-piece/concrete.jpg
+
+

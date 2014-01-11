@@ -477,7 +477,7 @@ public class ObjLoader implements ReleaseListener {
 	public void render(boolean mesh) {
 		GL2 gl = GlTools.gl();
 		
-		gl.glPushAttrib(GL2.GL_LIGHTING_BIT | GL2.GL_ENABLE_BIT | GL2.GL_CURRENT_BIT);
+		gl.glPushAttrib(GL2.GL_LIGHTING_BIT | GL2.GL_ENABLE_BIT | GL2.GL_CURRENT_BIT | GL2.GL_TEXTURE_BIT);
 
 			gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 			gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);

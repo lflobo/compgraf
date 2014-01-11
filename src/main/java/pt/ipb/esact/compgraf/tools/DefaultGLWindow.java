@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.media.opengl.GLAutoDrawable;
@@ -30,6 +31,7 @@ import pt.ipb.esact.compgraf.tools.math.Vector;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
@@ -47,6 +49,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	private long lastTime = System.currentTimeMillis();
 	
 	private Set<Integer> keycodes = new HashSet<>();
+	private Map<String, Integer> keymap = Maps.newHashMap();
 
 	private GLDemo demo;
 	
@@ -100,18 +103,20 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 
 	private Animator animator;
 
+	protected boolean controlDown;
+
+	protected boolean shiftDown;
+
+	protected boolean altDown;
+
 	private KeyListener keyProxy = new KeyAdapter() {
 		
 		@Override
 		public void keyReleased(KeyEvent e) {
 			keycodes.remove(e.getKeyCode());
-			if((e.getModifiers() & KeyEvent.CTRL_MASK) == 0) // ctrl is not pressed
-				keycodes.remove(KeyEvent.CTRL_MASK);
-			if((e.getModifiers() & KeyEvent.SHIFT_MASK) == 0) // shift is not pressed
-				keycodes.remove(KeyEvent.SHIFT_MASK);
-			if((e.getModifiers() & KeyEvent.ALT_MASK) == 0) // alt is not pressed
-				keycodes.remove(KeyEvent.ALT_MASK);
-			
+			altDown = e.isAltDown();
+			controlDown = e.isControlDown();
+			shiftDown = e.isShiftDown();
 			context.makeCurrent();
 			onKeyUp(e);
 			context.release();
@@ -121,15 +126,9 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		public void keyPressed(KeyEvent e) {
 			if(!keycodes.contains(e.getKeyCode()))
 				keycodes.add(e.getKeyCode());
-			if((e.getModifiers() & KeyEvent.CTRL_MASK) != 0) // ctrl is not pressed
-				if(!keycodes.contains(KeyEvent.CTRL_MASK))
-					keycodes.add(KeyEvent.CTRL_MASK);
-			if((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) // shift is not pressed
-				if(!keycodes.contains(KeyEvent.SHIFT_MASK))
-					keycodes.add(KeyEvent.SHIFT_MASK);
-			if((e.getModifiers() & KeyEvent.ALT_MASK) != 0) // alt is not pressed
-				if(!keycodes.contains(KeyEvent.ALT_MASK))
-					keycodes.add(KeyEvent.ALT_MASK);
+			altDown = e.isAltDown();
+			controlDown = e.isControlDown();
+			shiftDown = e.isShiftDown();
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				exit();
 			
@@ -143,11 +142,17 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		public void mousePressed(MouseEvent e) {
 			mouseDown = true;
 			lastMouseLocation = MouseInfo.getPointerInfo().getLocation();
+			altDown = e.isAltDown();
+			controlDown = e.isControlDown();
+			shiftDown = e.isShiftDown();
 			onMouseDown(e);
 		};
 		
 		public void mouseReleased(MouseEvent e) {
 			mouseDown = false;
+			altDown = e.isAltDown();
+			controlDown = e.isControlDown();
+			shiftDown = e.isShiftDown();
 			onMouseUp(e);
 		};
 		
@@ -163,7 +168,6 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	public DefaultGLWindow(String caption, boolean continuous) {
 		frame = new JFrame(caption);
 		
-
 		GLProfile profile = GLProfile.getMaxFixedFunc(true);
 		GLCapabilities capabilities = new GLCapabilities(profile);
 
@@ -205,9 +209,16 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		canvas.requestFocus();
 		animator.start();
 
-		
+		fillKeyMap();
 	}
 	
+	private void fillKeyMap() {
+		keymap.put("left", KeyEvent.VK_LEFT);
+		keymap.put("right", KeyEvent.VK_RIGHT);
+		keymap.put("up", KeyEvent.VK_UP);
+		keymap.put("down", KeyEvent.VK_DOWN);
+	}
+
 	public void addReleaseListener(ReleaseListener listener) {
 		releaseListeners.add(listener);
 	}
@@ -440,13 +451,13 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		Vector left = new Vector(new Quaternion(upArray, 90.0f).mult(forwardArray));
 		left.y = 0.0f;
 
-		if(isKeyPressed(KeyEvent.SHIFT_MASK)) {
+		if(isShiftPressed()) {
 			left.scale(hrot);
 			camera.eye = camera.eye.add(left);
 			camera.at = camera.at.add(left);
 			
 			forward.scale(vrot);
-			if(!isKeyPressed(KeyEvent.CTRL_MASK)) {
+			if(!isCtrlPressed()) {
 				forward.y = 0.0f;
 			} else {
 				forward.x = 0.0f;
@@ -468,6 +479,18 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		setupCamera();
 	}
 
+	public boolean isAltPressed() {
+		return altDown;
+	}
+
+	public boolean isShiftPressed() {
+		return shiftDown;
+	}
+
+	public boolean isCtrlPressed() {
+		return controlDown;
+	}
+
 	public GLCanvas getCanvas() {
 		return canvas;
 	}
@@ -487,6 +510,20 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	 */
 	public boolean isKeyPressed(int keyCode) {
 		return keycodes.contains(keyCode);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(KeyEvent.VK_A);
+	}
+	
+	public boolean isKeyPressed(char c) {
+		return keycodes.contains((int) Character.toUpperCase(c));
+	}
+	
+	public boolean isKeyPressed(String name) {
+		if(!keymap.containsKey(name))
+			return false;
+		return keycodes.contains(keymap.get(name));
 	}
 
 }

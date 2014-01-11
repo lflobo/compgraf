@@ -28,6 +28,10 @@ public class Vector extends Vector3f {
 		super(v);
 	}
 
+	public Vector(Vector3f v) {
+		super(v);
+	}
+
 	private GL2 gl() {
 		return GLContext.getCurrentGL().getGL2();
 	}
