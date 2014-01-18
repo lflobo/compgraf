@@ -205,6 +205,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		// Tools
 		demo = new GLDemo();
 		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		canvas.requestFocus();
 		animator.start();
