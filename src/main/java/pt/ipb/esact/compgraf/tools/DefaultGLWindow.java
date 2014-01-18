@@ -190,7 +190,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				dispose();
+				// dispose();
 			}
 		});
 		
