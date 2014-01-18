@@ -14,16 +14,16 @@ public class A12_Movement extends DefaultGLWindow {
 	// .obj loaders
 	private ObjLoader wheatley;
 	private ObjLoader floor;
+	private Camera camera;
 	
 	// Vetores de movimento
 	Vector3f position = new Vector3f(0, 1, 0);
 	Vector3f forward = GlMath.VECTOR_FORWARD;
-	Vector3f velocity = new Vector3f(0, 1, 0);
+	Vector3f velocity = new Vector3f(0, 0, 0);
 	private float orientation = 0.0f;
-	private Camera camera;
 	
 	private static final float MAX_VELOCITY = 3.0f;
-	private static final float MAX_ANGULAR_VELOCITY = 45.0f;
+	private static final float MAX_ANGULAR_VELOCITY = 90.0f;
 	
 	// skybox
 	public A12_Movement() {
