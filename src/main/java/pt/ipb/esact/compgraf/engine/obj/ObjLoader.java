@@ -457,17 +457,7 @@ public class ObjLoader implements ReleaseListener {
 	
 	public void release() {
 		GL2 gl = GlTools.gl();
-		gl.glDeleteBuffers(OBJ_BUFFER_COUNT, vboIds);
-
-		for(String s: triBufferObjects.keySet()) {
-			int b = triBufferObjects.get(s);
-			gl.glDeleteBuffers(1, new int[] {b}, 0);
-		}
-
-		for(String s: quadBufferObjects.keySet()) {
-			int b = quadBufferObjects.get(s);
-			gl.glDeleteBuffers(1, new int[] {b}, 0);
-		}
+		release(gl);
 	}
 	
 	public void render() {
@@ -558,6 +548,9 @@ public class ObjLoader implements ReleaseListener {
 
 	@Override
 	public void release(GL2 gl) {
+		if(gl == null)
+			return;
+		
 		gl.glDeleteBuffers(OBJ_BUFFER_COUNT, vboIds);
 
 		for(int id : triBufferObjects.values())
