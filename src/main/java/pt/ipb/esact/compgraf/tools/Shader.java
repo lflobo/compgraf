@@ -24,6 +24,8 @@ public class Shader {
 	private int normalUniform;
 
 	private int specularUniform;
+
+	private boolean linked;
 	
 	public static final String UNIFORM_DIFFUSE_MAP_NAME = "diffuse_map";
 	
@@ -72,6 +74,8 @@ public class Shader {
 			String info = getInfo(gl, shader);
 			if(!Strings.isNullOrEmpty(info))
 				logger.error("{}:\n{}", path, info);
+			else
+				linked = true;
 		} catch (IOException e) {
 			GlTools.exit(e.getMessage());
 		}
@@ -101,6 +105,104 @@ public class Shader {
 	public void unbind() {
 		GL2 gl = GlTools.gl();
 		gl.glUseProgram(0);
+	}
+	
+	public int attributeLocation(String name) {
+		GL2 gl = GlTools.gl();
+		if(!linked)
+			logger.warn("Shader program is not linked");
+		return gl.glGetAttribLocation(program, name);
+	}
+	
+	public void setAttributeValue(int location, float value) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glVertexAttrib1f(location, value);
+	}
+
+	public void setAttributeValue(String name, float value) {
+		setAttributeValue(attributeLocation(name), value);
+	}
+	
+	public void setAttributeValue(int location, float x, float y) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glVertexAttrib2f(location, x, y);
+	}
+
+	public void setAttributeValue(String name, float x, float y) {
+		setAttributeValue(attributeLocation(name), x, y);
+	}
+	
+	public void setAttributeValue(int location, float x, float y, float z) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glVertexAttrib3f(location, x, y, z);
+	}
+
+	public void setAttributeValue(String name, float x, float y, float z) {
+		setAttributeValue(attributeLocation(name), x, y, z);
+	}
+	
+	public void setAttributeValue(int location, float x, float y, float z, float w) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glVertexAttrib4f(location, x, y, z, w);
+	}
+
+	public void setAttributeValue(String name, float x, float y, float z, float w) {
+		setAttributeValue(attributeLocation(name), x, y, z, w);
+	}
+	
+	public int uniformLocation(String name) {
+		GL2 gl = GlTools.gl();
+		if(!linked)
+			logger.warn("Shader program is not linked");
+		return gl.glGetUniformLocation(program, name);
+	}
+	
+	public void setUniformValue(int location, float value) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glVertexAttrib1f(location, value);
+	}
+
+	public void setUniformValue(String name, float value) {
+		setUniformValue(uniformLocation(name), value);
+	}
+	
+	public void setUniformValue(int location, float x, float y) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glUniform2f(location, x, y);
+	}
+
+	public void setUniformValue(String name, float x, float y) {
+		setUniformValue(uniformLocation(name), x, y);
+	}
+	
+	public void setUniformValue(int location, float x, float y, float z) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glUniform3f(location, x, y, z);
+	}
+
+	public void setUniformValue(String name, float x, float y, float z) {
+		setUniformValue(uniformLocation(name), x, y, z);
+	}
+	
+	public void setUniformValue(int location, float x, float y, float z, float w) {
+		GL2 gl = GlTools.gl();
+		if(location != -1)
+			gl.glUniform4f(location, x, y, z, w);
+	}
+
+	public void setUniformValue(String name, float x, float y, float z, float w) {
+		setUniformValue(uniformLocation(name), x, y, z, w);
+	}
+	
+	public int getProgram() {
+		return program;
 	}
 	
 }
