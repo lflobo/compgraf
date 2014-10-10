@@ -17,7 +17,6 @@ public class A03_Primitivas extends DefaultGLWindow {
 	// Armazena a última tecla premida (por omissão = 1)
 	char key = '1';
 	
-	
 	/*
 	 * Explicação da utilização dos FloatBuffer's
 	 * -----------------------------------------------------------------
