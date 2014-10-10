@@ -18,7 +18,7 @@ public class A13_Board extends DefaultGLWindow {
 	 */
 
 	// Velocidade Máxima
-	private static final float MAX_VELOCITY = 1.0f;
+	private static final float MAX_VELOCITY = 3.0f;
 	
 	// Margem da chegada ao centro do cubo
 	private static final float ARRIVE_MARGIN = 0.1f;

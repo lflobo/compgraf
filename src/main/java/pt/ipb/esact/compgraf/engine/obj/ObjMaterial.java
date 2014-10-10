@@ -6,6 +6,9 @@ import java.util.Set;
 
 import javax.media.opengl.GL2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pt.ipb.esact.compgraf.tools.GlTools;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.Shader;
@@ -16,6 +19,8 @@ import com.google.common.collect.Sets;
 
 public class ObjMaterial implements ReleaseListener {
 
+	private static final Logger logger = LoggerFactory.getLogger(ObjMaterial.class);
+	
 	private String name;
 
 	private Set<Integer> textureIds = Sets.newHashSet();
@@ -109,6 +114,18 @@ public class ObjMaterial implements ReleaseListener {
 		ns = GlMath.clamp(value, 0.0f, 1.0f);
 	}
 
+	public String debugBuffer(String name, FloatBuffer buffer) {
+		StringBuilder s = new StringBuilder();
+		s.append(name).append("(");
+		for(int i=0; i<buffer.capacity(); i++) {
+			if(i>0)
+				s.append(", ");
+			s.append(buffer.get(i));
+		}
+		s.append(")");
+		return s.toString();
+	}
+	
 	public void set() {
 		GL2 gl = GlTools.gl();
 		
@@ -116,6 +133,7 @@ public class ObjMaterial implements ReleaseListener {
 			if(dset && d < 1.0f)
 				kd.put(3, d);
 			gl.glColor4fv(kd);
+//			logger.info("{} --> {}", name, debugBuffer("kd", kd));
 		}
 		
 		if(kaset)

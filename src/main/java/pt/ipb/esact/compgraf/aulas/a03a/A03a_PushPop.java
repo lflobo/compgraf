@@ -1,14 +1,16 @@
-package pt.ipb.esact.compgraf.aulas.a03;
+package pt.ipb.esact.compgraf.aulas.a03a;
 
+import pt.ipb.esact.compgraf.tools.Camera;
+import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A03_PushPop extends DefaultGLWindow {
+public class A03a_PushPop extends DefaultGLWindow {
 
 	// Variáveies que armazenam os valores das rotações dos planetas
 	float rotEarth = 0.0f;
 	float rotMoon = 0.0f;
 
-	public A03_PushPop() {
+	public A03a_PushPop() {
 		super("A03 Push Pop", true);
 	}
 	
@@ -94,35 +96,19 @@ public class A03_PushPop extends DefaultGLWindow {
 
 	@Override
 	public void resize(int width, int height) {
-		if (height == 0)
-			height = 1; // prevnir divisão por 0
-
-		// O meu viewport terá o tamanho da janela (width x height)
-		glViewport(0, 0, width, height);
-
-		// Mudar para a matiz de PROJECTION
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		// Configurar uma camara na posição [5,5,5]
+		Camera camera = new Camera(5, 5, 5);
+		// Dizer que a nossa camera deve ser usada por omissão 
+		Cameras.setCurrent(camera);
 		
-		float volume = 100f;
-		float fAspect = (float) width / (float) height;
-		
-		// Projecção em Perspectiva
-		gluPerspective(8f, fAspect, 1.0f, volume * 2f);
-		
-		// Mudar para a matriz de MODELVIEW
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		gluLookAt(
-			50f, 10f, 120.0f,			// Ponto onde está o meu olho
-			0f, 0f, 0f,					// Para onde estou a olhar
-			0f, 1f, 0f);				// Vector que define a orientação vertical
-		
+		// Configurar a projection
+		setProjectionPerspective(width, height, 8f, 1.0f, 100f);
+		setupCamera();
 	}
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A03_PushPop();
+		new A03a_PushPop();
 	}
 
 }

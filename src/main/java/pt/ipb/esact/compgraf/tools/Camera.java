@@ -9,7 +9,14 @@ public class Camera {
 	public Vector at = Vector.ORIGIN;
 	
 	public Vector up = Vector.UP;
-
+	
+	public Camera() {
+	}
+	
+	public Camera(float eyeX, float eyeY, float eyeZ) {
+		eye = new Vector(eyeX, eyeY, eyeZ);
+	}
+	
 	public Vector forward() {
 		return eye.sub(at);
 	}
