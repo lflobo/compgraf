@@ -9,6 +9,17 @@ public class GLPrimitives {
 		return GLContext.getCurrentGL().getGL2();
 	}
 	
+	public static void drawLine(Vector from, Vector to, Color color) {
+		GL2 gl = gl();
+		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
+			color.set();
+			gl.glBegin(GL2.GL_LINES);
+				from.vertex();
+				to.vertex();
+			gl.glEnd();
+		gl.glPopAttrib();
+	}
+	
 	public static void drawCircle(float radius, Color color, Vector at) {
 		GL2 gl = gl();
 		gl.glPushAttrib(GL2.GL_CURRENT_BIT);

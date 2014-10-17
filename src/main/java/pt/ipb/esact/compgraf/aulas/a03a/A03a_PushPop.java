@@ -90,7 +90,7 @@ public class A03a_PushPop extends DefaultGLWindow {
 		// Garantir que o angulo está sempre entre 0 e 360
 		rotEarth %= 360.0f;
 		rotMoon %= 360.0f;
-		
+
 		renderText("Earth Rotation = " + rotEarth + "\nMoon Rotation = " + rotMoon, 10, 20);
 	}
 

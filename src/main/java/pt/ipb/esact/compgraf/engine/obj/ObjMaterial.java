@@ -6,9 +6,6 @@ import java.util.Set;
 
 import javax.media.opengl.GL2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pt.ipb.esact.compgraf.tools.GlTools;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.Shader;
@@ -19,8 +16,6 @@ import com.google.common.collect.Sets;
 
 public class ObjMaterial implements ReleaseListener {
 
-	private static final Logger logger = LoggerFactory.getLogger(ObjMaterial.class);
-	
 	private String name;
 
 	private Set<Integer> textureIds = Sets.newHashSet();

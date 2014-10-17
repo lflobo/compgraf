@@ -1,5 +1,7 @@
-package pt.ipb.esact.compgraf.aulas.a03.ex;
+package pt.ipb.esact.compgraf.aulas.exercicios;
 
+import pt.ipb.esact.compgraf.tools.Camera;
+import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 public class Exercicio1 extends DefaultGLWindow {
