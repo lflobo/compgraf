@@ -51,7 +51,6 @@ public class A03a_QuadStrip extends DefaultGLWindow {
 			
 			// +2 vertices = +1 quad
 			glColor3f(1, 0, 0);
-			glVertex3f(-2, -1, 1);
 			glVertex3f(-2, 1, 0);
 		glEnd();
 		
