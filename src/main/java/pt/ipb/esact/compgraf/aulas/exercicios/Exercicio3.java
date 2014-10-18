@@ -22,8 +22,6 @@ public class Exercicio3 extends DefaultGLWindow {
 		// Fazer o Culling das faces
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		
-		glEnable(GL_CW);
 	}
 
 	@Override
