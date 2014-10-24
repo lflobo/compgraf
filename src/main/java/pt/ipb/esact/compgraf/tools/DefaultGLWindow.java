@@ -14,6 +14,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.FloatBuffer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -526,5 +527,9 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 			return false;
 		return keycodes.contains(keymap.get(name));
 	}
+
+    protected static FloatBuffer newFloatBuffer(float ... values) {
+        return FloatBuffer.wrap(values);
+    }
 
 }

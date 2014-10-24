@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 /target
-=======
-target/
->>>>>>> 44abeec452f61e8b917ff1be97fe26eb54cac2d0
-/target
+atlassian-ide-plugin.xml
+*.iml
+.DS_Store

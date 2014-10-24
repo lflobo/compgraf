@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.a04;
 
+import pt.ipb.esact.compgraf.tools.Camera;
+import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 public class A04_RGBColorSpace extends DefaultGLWindow {
@@ -60,34 +62,10 @@ public class A04_RGBColorSpace extends DefaultGLWindow {
 
 	@Override
 	public void resize(int width, int height) {
-		if (height == 0)
-			height = 1; // prevnir divisão por 0
-	
-		// O meu viewport terá o tamanho da janela (width x height)
-		glViewport(0, 0, width, height);
-	
-		// Mudar para a matiz de PROJECTION
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		
-		// Configuração da Projeção Ortho
-		float volume = 2.0f;
-		float near = 0.001f; // muito perto do olho
-		float far = 10.0f; // tem que ter em conta onde está o observador
-		float fAspect = (float) width / (float) height;
-		
-		// Projeção Ortogonal (left, right, bottom, top, near, far)
-		glOrtho(-volume, volume, -volume/fAspect, volume/fAspect, near, far);
-	
-		// Mudar para a matriz de MODELVIEW
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		gluLookAt(
-			2.0f, 1.7f, 1.2f,			// Ponto onde está observador
-			0f, 0f, 0f,					// Para onde está a olhar
-			0f, 1f, 0f);				// Vector que define a orientação vertical
-		
-	}
+		setProjectionOrtho(width, height, 2, 0.001f, 10);
+        Cameras.setCurrent(new Camera(2f, 1.7f, 1.2f));
+        setupCamera();
+    }
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {

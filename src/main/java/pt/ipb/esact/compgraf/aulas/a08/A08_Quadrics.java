@@ -258,6 +258,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		drawPlanet();
 		drawAsteroids();
 		drawClouds();
+		drawClouds();
 	}
 	
 	private void drawPlanet() {
