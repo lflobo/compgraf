@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.a05;
 
+import java.nio.FloatBuffer;
+
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -7,9 +9,9 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 public class A05_Mirror extends DefaultGLWindow {
 
 	// Array com a posição da luz
-	float[] positionLitght0 = { 0.0f, 20.0f, 0.0f, 1.0f };
+	FloatBuffer positionLitght0 = newFloatBuffer(0.0f, 20.0f, 0.0f, 1.0f);
 	
-	float[] positionLitght0Inverted = { 0.0f, -20.0f, 0.0f, 1.0f };
+	FloatBuffer positionLitght0Inverted = newFloatBuffer(0.0f, -20.0f, 0.0f, 1.0f);
 	
 	public A05_Mirror() {
 		super("A05 Mirror", true);
@@ -131,7 +133,7 @@ public class A05_Mirror extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Desenhar a luz invertida
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0Inverted, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0Inverted);
 
 		// Desenhar objetos invertidos
 		glPushMatrix();
@@ -143,12 +145,12 @@ public class A05_Mirror extends DefaultGLWindow {
 			
 			drawWorld();
 			
-			// Report winding
+			// Repor winding
 			glFrontFace(GL_CCW);
 		glPopMatrix();
 		
 		// Desenhar a luz no sítio certo
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
 
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
 		
