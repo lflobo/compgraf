@@ -1,6 +1,10 @@
 package pt.ipb.esact.compgraf.aulas.a12;
 
 import java.awt.event.KeyEvent;
+import java.nio.FloatBuffer;
+import java.util.Random;
+
+import com.jogamp.common.nio.Buffers;
 
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
@@ -83,15 +87,16 @@ public class A12_Shaders2 extends DefaultGLWindow {
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
 
 		// Configurar uma point light
-		glLightfv(GL_LIGHT0, GL_AMBIENT,  new float[] { 0f, 0f, 0f, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,  new float[] { .4f, .4f, .4f, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, new float[] { 1, 1, 1, 1 }, 0);
+		glLightfv(GL_LIGHT0, GL_AMBIENT,  newFloatBuffer( 0f, 0f, 0f, 1 ));
+		glLightfv(GL_LIGHT0, GL_DIFFUSE,  newFloatBuffer( .4f, .4f, .4f, 1 ));
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer( 1, 1, 1, 1 ));
 		glEnable(GL_LIGHT0);
 
 		// Configurar uma spot light
-		glLightfv(GL_LIGHT1, GL_AMBIENT,  new float[] { .4f, .4f, .4f, 1 }, 0);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE,  new float[] { 1, 1, 1, 1 }, 0);
-		glLightfv(GL_LIGHT1, GL_SPECULAR, new float[] { 1, 1, 1, 1 }, 0);
+		glLightfv(GL_LIGHT1, GL_AMBIENT,  newFloatBuffer( .4f, .4f, .4f, 1 ));
+		lightDiffuse = newFloatBuffer( 1, 1, 1, 1 );
+		glLightfv(GL_LIGHT1, GL_DIFFUSE,  lightDiffuse);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, newFloatBuffer( 1, 1, 1, 1 ));
 		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 25.0f);
 		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.1f);
 		glEnable(GL_LIGHT1);
@@ -106,6 +111,7 @@ public class A12_Shaders2 extends DefaultGLWindow {
 	float x = -2.0f;
 
 	boolean useShaders =  true;
+	private FloatBuffer lightDiffuse;
 	
 	@Override
 	protected void onKeyDown(KeyEvent e) {
@@ -113,14 +119,29 @@ public class A12_Shaders2 extends DefaultGLWindow {
 			useShaders = ! useShaders;
 	}
 	
+	private Random random = new Random();
+	
+	public FloatBuffer randMult(FloatBuffer buffer) {
+		FloatBuffer out = Buffers.copyFloatBuffer(buffer);
+		boolean nextBoolean = random.nextBoolean();
+		float nextFloat = nextBoolean ? random.nextFloat() : 0;
+		for(int i=0; i<buffer.capacity(); i++) {
+			out.put(i, nextFloat * buffer.get(i));
+		}
+		return out;
+	}
+	
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glLightfv(GL_LIGHT1, GL_DIFFUSE,  randMult(lightDiffuse));
+
 		
 		// Posicionar as luzes
-		glLightfv(GL_LIGHT0, GL_POSITION, new float[] { 0.0f, 5.0f, 0.0f, 1.0f }, 0);
-		glLightfv(GL_LIGHT1, GL_POSITION, new float[] { 0.0f, 6.0f, 0.0f, 1.0f }, 0);
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, new float[] {0, -1, 0}, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer( 0.0f, 5.0f, 0.0f, 1.0f ));
+		glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer( 0.0f, 6.0f, 0.0f, 1.0f ));
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(0, -1, 0));
 
 		// Desenhar o Wheatley
 		glPushMatrix();

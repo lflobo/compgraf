@@ -13,16 +13,8 @@ public class A05_Mirror extends DefaultGLWindow {
 	
 	public A05_Mirror() {
 		super("A05 Mirror", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 20.0f;
-		camera.eye.y = 20.0f;
-		camera.eye.z = 20.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	/**
@@ -155,6 +147,9 @@ public class A05_Mirror extends DefaultGLWindow {
 			glFrontFace(GL_CCW);
 		glPopMatrix();
 		
+		// Desenhar a luz no sítio certo
+		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
 		
 			// Desenhar agora o chão transparente
@@ -167,10 +162,6 @@ public class A05_Mirror extends DefaultGLWindow {
 
 		glPopAttrib();
 
-		// Desenhar a luz no sítio certo
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
-
-
 		// Desenhar depois objetos transparentes
 		drawWorld();
 		
@@ -178,7 +169,7 @@ public class A05_Mirror extends DefaultGLWindow {
 	
 	@Override
 	public void resize(int width, int height) {
-		// tem que ter em conta onde está o observador
+		Cameras.setCurrent(new Camera(20, 20, 20));
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 130.0f);
 		setupCamera();
 	}
