@@ -63,6 +63,7 @@ public class A06_Triangle extends DefaultGLWindow {
 	}
 	
 	private void configureTextures() {
+		// Ativar as texturas globalmente
 		glEnable(GL_TEXTURE_2D);
 		try {
 			TEX_STONE = TextureIO.newTexture(packageFile("stone.png"), true, TextureIO.PNG);
@@ -70,6 +71,9 @@ public class A06_Triangle extends DefaultGLWindow {
 			// Ocorreu um erro --> Terminar o programa
 			exit("Foi impossivel carregar a imagem 'stone.png'");
 		}
+
+		// A textura deve ser MODULTE'd (multiplicada) pelo material
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 
 	@Override

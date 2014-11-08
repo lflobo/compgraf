@@ -3,6 +3,7 @@ package pt.ipb.esact.compgraf.aulas.a06;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -13,6 +14,7 @@ public class A06_Texture extends DefaultGLWindow {
 	private Texture TEX_FLOOR;
 	private Texture TEX_CEILING;
 	private Texture TEX_STONE;
+	private Texture TEX_MOON;
 
 	public A06_Texture() {
 		super("A06 Texture", true);
@@ -61,11 +63,24 @@ public class A06_Texture extends DefaultGLWindow {
 	}
 	
 	private void configureTextures() {
+		// Ativar as texturas globalmente
+		glEnable(GL_TEXTURE_2D);
+		
+		// A textura deve ser MODULTE'd (multiplicada) pelo material
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		
+		// Descomentar para fazer o blend da textura com uma cor
+		/*
+		glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, newFloatBuffer(1, 0, 0, 1));
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+		*/
+
+		// Carregar as texturas
 		TEX_STONE = createTexture("stone.png");
 		TEX_BRICK = createTexture("brick.png");
 		TEX_FLOOR = createTexture("floor.png");
 		TEX_CEILING = createTexture("ceiling.png");
-		glEnable(GL_TEXTURE_2D);
+		TEX_MOON = createTexture("moon.png");
 	}
 
 	private Texture createTexture(String name) {
@@ -93,37 +108,43 @@ public class A06_Texture extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glColor3f(1.0f, 1.0f, 1.0f);
+
+		// Desenhar o chao
+		TEX_FLOOR.bind(this);
+		drawWall();
+
+		// Desenhar o tecto
+		TEX_CEILING.bind(this);
 		glPushMatrix();
-
-			// Desenhar o chao
-			TEX_FLOOR.bind(this);
+			glTranslatef(0f, 2f, 0f);
+			glRotatef(180f, 0f, 0f, -1f);
 			drawWall();
-	
-			// Desenhar o tecto
-			TEX_CEILING.bind(this);
-			glPushMatrix();
-				glTranslatef(0f, 2f, 0f);
-				glRotatef(180f, 0f, 0f, -1f);
-				drawWall();
-			glPopMatrix();
-	
-			// Desenhar a Parede da Esquerda
-			TEX_BRICK.bind(this);
-			glPushMatrix();
-				glTranslatef(-1f, 1f, 0f);
-				glRotatef(90f, 0f, 0f, -1f);
-				drawWall();
-			glPopMatrix();
-	
-			// Desenhar a Parede da Direita
-			TEX_STONE.bind(this);
-			glPushMatrix();
-				glTranslatef(1f, 1f, 0f);
-				glRotatef(90f, 0f, 0f, 1f);
-				drawWall();
-			glPopMatrix();
-
 		glPopMatrix();
+
+		// Desenhar a Parede da Esquerda
+		TEX_BRICK.bind(this);
+		glPushMatrix();
+			glTranslatef(-1f, 1f, 0f);
+			glRotatef(90f, 0f, 0f, -1f);
+			drawWall();
+		glPopMatrix();
+
+		// Desenhar a Parede da Direita
+		TEX_STONE.bind(this);
+		glPushMatrix();
+			glTranslatef(1f, 1f, 0f);
+			glRotatef(90f, 0f, 0f, 1f);
+			drawWall();
+		glPopMatrix();
+		
+		TEX_MOON.bind(this);
+		glPushMatrix();
+			glRotatef(90, -1, 0, 0);
+			glTranslatef(0, 0, 1);
+			GLPrimitives.drawSphere(0.6f, 32, 32);
+		glPopMatrix();
+		
+		renderText("Permir 'n' para GL_NEAREST na lua", 10, 20);
 	}
 	
 	/**
@@ -151,7 +172,7 @@ public class A06_Texture extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 30.0f);
-		Camera camera = new Camera(0, 1, 6);
+		Camera camera = new Camera(0, 1, 1);
 		camera.at.y = 1.0f;
 		Cameras.setCurrent(camera);
 		setupCamera();
