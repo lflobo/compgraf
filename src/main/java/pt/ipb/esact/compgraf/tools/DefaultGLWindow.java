@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.tools;
 
+import static pt.ipb.esact.compgraf.tools.math.GlMath.rotate;
+
 import java.awt.BorderLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -14,6 +16,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.util.HashSet;
 import java.util.List;
@@ -27,13 +30,13 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
+import javax.vecmath.Vector3f;
 
-import pt.ipb.esact.compgraf.tools.math.Vector;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jogamp.opengl.math.Quaternion;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -100,8 +103,6 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		}
 	};
 	
-	
-
 	private Animator animator;
 
 	protected boolean controlDown;
@@ -212,6 +213,23 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		animator.start();
 
 		fillKeyMap();
+	}
+	
+	/**
+	 * Obter uma stream de dados do ficheiro relativamente ao package da classe atual
+	 * @param filename O nome relativo do ficheiro
+	 * @return A stream de dados
+	 */
+	public InputStream packageFile(String filename) {
+		return getClass().getResourceAsStream(filename);
+	}
+	
+	public int getWidth() {
+		return frame.getWidth();
+	}
+	
+	public int getHeight() {
+		return frame.getHeight();
 	}
 	
 	private void fillKeyMap() {
@@ -416,7 +434,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 			float xdiff = lastMouseLocation.x - location.x;
 			float ydiff = lastMouseLocation.y - location.y;
 			if(xdiff!=0 || ydiff!=0)
-				rotateOrPanScene(xdiff * 0.01f, ydiff * 0.01f);
+				rotateOrPanScene(xdiff * 0.1f, ydiff * 0.1f);
 			
 		}
 
@@ -437,45 +455,41 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		float percent = 0.1f * signal;
 		
 		Camera c = Cameras.getCurrent();
-		Vector inc = c.at.sub(c.eye);
+		Vector3f inc = Vectors.sub(c.at, c.eye);
 		inc.scale(percent);
-		c.eye = c.eye.add(inc);
+		c.eye = Vectors.add(c.eye, inc);
 		setupCamera();
 	}
 
 	public void rotateOrPanScene(float hrot, float vrot) {
 		Camera camera = Cameras.getCurrent();
-		Vector forward = camera.eye.sub(camera.at);
-		Vector up = camera.up;
-
-		float[] forwardArray = forward.toArray();
-		float[] upArray = up.toArray();
-		Vector left = new Vector(new Quaternion(upArray, 90.0f).mult(forwardArray));
+		Vector3f fw = Vectors.sub(camera.eye, camera.at);
+		Vector3f up = camera.up;
+		Vector3f left = new Vector3f(rotate(90, up, fw));
 		left.y = 0.0f;
-
+		
 		if(isShiftPressed()) {
+			hrot *= 0.1f;
+			vrot *= 0.1f;
+			
 			left.scale(hrot);
-			camera.eye = camera.eye.add(left);
-			camera.at = camera.at.add(left);
+			camera.eye = Vectors.add(camera.eye, left);
+			camera.at = Vectors.add(camera.at, left);
 			
-			forward.scale(vrot);
+			fw.scale(vrot);
 			if(!isCtrlPressed()) {
-				forward.y = 0.0f;
+				fw.y = 0.0f;
 			} else {
-				forward.x = 0.0f;
-				forward.z = 0.0f;
-				forward.y *= -1.0f;
+				fw.x = 0.0f;
+				fw.z = 0.0f;
+				fw.y *= -1.0f;
 			}
-			camera.eye = camera.eye.add(forward);
-			camera.at = camera.at.add(forward);
+			camera.eye = Vectors.add(camera.eye, fw);
+			camera.at = Vectors.add(camera.at, fw);
 		} else {
-			
-			float[] leftArray = left.toArray();
-			Quaternion qx = new Quaternion(upArray, hrot);
-			Vector eye = new Vector(qx.mult(forwardArray));
-	
-			Quaternion qy = new Quaternion(leftArray, vrot);
-			camera.eye = new Vector(qy.mult(eye.toArray())).add(camera.at);
+			Vector3f eye = new Vector3f(rotate(hrot, up, fw));
+			eye = new Vector3f(rotate(vrot, left, eye));
+			camera.eye = Vectors.add(eye, camera.at);
 		}
 		
 		setupCamera();
@@ -514,10 +528,6 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		return keycodes.contains(keyCode);
 	}
 
-	public static void main(String[] args) {
-		System.out.println(KeyEvent.VK_A);
-	}
-	
 	public boolean isKeyPressed(char c) {
 		return keycodes.contains((int) Character.toUpperCase(c));
 	}

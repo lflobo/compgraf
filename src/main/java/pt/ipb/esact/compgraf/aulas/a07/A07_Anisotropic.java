@@ -1,16 +1,12 @@
 package pt.ipb.esact.compgraf.aulas.a07;
 
 import java.awt.event.KeyEvent;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-
-import com.jogamp.opengl.util.texture.spi.PNGImage;
 
 public class A07_Anisotropic extends DefaultGLWindow {
 
@@ -140,33 +136,33 @@ public class A07_Anisotropic extends DefaultGLWindow {
 	}
 
 	private void setupTexture(String name, int textureId) {
-		PNGImage image = null;
-		ByteBuffer buffer = null;
-		
-		// Tentar carregar a imagem a partir do package atual
-		try(InputStream stream = getClass().getResourceAsStream(name)) {
-			image = PNGImage.read(stream);
-			buffer = image.getData();
-		} catch (Exception e) {
-			// Ocorreu um erro --> Terminar o programa
-			exit("Foi impossivel carregar a imagem '" + name + "'");
-		}
-		
-		// Fazer o bind do estado da textura ao identificador
-		glBindTexture(GL_TEXTURE_2D, textureId);
-
-		// Carregar os mipmaps para a textura
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
-		
-		// Parametros da textura (ignorar para ja)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		// Configurar a anisotropy para a nossa textura
-		if(anisotropicAvailable)
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);
+//		PNGImage image = null;
+//		ByteBuffer buffer = null;
+//		
+//		// Tentar carregar a imagem a partir do package atual
+//		try(InputStream stream = getClass().getResourceAsStream(name)) {
+//			image = PNGImage.read(stream);
+//			buffer = image.getData();
+//		} catch (Exception e) {
+//			// Ocorreu um erro --> Terminar o programa
+//			exit("Foi impossivel carregar a imagem '" + name + "'");
+//		}
+//		
+//		// Fazer o bind do estado da textura ao identificador
+//		glBindTexture(GL_TEXTURE_2D, textureId);
+//
+//		// Carregar os mipmaps para a textura
+//		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, image.getWidth(), image.getHeight(), image.getGLFormat(), GL_UNSIGNED_BYTE, buffer);
+//		
+//		// Parametros da textura (ignorar para ja)
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//
+//		// Configurar a anisotropy para a nossa textura
+//		if(anisotropicAvailable)
+//			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);
 	}
 
 	@Override

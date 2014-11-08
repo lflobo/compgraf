@@ -2,6 +2,8 @@ package pt.ipb.esact.compgraf.tools.math;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.vecmath.Color4f;
+import javax.vecmath.Vector3f;
 
 public class GLPrimitives {
 
@@ -9,23 +11,23 @@ public class GLPrimitives {
 		return GLContext.getCurrentGL().getGL2();
 	}
 	
-	public static void drawLine(Vector from, Vector to, Color color) {
+	public static void drawLine(Vector3f from, Vector3f to, Color4f color) {
 		GL2 gl = gl();
 		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
-			color.set();
+			gl.glColor4f(color.x, color.y, color.z, color.w);
 			gl.glBegin(GL2.GL_LINES);
-				from.vertex();
-				to.vertex();
+				gl.glVertex3f(from.x, from.y, from.z);
+				gl.glVertex3f(to.x, to.y, to.z);
 			gl.glEnd();
 		gl.glPopAttrib();
 	}
 	
-	public static void drawCircle(float radius, Color color, Vector at) {
+	public static void drawCircle(float radius, Color4f color, Vector3f at) {
 		GL2 gl = gl();
 		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
 			gl.glPushMatrix();
 				gl.glTranslatef(at.x, at.y, at.z);
-				color.set();
+				gl.glColor4f(color.x, color.y, color.z, color.w);
 				gl.glBegin(GL2.GL_LINE_LOOP);
 				for(float angle = 0.0f; angle <= 2.0f * Math.PI; angle += 0.1f)
 					gl.glVertex3f(radius * (float) Math.sin(angle), 0.0f, radius * (float) Math.cos(angle));

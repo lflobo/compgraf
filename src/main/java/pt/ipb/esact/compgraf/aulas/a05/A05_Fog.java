@@ -103,7 +103,7 @@ public class A05_Fog extends DefaultGLWindow {
 		glEnable(GL_FOG);
 		
 		// Definir a cor do nevoeiro
-		glFogfv(GL_FOG_COLOR, newFloatBuffer(0.25f, 0.25f, 0.25f, 1.0f));
+		glFogfv(GL_FOG_COLOR, newFloatBuffer(0.75f, 0.75f, 0.75f, 1.0f));
 		// A que distância os objectos começam a ser afetados
 		glFogf(GL_FOG_START, 1.0f);
 		// A que distância o FOG toma conta por completo
@@ -167,6 +167,9 @@ public class A05_Fog extends DefaultGLWindow {
 			glFrontFace(GL_CCW);
 		glPopMatrix();
 		
+		// Desenhar a luz no sítio certo
+		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
+		
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
 		
 			// Desenhar agora o chão transparente
@@ -178,9 +181,6 @@ public class A05_Fog extends DefaultGLWindow {
 			demo().drawFloor(30.0f, 10);
 
 		glPopAttrib();
-
-		// Desenhar a luz no sítio certo
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
 
 
 		// Desenhar depois objetos reais

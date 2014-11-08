@@ -56,7 +56,7 @@ public class A05_Blending extends DefaultGLWindow {
 			glPopMatrix();
 			
 			// Cubo e Piramide a verde
-			glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
+			glColor4f(0.0f, 1.0f, 0.0f, 0.2f);
 
 			// Desenhar um cone
 			glPushMatrix();
@@ -125,7 +125,7 @@ public class A05_Blending extends DefaultGLWindow {
 	}
 	
 	// Variavel que indica se a transparencia esta ativa
-	private boolean transOn = false;
+	private boolean transOn = true;
 	
 	@Override
 	public void render(int width, int height) {
@@ -148,7 +148,7 @@ public class A05_Blending extends DefaultGLWindow {
 			drawWorld();
 			
 		glPopAttrib();
-
+		
 		renderText("t - toggle transparency", 10, 20);
 	}
 	

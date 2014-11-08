@@ -1,22 +1,24 @@
 package pt.ipb.esact.compgraf.tools.math;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
+import javax.vecmath.Vector3f;
 
 /**
  * A classe VectorList facilita o cálculo da normal de 3 vectores, ou do centróide
  * de um determinado polígono
  */
 @SuppressWarnings("serial")
-public class VectorList extends ArrayList<Vector> {
+public class VectorList extends ArrayList<Vector3f> {
 
 	/**
 	 * Adiciona o {@link Vector} à lista atual
 	 * @return A lista atual
 	 */
-	public VectorList append(Vector vector) {
+	public VectorList append(Vector3f vector) {
 		add(vector);
 		return this;
 	}
@@ -24,16 +26,16 @@ public class VectorList extends ArrayList<Vector> {
 	/**
 	 * @return O vector normal dos 3 primeiros vectores da lista actual
 	 */
-	Vector normalVector() {
+	Vector3f normalVector() {
 		if(size() < 3)
-			return Vector.ORIGIN;
+			return Vectors.ORIGIN;
 
-		Vector v1 = get(0);
-		Vector v2 = get(1);
-		Vector v3 = get(2);
-		Vector vv1 = v2.sub(v1);
-		Vector vv2 = v3.sub(v1);
-		Vector n = vv1.cross(vv2);
+		Vector3f v1 = get(0);
+		Vector3f v2 = get(1);
+		Vector3f v3 = get(2);
+		Vector3f vv1 = Vectors.sub(v2, v1);
+		Vector3f vv2 = Vectors.sub(v3, v1);
+		Vector3f n = Vectors.cross(vv1, vv2);
 		n.normalize();
 		return n;
 	}
@@ -43,20 +45,19 @@ public class VectorList extends ArrayList<Vector> {
 	 * 
 	 * @return O centróide do polígono representado pelos 3 primeiros vectores da lista actual
 	 */
-	public Vector centroid() {
+	public Vector3f centroid() {
 		if(size() < 3)
-			return Vector.ORIGIN;
+			return Vectors.ORIGIN;
 
-		Vector v1 = get(0);
-		Vector v2 = get(1);
-		Vector v3 = get(2);
+		Vector3f v1 = get(0);
+		Vector3f v2 = get(1);
+		Vector3f v3 = get(2);
 
 		float xx = v1.x + v2.x + v3.x; xx /= 3.0;
 		float yy = v1.y + v2.y + v3.y; yy /= 3.0;
 		float zz = v1.z + v2.z + v3.z; zz /= 3.0;
 
-		Vector c = new Vector(xx, yy, zz);
-		return c;
+		return new Vector3f(xx, yy, zz);
 	}	
 
 
@@ -90,18 +91,18 @@ public class VectorList extends ArrayList<Vector> {
 		GL2 gl = gl();
 		
 		if(normals) {
-			Vector n = normalVector();
-			if(n.isOrigin())
+			Vector3f n = normalVector();
+			if(Vectors.isOrigin(n))
 				gl.glNormal3f(n.x, n.y, n.z);
 			if(paintNormals) {
 				n.scale(30.0f);
-				n.paint(centroid(), Color.BLUE);
+				Vectors.paint(n, centroid(), Colors.BLUE);
 			}
 		}
 		
 		gl.glBegin(primitive);
 		for(int i=0; i<size(); i++) {
-			Vector v = get(i);
+			Vector3f v = get(i);
 			gl.glVertex3f(v.x, v.y, v.z);
 		}
 		gl.glEnd();
@@ -114,14 +115,14 @@ public class VectorList extends ArrayList<Vector> {
 	 * @param two Outro vector
 	 * @param three Outro vector
 	 */
-	public static void normal(Vector one, Vector two, Vector three) {
+	public static void normal(Vector3f one, Vector3f two, Vector3f three) {
 		VectorList list = new VectorList();
 		list.append(one);
 		list.append(two);
 		list.append(three);
 
 		GL2 gl = gl();
-		Vector n = list.normalVector();
+		Vector3f n = list.normalVector();
 		gl.glNormal3f(n.x, n.y, n.z);
 	}
 
@@ -136,8 +137,8 @@ public class VectorList extends ArrayList<Vector> {
 	 * @param z Coordenada > do vector
 	 * @return O vector que foi adicionado
 	 */
-	public Vector append(float x, float y, float z) {
-		Vector v = new Vector(x, y, z);
+	public Vector3f append(float x, float y, float z) {
+		Vector3f v = new Vector3f(x, y, z);
 		append(v);
 		return v;
 	}

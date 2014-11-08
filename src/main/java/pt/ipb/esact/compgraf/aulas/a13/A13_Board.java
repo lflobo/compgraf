@@ -9,7 +9,6 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.MediaPlayer;
-import pt.ipb.esact.compgraf.tools.math.Vector;
 
 public class A13_Board extends DefaultGLWindow {
 	
@@ -69,7 +68,7 @@ public class A13_Board extends DefaultGLWindow {
 		camera.eye.y = 3.0f;
 		camera.eye.z = 3.0f;
 		
-		camera.at = new Vector(position);
+		camera.at = new Vector3f(position);
 		
 		Cameras.setCurrent(camera);
 	}

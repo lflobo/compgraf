@@ -3,12 +3,13 @@ package pt.ipb.esact.compgraf.engine;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL2;
+import javax.vecmath.Vector3f;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Vector;
+import pt.ipb.esact.compgraf.tools.ReleaseListener;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 public class Skybox implements ReleaseListener {
 
@@ -147,7 +148,7 @@ public class Skybox implements ReleaseListener {
 			return;
 		
 		// p = Camera.at - Camera.eye = vetor direcao
-		Vector p = cam.at.sub(cam.eye);
+		Vector3f p = Vectors.sub(cam.at, cam.eye);
 		p.normalize();
 
 		gl.glPushAttrib(GL2.GL_ENABLE_BIT);

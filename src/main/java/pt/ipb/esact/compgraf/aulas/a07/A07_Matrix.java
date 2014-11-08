@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Color;
+import pt.ipb.esact.compgraf.tools.math.Colors;
 
 public class A07_Matrix extends DefaultGLWindow {
 	
@@ -89,16 +89,16 @@ public class A07_Matrix extends DefaultGLWindow {
 		// Aplicar a matriz alterada
 		glLoadMatrixf(mv);
 
-		Color.BLUE.set();
+		Colors.BLUE.set();
 		glutWireTeapot(2.0);
 		
 		glPushMatrix();
 			glTranslatef(0.0f, -2.0f, 0.0f);
-			Color.DARKGRAY.set();
+			Colors.DARKGRAY.set();
 			demo().drawGround(GL_LINE_STRIP, 5.0f, 30, 1.0f);
 		glPopMatrix();
 		
-		Color.GRAY.set();
+		Colors.GRAY.set();
 		paintMatrix(width);
 	}
 	

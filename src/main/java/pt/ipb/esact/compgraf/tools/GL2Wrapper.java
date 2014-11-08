@@ -21,6 +21,7 @@ import javax.media.opengl.GL4;
 import javax.media.opengl.GL4ES3;
 import javax.media.opengl.GL4bc;
 import javax.media.opengl.GLArrayData;
+import javax.media.opengl.GLBufferStorage;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLES1;
 import javax.media.opengl.GLES2;
@@ -395,24 +396,24 @@ public class GL2Wrapper implements GL2 {
 		current.glColor4ub(red, green, blue, alpha);
 	}
 
-	public Object getPlatformGLExtensions() {
-		return current.getPlatformGLExtensions();
-	}
-
 	public void glFogf(int pname, float param) {
 		current.glFogf(pname, param);
+	}
+
+	public Object getPlatformGLExtensions() {
+		return current.getPlatformGLExtensions();
 	}
 
 	public void glFogfv(int pname, FloatBuffer params) {
 		current.glFogfv(pname, params);
 	}
 
-	public Object getExtension(String extensionName) {
-		return current.getExtension(extensionName);
-	}
-
 	public void glFogfv(int pname, float[] params, int params_offset) {
 		current.glFogfv(pname, params, params_offset);
+	}
+
+	public Object getExtension(String extensionName) {
+		return current.getExtension(extensionName);
 	}
 
 	public void glGetLightfv(int light, int pname, FloatBuffer params) {
@@ -439,60 +440,44 @@ public class GL2Wrapper implements GL2 {
 		current.glGetMaterialfv(face, pname, params, params_offset);
 	}
 
-	public int glGetBoundBuffer(int target) {
-		return current.glGetBoundBuffer(target);
+	public int getBoundBuffer(int target) {
+		return current.getBoundBuffer(target);
 	}
 
 	public void glGetTexEnvfv(int tenv, int pname, FloatBuffer params) {
 		current.glGetTexEnvfv(tenv, pname, params);
 	}
 
-	public long glGetBufferSize(int buffer) {
-		return current.glGetBufferSize(buffer);
+	public GLBufferStorage getBufferStorage(int bufferName) {
+		return current.getBufferStorage(bufferName);
 	}
 
 	public void glGetTexEnvfv(int tenv, int pname, float[] params, int params_offset) {
 		current.glGetTexEnvfv(tenv, pname, params, params_offset);
 	}
 
-	public boolean glIsVBOArrayBound() {
-		return current.glIsVBOArrayBound();
-	}
-
 	public void glGetTexEnviv(int tenv, int pname, IntBuffer params) {
 		current.glGetTexEnviv(tenv, pname, params);
 	}
 
-	public boolean glIsVBOElementArrayBound() {
-		return current.glIsVBOElementArrayBound();
-	}
-
-	public int getBoundFramebuffer(int target) {
-		return current.getBoundFramebuffer(target);
+	public GLBufferStorage mapBuffer(int target, int access) throws GLException {
+		return current.mapBuffer(target, access);
 	}
 
 	public void glGetTexEnviv(int tenv, int pname, int[] params, int params_offset) {
 		current.glGetTexEnviv(tenv, pname, params, params_offset);
 	}
 
-	public int getDefaultDrawFramebuffer() {
-		return current.getDefaultDrawFramebuffer();
-	}
-
 	public void glGetTexGenfv(int coord, int pname, FloatBuffer params) {
 		current.glGetTexGenfv(coord, pname, params);
 	}
 
-	public int getDefaultReadFramebuffer() {
-		return current.getDefaultReadFramebuffer();
-	}
-
-	public int getDefaultReadBuffer() {
-		return current.getDefaultReadBuffer();
-	}
-
 	public void glGetTexGenfv(int coord, int pname, float[] params, int params_offset) {
 		current.glGetTexGenfv(coord, pname, params, params_offset);
+	}
+
+	public GLBufferStorage mapBufferRange(int target, long offset, long length, int access) throws GLException {
+		return current.mapBufferRange(target, offset, length, access);
 	}
 
 	public void glGetTexGeniv(int coord, int pname, IntBuffer params) {
@@ -515,20 +500,44 @@ public class GL2Wrapper implements GL2 {
 		current.glLightModelfv(pname, params, params_offset);
 	}
 
+	public boolean isVBOArrayBound() {
+		return current.isVBOArrayBound();
+	}
+
 	public void glLightf(int light, int pname, float param) {
 		current.glLightf(light, pname, param);
+	}
+
+	public boolean isVBOElementArrayBound() {
+		return current.isVBOElementArrayBound();
+	}
+
+	public int getBoundFramebuffer(int target) {
+		return current.getBoundFramebuffer(target);
 	}
 
 	public void glLogicOp(int opcode) {
 		current.glLogicOp(opcode);
 	}
 
+	public int getDefaultDrawFramebuffer() {
+		return current.getDefaultDrawFramebuffer();
+	}
+
 	public void glMultiTexCoord4f(int target, float s, float t, float r, float q) {
 		current.glMultiTexCoord4f(target, s, t, r, q);
 	}
 
+	public int getDefaultReadFramebuffer() {
+		return current.getDefaultReadFramebuffer();
+	}
+
 	public void glNormal3f(float nx, float ny, float nz) {
 		current.glNormal3f(nx, ny, nz);
+	}
+
+	public int getDefaultReadBuffer() {
+		return current.getDefaultReadBuffer();
 	}
 
 	public void glPointParameterf(int pname, float param) {
@@ -755,7 +764,8 @@ public class GL2Wrapper implements GL2 {
 		current.glDrawArraysInstanced(mode, first, count, instancecount);
 	}
 
-	public void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, long data_buffer_offset) {
+	public void glCompressedTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize,
+			long data_buffer_offset) {
 		current.glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data_buffer_offset);
 	}
 
@@ -767,12 +777,12 @@ public class GL2Wrapper implements GL2 {
 		current.glCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data_buffer_offset);
 	}
 
-	public void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) {
-		current.glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
-	}
-
 	public void glDrawBuffers(int n, int[] bufs, int bufs_offset) {
 		current.glDrawBuffers(n, bufs, bufs_offset);
+	}
+
+	public void glCopyTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) {
+		current.glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
 	}
 
 	public void glCopyTexImage1D(int target, int level, int internalformat, int x, int y, int width, int border) {
@@ -979,7 +989,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetIntegeri_v(target, index, data, data_offset);
 	}
 
-	public void glGetActiveAttrib(int program, int index, int bufsize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name, int name_offset) {
+	public void glGetActiveAttrib(int program, int index, int bufsize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name,
+			int name_offset) {
 		current.glGetActiveAttrib(program, index, bufsize, length, length_offset, size, size_offset, type, type_offset, name, name_offset);
 	}
 
@@ -991,12 +1002,12 @@ public class GL2Wrapper implements GL2 {
 		current.glGetBooleani_v(target, index, data);
 	}
 
-	public void glGetActiveUniform(int program, int index, int bufsize, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
-		current.glGetActiveUniform(program, index, bufsize, length, size, type, name);
-	}
-
 	public void glGetBooleani_v(int target, int index, byte[] data, int data_offset) {
 		current.glGetBooleani_v(target, index, data, data_offset);
+	}
+
+	public void glGetActiveUniform(int program, int index, int bufsize, IntBuffer length, IntBuffer size, IntBuffer type, ByteBuffer name) {
+		current.glGetActiveUniform(program, index, bufsize, length, size, type, name);
 	}
 
 	public void glGetInternalformativ(int target, int internalformat, int pname, int bufSize, int[] params, int params_offset) {
@@ -1019,7 +1030,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetTransformFeedbackVarying(program, index, bufSize, length, size, type, name);
 	}
 
-	public void glGetActiveUniform(int program, int index, int bufsize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name, int name_offset) {
+	public void glGetActiveUniform(int program, int index, int bufsize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name,
+			int name_offset) {
 		current.glGetActiveUniform(program, index, bufsize, length, length_offset, size, size_offset, type, type_offset, name, name_offset);
 	}
 
@@ -1035,7 +1047,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetCompressedTexImage(target, level, img);
 	}
 
-	public void glGetTransformFeedbackVarying(int program, int index, int bufSize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name, int name_offset) {
+	public void glGetTransformFeedbackVarying(int program, int index, int bufSize, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset,
+			byte[] name, int name_offset) {
 		current.glGetTransformFeedbackVarying(program, index, bufSize, length, length_offset, size, size_offset, type, type_offset, name, name_offset);
 	}
 
@@ -1067,8 +1080,10 @@ public class GL2Wrapper implements GL2 {
 		return current.glGetDebugMessageLog(count, bufsize, sources, types, ids, severities, lengths, messageLog);
 	}
 
-	public int glGetDebugMessageLogAMD(int count, int bufsize, int[] categories, int categories_offset, int[] severities, int severities_offset, int[] ids, int ids_offset, int[] lengths, int lengths_offset, byte[] message, int message_offset) {
-		return current.glGetDebugMessageLogAMD(count, bufsize, categories, categories_offset, severities, severities_offset, ids, ids_offset, lengths, lengths_offset, message, message_offset);
+	public int glGetDebugMessageLogAMD(int count, int bufsize, int[] categories, int categories_offset, int[] severities, int severities_offset, int[] ids, int ids_offset,
+			int[] lengths, int lengths_offset, byte[] message, int message_offset) {
+		return current.glGetDebugMessageLogAMD(count, bufsize, categories, categories_offset, severities, severities_offset, ids, ids_offset, lengths, lengths_offset, message,
+				message_offset);
 	}
 
 	public void glGetUniformIndices(int program, int uniformCount, String[] uniformNames, int[] uniformIndices, int uniformIndices_offset) {
@@ -1083,8 +1098,10 @@ public class GL2Wrapper implements GL2 {
 		current.glGetUniformuiv(program, location, params);
 	}
 
-	public int glGetDebugMessageLog(int count, int bufsize, int[] sources, int sources_offset, int[] types, int types_offset, int[] ids, int ids_offset, int[] severities, int severities_offset, int[] lengths, int lengths_offset, byte[] messageLog, int messageLog_offset) {
-		return current.glGetDebugMessageLog(count, bufsize, sources, sources_offset, types, types_offset, ids, ids_offset, severities, severities_offset, lengths, lengths_offset, messageLog, messageLog_offset);
+	public int glGetDebugMessageLog(int count, int bufsize, int[] sources, int sources_offset, int[] types, int types_offset, int[] ids, int ids_offset, int[] severities,
+			int severities_offset, int[] lengths, int lengths_offset, byte[] messageLog, int messageLog_offset) {
+		return current.glGetDebugMessageLog(count, bufsize, sources, sources_offset, types, types_offset, ids, ids_offset, severities, severities_offset, lengths, lengths_offset,
+				messageLog, messageLog_offset);
 	}
 
 	public void glGetDoublev(int pname, double[] params, int params_offset) {
@@ -1135,12 +1152,12 @@ public class GL2Wrapper implements GL2 {
 		current.glGetObjectPtrLabel(ptr, bufSize, length, label);
 	}
 
-	public void glGetVertexAttribIuiv(int index, int pname, int[] params, int params_offset) {
-		current.glGetVertexAttribIuiv(index, pname, params, params_offset);
-	}
-
 	public void glGetNamedBufferParameterui64vNV(int buffer, int pname, LongBuffer params) {
 		current.glGetNamedBufferParameterui64vNV(buffer, pname, params);
+	}
+
+	public void glGetVertexAttribIuiv(int index, int pname, int[] params, int params_offset) {
+		current.glGetVertexAttribIuiv(index, pname, params, params_offset);
 	}
 
 	public boolean glIsVertexArray(int array) {
@@ -1279,10 +1296,6 @@ public class GL2Wrapper implements GL2 {
 		current.glGetQueryObjectuiv(id, pname, params, params_offset);
 	}
 
-	public void glBindFramebuffer(int target, int framebuffer) {
-		current.glBindFramebuffer(target, framebuffer);
-	}
-
 	public void glGetTexLevelParameterfv(int target, int level, int pname, FloatBuffer params) {
 		current.glGetTexLevelParameterfv(target, level, pname, params);
 	}
@@ -1291,12 +1304,12 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform3uiv(location, count, value, value_offset);
 	}
 
-	public void glGetQueryiv(int target, int pname, IntBuffer params) {
-		current.glGetQueryiv(target, pname, params);
+	public void glBindFramebuffer(int target, int framebuffer) {
+		current.glBindFramebuffer(target, framebuffer);
 	}
 
-	public void glBindRenderbuffer(int target, int renderbuffer) {
-		current.glBindRenderbuffer(target, renderbuffer);
+	public void glGetQueryiv(int target, int pname, IntBuffer params) {
+		current.glGetQueryiv(target, pname, params);
 	}
 
 	public void glUniform4ui(int location, int v0, int v1, int v2, int v3) {
@@ -1307,6 +1320,10 @@ public class GL2Wrapper implements GL2 {
 		current.glGetTexLevelParameterfv(target, level, pname, params, params_offset);
 	}
 
+	public void glBindRenderbuffer(int target, int renderbuffer) {
+		current.glBindRenderbuffer(target, renderbuffer);
+	}
+
 	public void glGetQueryiv(int target, int pname, int[] params, int params_offset) {
 		current.glGetQueryiv(target, pname, params, params_offset);
 	}
@@ -1315,20 +1332,20 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform4uiv(location, count, value);
 	}
 
-	public void glBindTexture(int target, int texture) {
-		current.glBindTexture(target, texture);
-	}
-
 	public void glGetTexLevelParameteriv(int target, int level, int pname, IntBuffer params) {
 		current.glGetTexLevelParameteriv(target, level, pname, params);
 	}
 
-	public void glBlendEquation(int mode) {
-		current.glBlendEquation(mode);
+	public void glBindTexture(int target, int texture) {
+		current.glBindTexture(target, texture);
 	}
 
 	public void glGetShaderInfoLog(int shader, int bufsize, IntBuffer length, ByteBuffer infolog) {
 		current.glGetShaderInfoLog(shader, bufsize, length, infolog);
+	}
+
+	public void glBlendEquation(int mode) {
+		current.glBlendEquation(mode);
 	}
 
 	public void glGetTexLevelParameteriv(int target, int level, int pname, int[] params, int params_offset) {
@@ -1367,24 +1384,24 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix2x3fv(location, count, transpose, value);
 	}
 
-	public void glBlendFuncSeparate(int srcRGB, int dstRGB, int srcAlpha, int dstAlpha) {
-		current.glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
-	}
-
 	public void glGetShaderSource(int shader, int bufsize, IntBuffer length, ByteBuffer source) {
 		current.glGetShaderSource(shader, bufsize, length, source);
+	}
+
+	public void glBlendFuncSeparate(int srcRGB, int dstRGB, int srcAlpha, int dstAlpha) {
+		current.glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 	}
 
 	public void glGetTexParameterIuiv(int target, int pname, IntBuffer params) {
 		current.glGetTexParameterIuiv(target, pname, params);
 	}
 
-	public void glBufferData(int target, long size, Buffer data, int usage) {
-		current.glBufferData(target, size, data, usage);
-	}
-
 	public void glUniformMatrix2x3fv(int location, int count, boolean transpose, float[] value, int value_offset) {
 		current.glUniformMatrix2x3fv(location, count, transpose, value, value_offset);
+	}
+
+	public void glBufferData(int target, long size, Buffer data, int usage) {
+		current.glBufferData(target, size, data, usage);
 	}
 
 	public void glGetShaderSource(int shader, int bufsize, int[] length, int length_offset, byte[] source, int source_offset) {
@@ -1399,10 +1416,6 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix2x4fv(location, count, transpose, value);
 	}
 
-	public void glBufferSubData(int target, long offset, long size, Buffer data) {
-		current.glBufferSubData(target, offset, size, data);
-	}
-
 	public void glGetShaderiv(int shader, int pname, IntBuffer params) {
 		current.glGetShaderiv(shader, pname, params);
 	}
@@ -1411,12 +1424,12 @@ public class GL2Wrapper implements GL2 {
 		current.glGetUniformui64vNV(program, location, params);
 	}
 
-	public void glUniformMatrix2x4fv(int location, int count, boolean transpose, float[] value, int value_offset) {
-		current.glUniformMatrix2x4fv(location, count, transpose, value, value_offset);
+	public void glBufferSubData(int target, long offset, long size, Buffer data) {
+		current.glBufferSubData(target, offset, size, data);
 	}
 
-	public int glCheckFramebufferStatus(int target) {
-		return current.glCheckFramebufferStatus(target);
+	public void glUniformMatrix2x4fv(int location, int count, boolean transpose, float[] value, int value_offset) {
+		current.glUniformMatrix2x4fv(location, count, transpose, value, value_offset);
 	}
 
 	public void glGetShaderiv(int shader, int pname, int[] params, int params_offset) {
@@ -1431,24 +1444,24 @@ public class GL2Wrapper implements GL2 {
 		return current.glGetUniformLocation(program, name);
 	}
 
-	public void glClear(int mask) {
-		current.glClear(mask);
-	}
-
 	public void glUniformMatrix3x2fv(int location, int count, boolean transpose, FloatBuffer value) {
 		current.glUniformMatrix3x2fv(location, count, transpose, value);
+	}
+
+	public int glCheckFramebufferStatus(int target) {
+		return current.glCheckFramebufferStatus(target);
 	}
 
 	public void glGetVertexAttribdv(int index, int pname, DoubleBuffer params) {
 		current.glGetVertexAttribdv(index, pname, params);
 	}
 
-	public void glClearColor(float red, float green, float blue, float alpha) {
-		current.glClearColor(red, green, blue, alpha);
-	}
-
 	public void glGetUniformfv(int program, int location, FloatBuffer params) {
 		current.glGetUniformfv(program, location, params);
+	}
+
+	public void glClear(int mask) {
+		current.glClear(mask);
 	}
 
 	public void glGetVertexAttribdv(int index, int pname, double[] params, int params_offset) {
@@ -1459,8 +1472,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix3x2fv(location, count, transpose, value, value_offset);
 	}
 
-	public void glClearDepthf(float depth) {
-		current.glClearDepthf(depth);
+	public void glClearColor(float red, float green, float blue, float alpha) {
+		current.glClearColor(red, green, blue, alpha);
 	}
 
 	public void glGetUniformfv(int program, int location, float[] params, int params_offset) {
@@ -1475,8 +1488,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix3x4fv(location, count, transpose, value);
 	}
 
-	public void glClearStencil(int s) {
-		current.glClearStencil(s);
+	public void glClearDepthf(float depth) {
+		current.glClearDepthf(depth);
 	}
 
 	public void glGetUniformiv(int program, int location, IntBuffer params) {
@@ -1487,12 +1500,12 @@ public class GL2Wrapper implements GL2 {
 		current.glGetnTexImage(target, level, format, type, bufSize, img);
 	}
 
-	public void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
-		current.glColorMask(red, green, blue, alpha);
-	}
-
 	public void glUniformMatrix3x4fv(int location, int count, boolean transpose, float[] value, int value_offset) {
 		current.glUniformMatrix3x4fv(location, count, transpose, value, value_offset);
+	}
+
+	public void glClearStencil(int s) {
+		current.glClearStencil(s);
 	}
 
 	public void glGetUniformiv(int program, int location, int[] params, int params_offset) {
@@ -1503,8 +1516,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetnUniformdv(program, location, bufSize, params);
 	}
 
-	public void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer data) {
-		current.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+	public void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+		current.glColorMask(red, green, blue, alpha);
 	}
 
 	public void glUniformMatrix4x2fv(int location, int count, boolean transpose, FloatBuffer value) {
@@ -1519,16 +1532,16 @@ public class GL2Wrapper implements GL2 {
 		current.glGetnUniformdv(program, location, bufSize, params, params_offset);
 	}
 
+	public void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, Buffer data) {
+		current.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+	}
+
 	public void glGetVertexAttribfv(int index, int pname, float[] params, int params_offset) {
 		current.glGetVertexAttribfv(index, pname, params, params_offset);
 	}
 
 	public void glUniformMatrix4x2fv(int location, int count, boolean transpose, float[] value, int value_offset) {
 		current.glUniformMatrix4x2fv(location, count, transpose, value, value_offset);
-	}
-
-	public void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, long data_buffer_offset) {
-		current.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data_buffer_offset);
 	}
 
 	public void glGetnUniformuiv(int program, int location, int bufSize, IntBuffer params) {
@@ -1543,12 +1556,12 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix4x3fv(location, count, transpose, value);
 	}
 
-	public void glGetnUniformuiv(int program, int location, int bufSize, int[] params, int params_offset) {
-		current.glGetnUniformuiv(program, location, bufSize, params, params_offset);
+	public void glCompressedTexImage2D(int target, int level, int internalformat, int width, int height, int border, int imageSize, long data_buffer_offset) {
+		current.glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data_buffer_offset);
 	}
 
-	public void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer data) {
-		current.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+	public void glGetnUniformuiv(int program, int location, int bufSize, int[] params, int params_offset) {
+		current.glGetnUniformuiv(program, location, bufSize, params, params_offset);
 	}
 
 	public void glGetVertexAttribiv(int index, int pname, int[] params, int params_offset) {
@@ -1563,16 +1576,16 @@ public class GL2Wrapper implements GL2 {
 		return current.glImportSyncEXT(external_sync_type, external_sync, flags);
 	}
 
+	public void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, Buffer data) {
+		current.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+	}
+
 	public boolean glIsProgram(int program) {
 		return current.glIsProgram(program);
 	}
 
 	public void glIndexFormatNV(int type, int stride) {
 		current.glIndexFormatNV(type, stride);
-	}
-
-	public void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, long data_buffer_offset) {
-		current.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data_buffer_offset);
 	}
 
 	public void glVertexAttribI4i(int index, int x, int y, int z, int w) {
@@ -1591,16 +1604,16 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttribI4iv(index, v);
 	}
 
+	public void glCompressedTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int imageSize, long data_buffer_offset) {
+		current.glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data_buffer_offset);
+	}
+
 	public boolean glIsShader(int shader) {
 		return current.glIsShader(shader);
 	}
 
 	public boolean glIsEnabledi(int target, int index) {
 		return current.glIsEnabledi(target, index);
-	}
-
-	public void glCopyTexImage2D(int target, int level, int internalformat, int x, int y, int width, int height, int border) {
-		current.glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
 	}
 
 	public void glLinkProgram(int program) {
@@ -1619,16 +1632,16 @@ public class GL2Wrapper implements GL2 {
 		current.glObjectLabel(identifier, name, length, label);
 	}
 
+	public void glCopyTexImage2D(int target, int level, int internalformat, int x, int y, int width, int height, int border) {
+		current.glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
+	}
+
 	public boolean glIsNamedStringARB(int namelen, String name) {
 		return current.glIsNamedStringARB(namelen, name);
 	}
 
 	public void glVertexAttribI4ui(int index, int x, int y, int z, int w) {
 		current.glVertexAttribI4ui(index, x, y, z, w);
-	}
-
-	public void glCopyTexSubImage2D(int target, int level, int xoffset, int yoffset, int x, int y, int width, int height) {
-		current.glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 	}
 
 	public void glVertexAttribI4uiv(int index, IntBuffer v) {
@@ -1639,28 +1652,28 @@ public class GL2Wrapper implements GL2 {
 		current.glObjectLabel(identifier, name, length, label, label_offset);
 	}
 
-	public void glMakeBufferNonResidentNV(int target) {
-		current.glMakeBufferNonResidentNV(target);
+	public void glCopyTexSubImage2D(int target, int level, int xoffset, int yoffset, int x, int y, int width, int height) {
+		current.glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 	}
 
-	public void glCullFace(int mode) {
-		current.glCullFace(mode);
+	public void glMakeBufferNonResidentNV(int target) {
+		current.glMakeBufferNonResidentNV(target);
 	}
 
 	public void glVertexAttribI4uiv(int index, int[] v, int v_offset) {
 		current.glVertexAttribI4uiv(index, v, v_offset);
 	}
 
-	public void glObjectPtrLabel(Buffer ptr, int length, ByteBuffer label) {
-		current.glObjectPtrLabel(ptr, length, label);
-	}
-
 	public void glMakeBufferResidentNV(int target, int access) {
 		current.glMakeBufferResidentNV(target, access);
 	}
 
-	public void glDeleteBuffers(int n, IntBuffer buffers) {
-		current.glDeleteBuffers(n, buffers);
+	public void glObjectPtrLabel(Buffer ptr, int length, ByteBuffer label) {
+		current.glObjectPtrLabel(ptr, length, label);
+	}
+
+	public void glCullFace(int mode) {
+		current.glCullFace(mode);
 	}
 
 	public void glVertexAttribIPointer(int index, int size, int type, int stride, long pointer_buffer_offset) {
@@ -1671,8 +1684,8 @@ public class GL2Wrapper implements GL2 {
 		current.glMakeNamedBufferNonResidentNV(buffer);
 	}
 
-	public void glDeleteBuffers(int n, int[] buffers, int buffers_offset) {
-		current.glDeleteBuffers(n, buffers, buffers_offset);
+	public void glDeleteBuffers(int n, IntBuffer buffers) {
+		current.glDeleteBuffers(n, buffers);
 	}
 
 	public void glObjectPtrLabel(Buffer ptr, int length, byte[] label, int label_offset) {
@@ -1683,32 +1696,32 @@ public class GL2Wrapper implements GL2 {
 		current.glMakeNamedBufferResidentNV(buffer, access);
 	}
 
-	public void glDeleteFramebuffers(int n, IntBuffer framebuffers) {
-		current.glDeleteFramebuffers(n, framebuffers);
-	}
-
 	public void glMultiDrawArrays(int mode, IntBuffer first, IntBuffer count, int drawcount) {
 		current.glMultiDrawArrays(mode, first, count, drawcount);
+	}
+
+	public void glDeleteBuffers(int n, int[] buffers, int buffers_offset) {
+		current.glDeleteBuffers(n, buffers, buffers_offset);
 	}
 
 	public void glPopDebugGroup() {
 		current.glPopDebugGroup();
 	}
 
-	public boolean glIsPBOPackBound() {
-		return current.glIsPBOPackBound();
+	public boolean isPBOPackBound() {
+		return current.isPBOPackBound();
 	}
 
-	public boolean glIsPBOUnpackBound() {
-		return current.glIsPBOUnpackBound();
+	public boolean isPBOUnpackBound() {
+		return current.isPBOUnpackBound();
+	}
+
+	public void glDeleteFramebuffers(int n, IntBuffer framebuffers) {
+		current.glDeleteFramebuffers(n, framebuffers);
 	}
 
 	public void glProgramBinary(int program, int binaryFormat, Buffer binary, int length) {
 		current.glProgramBinary(program, binaryFormat, binary, length);
-	}
-
-	public void glDeleteFramebuffers(int n, int[] framebuffers, int framebuffers_offset) {
-		current.glDeleteFramebuffers(n, framebuffers, framebuffers_offset);
 	}
 
 	public void glMultiDrawArrays(int mode, int[] first, int first_offset, int[] count, int count_offset, int drawcount) {
@@ -1719,40 +1732,40 @@ public class GL2Wrapper implements GL2 {
 		current.glMultiDrawArraysIndirectAMD(mode, indirect, primcount, stride);
 	}
 
-	public void glDeleteRenderbuffers(int n, IntBuffer renderbuffers) {
-		current.glDeleteRenderbuffers(n, renderbuffers);
+	public void glDeleteFramebuffers(int n, int[] framebuffers, int framebuffers_offset) {
+		current.glDeleteFramebuffers(n, framebuffers, framebuffers_offset);
 	}
 
 	public void glPushDebugGroup(int source, int id, int length, ByteBuffer message) {
 		current.glPushDebugGroup(source, id, length, message);
 	}
 
-	public void glMultiDrawElements(int mode, IntBuffer count, int type, PointerBuffer indices, int drawcount) {
-		current.glMultiDrawElements(mode, count, type, indices, drawcount);
+	public void glDeleteRenderbuffers(int n, IntBuffer renderbuffers) {
+		current.glDeleteRenderbuffers(n, renderbuffers);
 	}
 
-	public void glDeleteRenderbuffers(int n, int[] renderbuffers, int renderbuffers_offset) {
-		current.glDeleteRenderbuffers(n, renderbuffers, renderbuffers_offset);
+	public void glMultiDrawElements(int mode, IntBuffer count, int type, PointerBuffer indices, int drawcount) {
+		current.glMultiDrawElements(mode, count, type, indices, drawcount);
 	}
 
 	public void glPushDebugGroup(int source, int id, int length, byte[] message, int message_offset) {
 		current.glPushDebugGroup(source, id, length, message, message_offset);
 	}
 
-	public void glShaderSource(int shader, int count, String[] string, IntBuffer length) {
-		current.glShaderSource(shader, count, string, length);
+	public void glDeleteRenderbuffers(int n, int[] renderbuffers, int renderbuffers_offset) {
+		current.glDeleteRenderbuffers(n, renderbuffers, renderbuffers_offset);
 	}
 
-	public void glDeleteTextures(int n, IntBuffer textures) {
-		current.glDeleteTextures(n, textures);
+	public void glShaderSource(int shader, int count, String[] string, IntBuffer length) {
+		current.glShaderSource(shader, count, string, length);
 	}
 
 	public void glMultiDrawElementsIndirectAMD(int mode, int type, Buffer indirect, int primcount, int stride) {
 		current.glMultiDrawElementsIndirectAMD(mode, type, indirect, primcount, stride);
 	}
 
-	public void glDeleteTextures(int n, int[] textures, int textures_offset) {
-		current.glDeleteTextures(n, textures, textures_offset);
+	public void glDeleteTextures(int n, IntBuffer textures) {
+		current.glDeleteTextures(n, textures);
 	}
 
 	public void glShaderSource(int shader, int count, String[] string, int[] length, int length_offset) {
@@ -1763,8 +1776,8 @@ public class GL2Wrapper implements GL2 {
 		current.glNamedFramebufferParameteriEXT(framebuffer, pname, param);
 	}
 
-	public void glDepthFunc(int func) {
-		current.glDepthFunc(func);
+	public void glDeleteTextures(int n, int[] textures, int textures_offset) {
+		current.glDeleteTextures(n, textures, textures_offset);
 	}
 
 	public void glStencilFuncSeparate(int face, int func, int ref, int mask) {
@@ -1775,60 +1788,56 @@ public class GL2Wrapper implements GL2 {
 		current.glNamedStringARB(type, namelen, name, stringlen, string);
 	}
 
-	public void glDepthMask(boolean flag) {
-		current.glDepthMask(flag);
-	}
-
 	public void glStencilMaskSeparate(int face, int mask) {
 		current.glStencilMaskSeparate(face, mask);
+	}
+
+	public void glDepthFunc(int func) {
+		current.glDepthFunc(func);
 	}
 
 	public void glNormalFormatNV(int type, int stride) {
 		current.glNormalFormatNV(type, stride);
 	}
 
-	public void glDepthRangef(float zNear, float zFar) {
-		current.glDepthRangef(zNear, zFar);
-	}
-
 	public void glStencilOpSeparate(int face, int fail, int zfail, int zpass) {
 		current.glStencilOpSeparate(face, fail, zfail, zpass);
+	}
+
+	public void glDepthMask(boolean flag) {
+		current.glDepthMask(flag);
 	}
 
 	public void glPixelStoref(int pname, float param) {
 		current.glPixelStoref(pname, param);
 	}
 
-	public void glDisable(int cap) {
-		current.glDisable(cap);
+	public void glDepthRangef(float zNear, float zFar) {
+		current.glDepthRangef(zNear, zFar);
 	}
 
 	public void glTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int format, int type, Buffer pixels) {
 		current.glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
 	}
 
-	public void glDrawArrays(int mode, int first, int count) {
-		current.glDrawArrays(mode, first, count);
+	public void glDisable(int cap) {
+		current.glDisable(cap);
 	}
 
-	public void glDrawElements(int mode, int count, int type, long indices_buffer_offset) {
-		current.glDrawElements(mode, count, type, indices_buffer_offset);
+	public void glDrawArrays(int mode, int first, int count) {
+		current.glDrawArrays(mode, first, count);
 	}
 
 	public void glTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int format, int type, long pixels_buffer_offset) {
 		current.glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels_buffer_offset);
 	}
 
-	public void glEnable(int cap) {
-		current.glEnable(cap);
+	public void glDrawElements(int mode, int count, int type, long indices_buffer_offset) {
+		current.glDrawElements(mode, count, type, indices_buffer_offset);
 	}
 
 	public void glPointParameteri(int pname, int param) {
 		current.glPointParameteri(pname, param);
-	}
-
-	public void glFinish() {
-		current.glFinish();
 	}
 
 	public void glPointParameteriv(int pname, IntBuffer params) {
@@ -1839,16 +1848,20 @@ public class GL2Wrapper implements GL2 {
 		current.glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
-	public void glFlush() {
-		current.glFlush();
+	public void glEnable(int cap) {
+		current.glEnable(cap);
 	}
 
 	public void glPointParameteriv(int pname, int[] params, int params_offset) {
 		current.glPointParameteriv(pname, params, params_offset);
 	}
 
-	public void glFlushMappedBufferRange(int target, long offset, long length) {
-		current.glFlushMappedBufferRange(target, offset, length);
+	public void glFinish() {
+		current.glFinish();
+	}
+
+	public void glFlush() {
+		current.glFlush();
 	}
 
 	public void glTexSubImage3D(int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, long pixels_buffer_offset) {
@@ -1859,8 +1872,8 @@ public class GL2Wrapper implements GL2 {
 		current.glPolygonMode(face, mode);
 	}
 
-	public void glFramebufferRenderbuffer(int target, int attachment, int renderbuffertarget, int renderbuffer) {
-		current.glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
+	public void glFlushMappedBufferRange(int target, long offset, long length) {
+		current.glFlushMappedBufferRange(target, offset, length);
 	}
 
 	public void glPrimitiveRestartIndex(int index) {
@@ -1875,8 +1888,8 @@ public class GL2Wrapper implements GL2 {
 		current.glProgramParameteriARB(program, pname, value);
 	}
 
-	public void glFramebufferTexture2D(int target, int attachment, int textarget, int texture, int level) {
-		current.glFramebufferTexture2D(target, attachment, textarget, texture, level);
+	public void glFramebufferRenderbuffer(int target, int attachment, int renderbuffertarget, int renderbuffer) {
+		current.glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
 	}
 
 	public void glUniform1fv(int location, int count, FloatBuffer v) {
@@ -1887,8 +1900,8 @@ public class GL2Wrapper implements GL2 {
 		current.glProgramUniformui64NV(program, location, value);
 	}
 
-	public void glFrontFace(int mode) {
-		current.glFrontFace(mode);
+	public void glFramebufferTexture2D(int target, int attachment, int textarget, int texture, int level) {
+		current.glFramebufferTexture2D(target, attachment, textarget, texture, level);
 	}
 
 	public void glProgramUniformui64vNV(int program, int location, int count, LongBuffer value) {
@@ -1899,12 +1912,12 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform1fv(location, count, v, v_offset);
 	}
 
-	public void glGenBuffers(int n, IntBuffer buffers) {
-		current.glGenBuffers(n, buffers);
-	}
-
 	public void glUniform1i(int location, int x) {
 		current.glUniform1i(location, x);
+	}
+
+	public void glFrontFace(int mode) {
+		current.glFrontFace(mode);
 	}
 
 	public void glProgramUniformui64vNV(int program, int location, int count, long[] value, int value_offset) {
@@ -1915,8 +1928,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform1iv(location, count, v);
 	}
 
-	public void glGenBuffers(int n, int[] buffers, int buffers_offset) {
-		current.glGenBuffers(n, buffers, buffers_offset);
+	public void glGenBuffers(int n, IntBuffer buffers) {
+		current.glGenBuffers(n, buffers);
 	}
 
 	public void glSecondaryColorFormatNV(int size, int type, int stride) {
@@ -1927,8 +1940,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform1iv(location, count, v, v_offset);
 	}
 
-	public void glGenFramebuffers(int n, IntBuffer framebuffers) {
-		current.glGenFramebuffers(n, framebuffers);
+	public void glGenBuffers(int n, int[] buffers, int buffers_offset) {
+		current.glGenBuffers(n, buffers, buffers_offset);
 	}
 
 	public void glSetMultisamplefvAMD(int pname, int index, FloatBuffer val) {
@@ -1939,8 +1952,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform2f(location, x, y);
 	}
 
-	public void glGenFramebuffers(int n, int[] framebuffers, int framebuffers_offset) {
-		current.glGenFramebuffers(n, framebuffers, framebuffers_offset);
+	public void glGenFramebuffers(int n, IntBuffer framebuffers) {
+		current.glGenFramebuffers(n, framebuffers);
 	}
 
 	public void glSetMultisamplefvAMD(int pname, int index, float[] val, int val_offset) {
@@ -1955,8 +1968,8 @@ public class GL2Wrapper implements GL2 {
 		current.glStencilOpValueAMD(face, value);
 	}
 
-	public void glGenRenderbuffers(int n, IntBuffer renderbuffers) {
-		current.glGenRenderbuffers(n, renderbuffers);
+	public void glGenFramebuffers(int n, int[] framebuffers, int framebuffers_offset) {
+		current.glGenFramebuffers(n, framebuffers, framebuffers_offset);
 	}
 
 	public void glUniform2fv(int location, int count, float[] v, int v_offset) {
@@ -1967,12 +1980,12 @@ public class GL2Wrapper implements GL2 {
 		current.glTessellationFactorAMD(factor);
 	}
 
-	public void glUniform2i(int location, int x, int y) {
-		current.glUniform2i(location, x, y);
+	public void glGenRenderbuffers(int n, IntBuffer renderbuffers) {
+		current.glGenRenderbuffers(n, renderbuffers);
 	}
 
-	public void glGenRenderbuffers(int n, int[] renderbuffers, int renderbuffers_offset) {
-		current.glGenRenderbuffers(n, renderbuffers, renderbuffers_offset);
+	public void glUniform2i(int location, int x, int y) {
+		current.glUniform2i(location, x, y);
 	}
 
 	public void glTessellationModeAMD(int mode) {
@@ -1987,8 +2000,8 @@ public class GL2Wrapper implements GL2 {
 		current.glTexBuffer(target, internalformat, buffer);
 	}
 
-	public void glGenTextures(int n, IntBuffer textures) {
-		current.glGenTextures(n, textures);
+	public void glGenRenderbuffers(int n, int[] renderbuffers, int renderbuffers_offset) {
+		current.glGenRenderbuffers(n, renderbuffers, renderbuffers_offset);
 	}
 
 	public void glUniform2iv(int location, int count, int[] v, int v_offset) {
@@ -1999,8 +2012,8 @@ public class GL2Wrapper implements GL2 {
 		current.glTexCoordFormatNV(size, type, stride);
 	}
 
-	public void glGenTextures(int n, int[] textures, int textures_offset) {
-		current.glGenTextures(n, textures, textures_offset);
+	public void glGenTextures(int n, IntBuffer textures) {
+		current.glGenTextures(n, textures);
 	}
 
 	public void glUniform3f(int location, float x, float y, float z) {
@@ -2011,8 +2024,8 @@ public class GL2Wrapper implements GL2 {
 		current.glTexImage1D(target, level, internalFormat, width, border, format, type, pixels);
 	}
 
-	public void glGenerateMipmap(int target) {
-		current.glGenerateMipmap(target);
+	public void glGenTextures(int n, int[] textures, int textures_offset) {
+		current.glGenTextures(n, textures, textures_offset);
 	}
 
 	public void glUniform3fv(int location, int count, FloatBuffer v) {
@@ -2023,16 +2036,16 @@ public class GL2Wrapper implements GL2 {
 		current.glTexImage1D(target, level, internalFormat, width, border, format, type, pixels_buffer_offset);
 	}
 
-	public void glGetBooleanv(int pname, ByteBuffer params) {
-		current.glGetBooleanv(pname, params);
+	public void glGenerateMipmap(int target) {
+		current.glGenerateMipmap(target);
 	}
 
 	public void glUniform3fv(int location, int count, float[] v, int v_offset) {
 		current.glUniform3fv(location, count, v, v_offset);
 	}
 
-	public void glGetBooleanv(int pname, byte[] params, int params_offset) {
-		current.glGetBooleanv(pname, params, params_offset);
+	public void glGetBooleanv(int pname, ByteBuffer params) {
+		current.glGetBooleanv(pname, params);
 	}
 
 	public void glTexImage2DMultisampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, boolean fixedSampleLocations) {
@@ -2043,24 +2056,25 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform3i(location, x, y, z);
 	}
 
-	public void glGetBufferParameteriv(int target, int pname, IntBuffer params) {
-		current.glGetBufferParameteriv(target, pname, params);
-	}
-
 	public void glUniform3iv(int location, int count, IntBuffer v) {
 		current.glUniform3iv(location, count, v);
 	}
 
-	public void glTexImage3DMultisampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, int depth, boolean fixedSampleLocations) {
+	public void glGetBooleanv(int pname, byte[] params, int params_offset) {
+		current.glGetBooleanv(pname, params, params_offset);
+	}
+
+	public void glTexImage3DMultisampleCoverageNV(int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, int depth,
+			boolean fixedSampleLocations) {
 		current.glTexImage3DMultisampleCoverageNV(target, coverageSamples, colorSamples, internalFormat, width, height, depth, fixedSampleLocations);
+	}
+
+	public void glGetBufferParameteriv(int target, int pname, IntBuffer params) {
+		current.glGetBufferParameteriv(target, pname, params);
 	}
 
 	public void glUniform3iv(int location, int count, int[] v, int v_offset) {
 		current.glUniform3iv(location, count, v, v_offset);
-	}
-
-	public void glGetBufferParameteriv(int target, int pname, int[] params, int params_offset) {
-		current.glGetBufferParameteriv(target, pname, params, params_offset);
 	}
 
 	public void glUniform4f(int location, float x, float y, float z, float w) {
@@ -2071,28 +2085,28 @@ public class GL2Wrapper implements GL2 {
 		current.glTexParameterIiv(target, pname, params);
 	}
 
-	public int glGetError() {
-		return current.glGetError();
+	public void glGetBufferParameteriv(int target, int pname, int[] params, int params_offset) {
+		current.glGetBufferParameteriv(target, pname, params, params_offset);
 	}
 
 	public void glUniform4fv(int location, int count, FloatBuffer v) {
 		current.glUniform4fv(location, count, v);
 	}
 
-	public void glGetFloatv(int pname, FloatBuffer params) {
-		current.glGetFloatv(pname, params);
-	}
-
 	public void glTexParameterIiv(int target, int pname, int[] params, int params_offset) {
 		current.glTexParameterIiv(target, pname, params, params_offset);
+	}
+
+	public int glGetError() {
+		return current.glGetError();
 	}
 
 	public void glUniform4fv(int location, int count, float[] v, int v_offset) {
 		current.glUniform4fv(location, count, v, v_offset);
 	}
 
-	public void glGetFloatv(int pname, float[] params, int params_offset) {
-		current.glGetFloatv(pname, params, params_offset);
+	public void glGetFloatv(int pname, FloatBuffer params) {
+		current.glGetFloatv(pname, params);
 	}
 
 	public void glTexParameterIuiv(int target, int pname, IntBuffer params) {
@@ -2103,8 +2117,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform4i(location, x, y, z, w);
 	}
 
-	public void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, IntBuffer params) {
-		current.glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
+	public void glGetFloatv(int pname, float[] params, int params_offset) {
+		current.glGetFloatv(pname, params, params_offset);
 	}
 
 	public void glTexParameterIuiv(int target, int pname, int[] params, int params_offset) {
@@ -2115,32 +2129,28 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform4iv(location, count, v);
 	}
 
-	public void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels) {
-		current.glTexSubImage1D(target, level, xoffset, width, format, type, pixels);
+	public void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, IntBuffer params) {
+		current.glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
 	}
 
-	public void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, int[] params, int params_offset) {
-		current.glGetFramebufferAttachmentParameteriv(target, attachment, pname, params, params_offset);
+	public void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, Buffer pixels) {
+		current.glTexSubImage1D(target, level, xoffset, width, format, type, pixels);
 	}
 
 	public void glUniform4iv(int location, int count, int[] v, int v_offset) {
 		current.glUniform4iv(location, count, v, v_offset);
 	}
 
-	public void glUniformMatrix2fv(int location, int count, boolean transpose, FloatBuffer value) {
-		current.glUniformMatrix2fv(location, count, transpose, value);
-	}
-
 	public void glTexSubImage1D(int target, int level, int xoffset, int width, int format, int type, long pixels_buffer_offset) {
 		current.glTexSubImage1D(target, level, xoffset, width, format, type, pixels_buffer_offset);
 	}
 
-	public int glGetGraphicsResetStatus() {
-		return current.glGetGraphicsResetStatus();
+	public void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, int[] params, int params_offset) {
+		current.glGetFramebufferAttachmentParameteriv(target, attachment, pname, params, params_offset);
 	}
 
-	public void glGetIntegerv(int pname, IntBuffer params) {
-		current.glGetIntegerv(pname, params);
+	public void glUniformMatrix2fv(int location, int count, boolean transpose, FloatBuffer value) {
+		current.glUniformMatrix2fv(location, count, transpose, value);
 	}
 
 	public void glTextureBufferRangeEXT(int texture, int target, int internalformat, int buffer, long offset, long size) {
@@ -2151,11 +2161,16 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix2fv(location, count, transpose, value, value_offset);
 	}
 
-	public void glGetIntegerv(int pname, int[] params, int params_offset) {
-		current.glGetIntegerv(pname, params, params_offset);
+	public int glGetGraphicsResetStatus() {
+		return current.glGetGraphicsResetStatus();
 	}
 
-	public void glTextureImage2DMultisampleCoverageNV(int texture, int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, boolean fixedSampleLocations) {
+	public void glGetIntegerv(int pname, IntBuffer params) {
+		current.glGetIntegerv(pname, params);
+	}
+
+	public void glTextureImage2DMultisampleCoverageNV(int texture, int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height,
+			boolean fixedSampleLocations) {
 		current.glTextureImage2DMultisampleCoverageNV(texture, target, coverageSamples, colorSamples, internalFormat, width, height, fixedSampleLocations);
 	}
 
@@ -2163,8 +2178,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUniformMatrix3fv(location, count, transpose, value);
 	}
 
-	public void glGetRenderbufferParameteriv(int target, int pname, IntBuffer params) {
-		current.glGetRenderbufferParameteriv(target, pname, params);
+	public void glGetIntegerv(int pname, int[] params, int params_offset) {
+		current.glGetIntegerv(pname, params, params_offset);
 	}
 
 	public void glUniformMatrix3fv(int location, int count, boolean transpose, float[] value, int value_offset) {
@@ -2175,28 +2190,29 @@ public class GL2Wrapper implements GL2 {
 		current.glTextureImage2DMultisampleNV(texture, target, samples, internalFormat, width, height, fixedSampleLocations);
 	}
 
-	public void glGetRenderbufferParameteriv(int target, int pname, int[] params, int params_offset) {
-		current.glGetRenderbufferParameteriv(target, pname, params, params_offset);
+	public void glGetRenderbufferParameteriv(int target, int pname, IntBuffer params) {
+		current.glGetRenderbufferParameteriv(target, pname, params);
 	}
 
 	public void glUniformMatrix4fv(int location, int count, boolean transpose, FloatBuffer value) {
 		current.glUniformMatrix4fv(location, count, transpose, value);
 	}
 
-	public void glTextureImage3DMultisampleCoverageNV(int texture, int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, int depth, boolean fixedSampleLocations) {
+	public void glTextureImage3DMultisampleCoverageNV(int texture, int target, int coverageSamples, int colorSamples, int internalFormat, int width, int height, int depth,
+			boolean fixedSampleLocations) {
 		current.glTextureImage3DMultisampleCoverageNV(texture, target, coverageSamples, colorSamples, internalFormat, width, height, depth, fixedSampleLocations);
 	}
 
-	public String glGetString(int name) {
-		return current.glGetString(name);
+	public void glGetRenderbufferParameteriv(int target, int pname, int[] params, int params_offset) {
+		current.glGetRenderbufferParameteriv(target, pname, params, params_offset);
 	}
 
 	public void glUniformMatrix4fv(int location, int count, boolean transpose, float[] value, int value_offset) {
 		current.glUniformMatrix4fv(location, count, transpose, value, value_offset);
 	}
 
-	public void glGetTexParameterfv(int target, int pname, FloatBuffer params) {
-		current.glGetTexParameterfv(target, pname, params);
+	public String glGetString(int name) {
+		return current.glGetString(name);
 	}
 
 	public void glTextureImage3DMultisampleNV(int texture, int target, int samples, int internalFormat, int width, int height, int depth, boolean fixedSampleLocations) {
@@ -2207,8 +2223,8 @@ public class GL2Wrapper implements GL2 {
 		current.glUseProgram(program);
 	}
 
-	public void glGetTexParameterfv(int target, int pname, float[] params, int params_offset) {
-		current.glGetTexParameterfv(target, pname, params, params_offset);
+	public void glGetTexParameterfv(int target, int pname, FloatBuffer params) {
+		current.glGetTexParameterfv(target, pname, params);
 	}
 
 	public void glValidateProgram(int program) {
@@ -2223,8 +2239,8 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1f(indx, x);
 	}
 
-	public void glGetTexParameteriv(int target, int pname, IntBuffer params) {
-		current.glGetTexParameteriv(target, pname, params);
+	public void glGetTexParameterfv(int target, int pname, float[] params, int params_offset) {
+		current.glGetTexParameterfv(target, pname, params, params_offset);
 	}
 
 	public void glUniformui64vNV(int location, int count, LongBuffer value) {
@@ -2235,8 +2251,8 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1fv(indx, values);
 	}
 
-	public void glGetTexParameteriv(int target, int pname, int[] params, int params_offset) {
-		current.glGetTexParameteriv(target, pname, params, params_offset);
+	public void glGetTexParameteriv(int target, int pname, IntBuffer params) {
+		current.glGetTexParameteriv(target, pname, params);
 	}
 
 	public void glUniformui64vNV(int location, int count, long[] value, int value_offset) {
@@ -2247,12 +2263,12 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1fv(indx, values, values_offset);
 	}
 
-	public void glGetnUniformfv(int program, int location, int bufSize, FloatBuffer params) {
-		current.glGetnUniformfv(program, location, bufSize, params);
-	}
-
 	public void glVertexArrayBindVertexBufferEXT(int vaobj, int bindingindex, int buffer, long offset, int stride) {
 		current.glVertexArrayBindVertexBufferEXT(vaobj, bindingindex, buffer, offset, stride);
+	}
+
+	public void glGetTexParameteriv(int target, int pname, int[] params, int params_offset) {
+		current.glGetTexParameteriv(target, pname, params, params_offset);
 	}
 
 	public void glVertexAttrib2f(int indx, float x, float y) {
@@ -2263,12 +2279,12 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib2fv(indx, values);
 	}
 
-	public void glVertexArrayVertexAttribBindingEXT(int vaobj, int attribindex, int bindingindex) {
-		current.glVertexArrayVertexAttribBindingEXT(vaobj, attribindex, bindingindex);
+	public void glGetnUniformfv(int program, int location, int bufSize, FloatBuffer params) {
+		current.glGetnUniformfv(program, location, bufSize, params);
 	}
 
-	public void glGetnUniformfv(int program, int location, int bufSize, float[] params, int params_offset) {
-		current.glGetnUniformfv(program, location, bufSize, params, params_offset);
+	public void glVertexArrayVertexAttribBindingEXT(int vaobj, int attribindex, int bindingindex) {
+		current.glVertexArrayVertexAttribBindingEXT(vaobj, attribindex, bindingindex);
 	}
 
 	public void glVertexAttrib2fv(int indx, float[] values, int values_offset) {
@@ -2279,40 +2295,40 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexArrayVertexAttribFormatEXT(vaobj, attribindex, size, type, normalized, relativeoffset);
 	}
 
-	public void glGetnUniformiv(int program, int location, int bufSize, IntBuffer params) {
-		current.glGetnUniformiv(program, location, bufSize, params);
+	public void glGetnUniformfv(int program, int location, int bufSize, float[] params, int params_offset) {
+		current.glGetnUniformfv(program, location, bufSize, params, params_offset);
 	}
 
 	public void glVertexAttrib3f(int indx, float x, float y, float z) {
 		current.glVertexAttrib3f(indx, x, y, z);
 	}
 
-	public void glVertexArrayVertexAttribIFormatEXT(int vaobj, int attribindex, int size, int type, int relativeoffset) {
-		current.glVertexArrayVertexAttribIFormatEXT(vaobj, attribindex, size, type, relativeoffset);
+	public void glGetnUniformiv(int program, int location, int bufSize, IntBuffer params) {
+		current.glGetnUniformiv(program, location, bufSize, params);
 	}
 
-	public void glGetnUniformiv(int program, int location, int bufSize, int[] params, int params_offset) {
-		current.glGetnUniformiv(program, location, bufSize, params, params_offset);
+	public void glVertexArrayVertexAttribIFormatEXT(int vaobj, int attribindex, int size, int type, int relativeoffset) {
+		current.glVertexArrayVertexAttribIFormatEXT(vaobj, attribindex, size, type, relativeoffset);
 	}
 
 	public void glVertexAttrib3fv(int indx, FloatBuffer values) {
 		current.glVertexAttrib3fv(indx, values);
 	}
 
-	public void glHint(int target, int mode) {
-		current.glHint(target, mode);
-	}
-
 	public void glVertexArrayVertexAttribLFormatEXT(int vaobj, int attribindex, int size, int type, int relativeoffset) {
 		current.glVertexArrayVertexAttribLFormatEXT(vaobj, attribindex, size, type, relativeoffset);
+	}
+
+	public void glGetnUniformiv(int program, int location, int bufSize, int[] params, int params_offset) {
+		current.glGetnUniformiv(program, location, bufSize, params, params_offset);
 	}
 
 	public void glVertexAttrib3fv(int indx, float[] values, int values_offset) {
 		current.glVertexAttrib3fv(indx, values, values_offset);
 	}
 
-	public boolean glIsBuffer(int buffer) {
-		return current.glIsBuffer(buffer);
+	public void glHint(int target, int mode) {
+		current.glHint(target, mode);
 	}
 
 	public void glVertexAttrib4f(int indx, float x, float y, float z, float w) {
@@ -2323,8 +2339,8 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexArrayVertexBindingDivisorEXT(vaobj, bindingindex, divisor);
 	}
 
-	public boolean glIsEnabled(int cap) {
-		return current.glIsEnabled(cap);
+	public boolean glIsBuffer(int buffer) {
+		return current.glIsBuffer(buffer);
 	}
 
 	public void glVertexAttrib4fv(int indx, FloatBuffer values) {
@@ -2335,8 +2351,8 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1d(index, x);
 	}
 
-	public boolean glIsFramebuffer(int framebuffer) {
-		return current.glIsFramebuffer(framebuffer);
+	public boolean glIsEnabled(int cap) {
+		return current.glIsEnabled(cap);
 	}
 
 	public void glVertexAttrib1dv(int index, DoubleBuffer v) {
@@ -2347,8 +2363,8 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib4fv(indx, values, values_offset);
 	}
 
-	public boolean glIsRenderbuffer(int renderbuffer) {
-		return current.glIsRenderbuffer(renderbuffer);
+	public boolean glIsFramebuffer(int framebuffer) {
+		return current.glIsFramebuffer(framebuffer);
 	}
 
 	public void glVertexAttrib1dv(int index, double[] v, int v_offset) {
@@ -2363,16 +2379,16 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1s(index, x);
 	}
 
-	public boolean glIsTexture(int texture) {
-		return current.glIsTexture(texture);
+	public boolean glIsRenderbuffer(int renderbuffer) {
+		return current.glIsRenderbuffer(renderbuffer);
 	}
 
 	public void glVertexAttrib1sv(int index, ShortBuffer v) {
 		current.glVertexAttrib1sv(index, v);
 	}
 
-	public void glLineWidth(float width) {
-		current.glLineWidth(width);
+	public boolean glIsTexture(int texture) {
+		return current.glIsTexture(texture);
 	}
 
 	public void glReleaseShaderCompiler() {
@@ -2383,28 +2399,24 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib1sv(index, v, v_offset);
 	}
 
-	public ByteBuffer glMapBuffer(int target, int access) {
-		return current.glMapBuffer(target, access);
+	public void glLineWidth(float width) {
+		current.glLineWidth(width);
 	}
 
 	public void glVertexAttrib2d(int index, double x, double y) {
 		current.glVertexAttrib2d(index, x, y);
 	}
 
-	public ByteBuffer glMapBufferRange(int target, long offset, long length, int access) {
-		return current.glMapBufferRange(target, offset, length, access);
-	}
-
 	public void glShaderBinary(int n, IntBuffer shaders, int binaryformat, Buffer binary, int length) {
 		current.glShaderBinary(n, shaders, binaryformat, binary, length);
 	}
 
-	public void glVertexAttrib2dv(int index, DoubleBuffer v) {
-		current.glVertexAttrib2dv(index, v);
+	public ByteBuffer glMapBuffer(int target, int access) {
+		return current.glMapBuffer(target, access);
 	}
 
-	public void glPixelStorei(int pname, int param) {
-		current.glPixelStorei(pname, param);
+	public void glVertexAttrib2dv(int index, DoubleBuffer v) {
+		current.glVertexAttrib2dv(index, v);
 	}
 
 	public void glVertexAttrib2dv(int index, double[] v, int v_offset) {
@@ -2415,20 +2427,16 @@ public class GL2Wrapper implements GL2 {
 		current.glShaderBinary(n, shaders, shaders_offset, binaryformat, binary, length);
 	}
 
-	public void glPolygonOffset(float factor, float units) {
-		current.glPolygonOffset(factor, units);
-	}
-
 	public void glVertexAttrib2s(int index, short x, short y) {
 		current.glVertexAttrib2s(index, x, y);
 	}
 
-	public void glVertexAttrib2sv(int index, ShortBuffer v) {
-		current.glVertexAttrib2sv(index, v);
+	public ByteBuffer glMapBufferRange(int target, long offset, long length, int access) {
+		return current.glMapBufferRange(target, offset, length, access);
 	}
 
-	public void glReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels) {
-		current.glReadPixels(x, y, width, height, format, type, pixels);
+	public void glVertexAttrib2sv(int index, ShortBuffer v) {
+		current.glVertexAttrib2sv(index, v);
 	}
 
 	public void glGetShaderPrecisionFormat(int shadertype, int precisiontype, IntBuffer range, IntBuffer precision) {
@@ -2439,44 +2447,44 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib2sv(index, v, v_offset);
 	}
 
-	public void glReadPixels(int x, int y, int width, int height, int format, int type, long pixels_buffer_offset) {
-		current.glReadPixels(x, y, width, height, format, type, pixels_buffer_offset);
+	public void glVertexAttrib3d(int index, double x, double y, double z) {
+		current.glVertexAttrib3d(index, x, y, z);
 	}
 
 	public void glGetShaderPrecisionFormat(int shadertype, int precisiontype, int[] range, int range_offset, int[] precision, int precision_offset) {
 		current.glGetShaderPrecisionFormat(shadertype, precisiontype, range, range_offset, precision, precision_offset);
 	}
 
-	public void glVertexAttrib3d(int index, double x, double y, double z) {
-		current.glVertexAttrib3d(index, x, y, z);
-	}
-
 	public void glVertexAttrib3dv(int index, DoubleBuffer v) {
 		current.glVertexAttrib3dv(index, v);
 	}
 
-	public void glReadnPixels(int x, int y, int width, int height, int format, int type, int bufSize, Buffer data) {
-		current.glReadnPixels(x, y, width, height, format, type, bufSize, data);
+	public void glPixelStorei(int pname, int param) {
+		current.glPixelStorei(pname, param);
+	}
+
+	public void glPolygonOffset(float factor, float units) {
+		current.glPolygonOffset(factor, units);
 	}
 
 	public void glVertexAttrib3dv(int index, double[] v, int v_offset) {
 		current.glVertexAttrib3dv(index, v, v_offset);
 	}
 
-	public void glRenderbufferStorage(int target, int internalformat, int width, int height) {
-		current.glRenderbufferStorage(target, internalformat, width, height);
-	}
-
 	public void glVertexAttrib3s(int index, short x, short y, short z) {
 		current.glVertexAttrib3s(index, x, y, z);
+	}
+
+	public void glReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels) {
+		current.glReadPixels(x, y, width, height, format, type, pixels);
 	}
 
 	public void glVertexAttrib3sv(int index, ShortBuffer v) {
 		current.glVertexAttrib3sv(index, v);
 	}
 
-	public void glSampleCoverage(float value, boolean invert) {
-		current.glSampleCoverage(value, invert);
+	public void glReadPixels(int x, int y, int width, int height, int format, int type, long pixels_buffer_offset) {
+		current.glReadPixels(x, y, width, height, format, type, pixels_buffer_offset);
 	}
 
 	public void glVertexAttrib3sv(int index, short[] v, int v_offset) {
@@ -2491,100 +2499,96 @@ public class GL2Wrapper implements GL2 {
 		current.glUniform(data);
 	}
 
-	public void glScissor(int x, int y, int width, int height) {
-		current.glScissor(x, y, width, height);
-	}
-
 	public void glVertexAttrib4Nbv(int index, ByteBuffer v) {
 		current.glVertexAttrib4Nbv(index, v);
 	}
 
-	public void glStencilFunc(int func, int ref, int mask) {
-		current.glStencilFunc(func, ref, mask);
+	public void glReadnPixels(int x, int y, int width, int height, int format, int type, int bufSize, Buffer data) {
+		current.glReadnPixels(x, y, width, height, format, type, bufSize, data);
 	}
 
 	public void glVertexAttrib4Nbv(int index, byte[] v, int v_offset) {
 		current.glVertexAttrib4Nbv(index, v, v_offset);
 	}
 
-	public void glStencilMask(int mask) {
-		current.glStencilMask(mask);
-	}
-
 	public void glVertexAttrib4Niv(int index, IntBuffer v) {
 		current.glVertexAttrib4Niv(index, v);
 	}
 
-	public void glStencilOp(int fail, int zfail, int zpass) {
-		current.glStencilOp(fail, zfail, zpass);
+	public void glRenderbufferStorage(int target, int internalformat, int width, int height) {
+		current.glRenderbufferStorage(target, internalformat, width, height);
 	}
 
 	public void glVertexAttrib4Niv(int index, int[] v, int v_offset) {
 		current.glVertexAttrib4Niv(index, v, v_offset);
 	}
 
-	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels) {
-		current.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+	public void glSampleCoverage(float value, boolean invert) {
+		current.glSampleCoverage(value, invert);
 	}
 
 	public void glVertexAttrib4Nsv(int index, ShortBuffer v) {
 		current.glVertexAttrib4Nsv(index, v);
 	}
 
+	public void glScissor(int x, int y, int width, int height) {
+		current.glScissor(x, y, width, height);
+	}
+
 	public void glVertexAttrib4Nsv(int index, short[] v, int v_offset) {
 		current.glVertexAttrib4Nsv(index, v, v_offset);
+	}
+
+	public void glStencilFunc(int func, int ref, int mask) {
+		current.glStencilFunc(func, ref, mask);
 	}
 
 	public void glVertexAttrib4Nub(int index, byte x, byte y, byte z, byte w) {
 		current.glVertexAttrib4Nub(index, x, y, z, w);
 	}
 
-	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, long pixels_buffer_offset) {
-		current.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels_buffer_offset);
-	}
-
 	public void glVertexAttrib4Nubv(int index, ByteBuffer v) {
 		current.glVertexAttrib4Nubv(index, v);
 	}
 
-	public void glTexParameterf(int target, int pname, float param) {
-		current.glTexParameterf(target, pname, param);
+	public void glStencilMask(int mask) {
+		current.glStencilMask(mask);
+	}
+
+	public void glStencilOp(int fail, int zfail, int zpass) {
+		current.glStencilOp(fail, zfail, zpass);
 	}
 
 	public void glVertexAttrib4Nubv(int index, byte[] v, int v_offset) {
 		current.glVertexAttrib4Nubv(index, v, v_offset);
 	}
 
-	public void glTexParameterfv(int target, int pname, FloatBuffer params) {
-		current.glTexParameterfv(target, pname, params);
-	}
-
 	public void glVertexAttrib4Nuiv(int index, IntBuffer v) {
 		current.glVertexAttrib4Nuiv(index, v);
+	}
+
+	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, Buffer pixels) {
+		current.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 	}
 
 	public void glVertexAttrib4Nuiv(int index, int[] v, int v_offset) {
 		current.glVertexAttrib4Nuiv(index, v, v_offset);
 	}
 
-	public void glTexParameterfv(int target, int pname, float[] params, int params_offset) {
-		current.glTexParameterfv(target, pname, params, params_offset);
-	}
-
 	public void glVertexAttrib4Nusv(int index, ShortBuffer v) {
 		current.glVertexAttrib4Nusv(index, v);
 	}
 
-	public void glTexParameteri(int target, int pname, int param) {
-		current.glTexParameteri(target, pname, param);
+	public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, long pixels_buffer_offset) {
+		current.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels_buffer_offset);
 	}
 
 	public void glVertexAttrib4Nusv(int index, short[] v, int v_offset) {
 		current.glVertexAttrib4Nusv(index, v, v_offset);
 	}
 
-	public void glTexParameteriv(int target, int pname, IntBuffer params) {
-		current.glTexParameteriv(target, pname, params);
+	public void glTexParameterf(int target, int pname, float param) {
+		current.glTexParameterf(target, pname, param);
 	}
 
 	public void glVertexAttrib4bv(int index, ByteBuffer v) {
@@ -2595,48 +2599,52 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib4bv(index, v, v_offset);
 	}
 
-	public void glTexParameteriv(int target, int pname, int[] params, int params_offset) {
-		current.glTexParameteriv(target, pname, params, params_offset);
+	public void glTexParameterfv(int target, int pname, FloatBuffer params) {
+		current.glTexParameterfv(target, pname, params);
 	}
 
 	public void glVertexAttrib4d(int index, double x, double y, double z, double w) {
 		current.glVertexAttrib4d(index, x, y, z, w);
 	}
 
-	public void glTexStorage1D(int target, int levels, int internalformat, int width) {
-		current.glTexStorage1D(target, levels, internalformat, width);
+	public void glTexParameterfv(int target, int pname, float[] params, int params_offset) {
+		current.glTexParameterfv(target, pname, params, params_offset);
 	}
 
 	public void glVertexAttrib4dv(int index, DoubleBuffer v) {
 		current.glVertexAttrib4dv(index, v);
 	}
 
-	public void glTexStorage2D(int target, int levels, int internalformat, int width, int height) {
-		current.glTexStorage2D(target, levels, internalformat, width, height);
+	public void glTexParameteri(int target, int pname, int param) {
+		current.glTexParameteri(target, pname, param);
 	}
 
 	public void glVertexAttrib4dv(int index, double[] v, int v_offset) {
 		current.glVertexAttrib4dv(index, v, v_offset);
 	}
 
-	public void glVertexAttrib4iv(int index, IntBuffer v) {
-		current.glVertexAttrib4iv(index, v);
+	public void glTexParameteriv(int target, int pname, IntBuffer params) {
+		current.glTexParameteriv(target, pname, params);
 	}
 
-	public void glTexStorage3D(int target, int levels, int internalformat, int width, int height, int depth) {
-		current.glTexStorage3D(target, levels, internalformat, width, height, depth);
+	public void glVertexAttrib4iv(int index, IntBuffer v) {
+		current.glVertexAttrib4iv(index, v);
 	}
 
 	public void glVertexAttrib4iv(int index, int[] v, int v_offset) {
 		current.glVertexAttrib4iv(index, v, v_offset);
 	}
 
+	public void glTexParameteriv(int target, int pname, int[] params, int params_offset) {
+		current.glTexParameteriv(target, pname, params, params_offset);
+	}
+
 	public void glVertexAttrib4s(int index, short x, short y, short z, short w) {
 		current.glVertexAttrib4s(index, x, y, z, w);
 	}
 
-	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels) {
-		current.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+	public void glTexStorage1D(int target, int levels, int internalformat, int width) {
+		current.glTexStorage1D(target, levels, internalformat, width);
 	}
 
 	public void glVertexAttrib4sv(int index, ShortBuffer v) {
@@ -2647,16 +2655,16 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib4sv(index, v, v_offset);
 	}
 
-	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, long pixels_buffer_offset) {
-		current.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels_buffer_offset);
+	public void glTexStorage2D(int target, int levels, int internalformat, int width, int height) {
+		current.glTexStorage2D(target, levels, internalformat, width, height);
 	}
 
 	public void glVertexAttrib4ubv(int index, ByteBuffer v) {
 		current.glVertexAttrib4ubv(index, v);
 	}
 
-	public void glTextureStorage1D(int texture, int target, int levels, int internalformat, int width) {
-		current.glTextureStorage1D(texture, target, levels, internalformat, width);
+	public void glTexStorage3D(int target, int levels, int internalformat, int width, int height, int depth) {
+		current.glTexStorage3D(target, levels, internalformat, width, height, depth);
 	}
 
 	public void glVertexAttrib4ubv(int index, byte[] v, int v_offset) {
@@ -2667,44 +2675,48 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttrib4uiv(index, v);
 	}
 
-	public void glTextureStorage2D(int texture, int target, int levels, int internalformat, int width, int height) {
-		current.glTextureStorage2D(texture, target, levels, internalformat, width, height);
+	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, Buffer pixels) {
+		current.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
 	public void glVertexAttrib4uiv(int index, int[] v, int v_offset) {
 		current.glVertexAttrib4uiv(index, v, v_offset);
 	}
 
-	public void glTextureStorage3D(int texture, int target, int levels, int internalformat, int width, int height, int depth) {
-		current.glTextureStorage3D(texture, target, levels, internalformat, width, height, depth);
-	}
-
 	public void glVertexAttrib4usv(int index, ShortBuffer v) {
 		current.glVertexAttrib4usv(index, v);
+	}
+
+	public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, long pixels_buffer_offset) {
+		current.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels_buffer_offset);
 	}
 
 	public void glVertexAttrib4usv(int index, short[] v, int v_offset) {
 		current.glVertexAttrib4usv(index, v, v_offset);
 	}
 
-	public boolean glUnmapBuffer(int target) {
-		return current.glUnmapBuffer(target);
-	}
-
 	public void glVertexAttribFormatNV(int index, int size, int type, boolean normalized, int stride) {
 		current.glVertexAttribFormatNV(index, size, type, normalized, stride);
 	}
 
-	public void glViewport(int x, int y, int width, int height) {
-		current.glViewport(x, y, width, height);
+	public void glTextureStorage1D(int texture, int target, int levels, int internalformat, int width) {
+		current.glTextureStorage1D(texture, target, levels, internalformat, width);
 	}
 
 	public void glVertexAttribI1i(int index, int x) {
 		current.glVertexAttribI1i(index, x);
 	}
 
+	public void glTextureStorage2D(int texture, int target, int levels, int internalformat, int width, int height) {
+		current.glTextureStorage2D(texture, target, levels, internalformat, width, height);
+	}
+
 	public void glVertexAttribI1iv(int index, IntBuffer v) {
 		current.glVertexAttribI1iv(index, v);
+	}
+
+	public void glTextureStorage3D(int texture, int target, int levels, int internalformat, int width, int height, int depth) {
+		current.glTextureStorage3D(texture, target, levels, internalformat, width, height, depth);
 	}
 
 	public void glVertexAttribI1iv(int index, int[] v, int v_offset) {
@@ -2715,8 +2727,16 @@ public class GL2Wrapper implements GL2 {
 		current.glVertexAttribI1ui(index, x);
 	}
 
+	public boolean glUnmapBuffer(int target) {
+		return current.glUnmapBuffer(target);
+	}
+
 	public void glVertexAttribI1uiv(int index, IntBuffer v) {
 		current.glVertexAttribI1uiv(index, v);
+	}
+
+	public void glViewport(int x, int y, int width, int height) {
+		current.glViewport(x, y, width, height);
 	}
 
 	public void glVertexAttribI1uiv(int index, int[] v, int v_offset) {
@@ -3263,7 +3283,8 @@ public class GL2Wrapper implements GL2 {
 		current.glCompressedMultiTexSubImage2DEXT(texunit, target, level, xoffset, yoffset, width, height, format, imageSize, bits);
 	}
 
-	public void glCompressedMultiTexSubImage3DEXT(int texunit, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer bits) {
+	public void glCompressedMultiTexSubImage3DEXT(int texunit, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format,
+			int imageSize, Buffer bits) {
 		current.glCompressedMultiTexSubImage3DEXT(texunit, target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, bits);
 	}
 
@@ -3287,7 +3308,8 @@ public class GL2Wrapper implements GL2 {
 		current.glCompressedTextureSubImage2DEXT(texture, target, level, xoffset, yoffset, width, height, format, imageSize, bits);
 	}
 
-	public void glCompressedTextureSubImage3DEXT(int texture, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int imageSize, Buffer bits) {
+	public void glCompressedTextureSubImage3DEXT(int texture, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format,
+			int imageSize, Buffer bits) {
 		current.glCompressedTextureSubImage3DEXT(texture, target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, bits);
 	}
 
@@ -3347,7 +3369,8 @@ public class GL2Wrapper implements GL2 {
 		current.glCopyConvolutionFilter2D(target, internalformat, x, y, width, height);
 	}
 
-	public void glCopyImageSubDataNV(int srcName, int srcTarget, int srcLevel, int srcX, int srcY, int srcZ, int dstName, int dstTarget, int dstLevel, int dstX, int dstY, int dstZ, int width, int height, int depth) {
+	public void glCopyImageSubDataNV(int srcName, int srcTarget, int srcLevel, int srcX, int srcY, int srcZ, int dstName, int dstTarget, int dstLevel, int dstX, int dstY,
+			int dstZ, int width, int height, int depth) {
 		current.glCopyImageSubDataNV(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, width, height, depth);
 	}
 
@@ -3403,7 +3426,8 @@ public class GL2Wrapper implements GL2 {
 		current.glCoverFillPathInstancedNV(numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues);
 	}
 
-	public void glCoverFillPathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int coverMode, int transformType, float[] transformValues, int transformValues_offset) {
+	public void glCoverFillPathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int coverMode, int transformType, float[] transformValues,
+			int transformValues_offset) {
 		current.glCoverFillPathInstancedNV(numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues, transformValues_offset);
 	}
 
@@ -3415,7 +3439,8 @@ public class GL2Wrapper implements GL2 {
 		current.glCoverStrokePathInstancedNV(numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues);
 	}
 
-	public void glCoverStrokePathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int coverMode, int transformType, float[] transformValues, int transformValues_offset) {
+	public void glCoverStrokePathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int coverMode, int transformType, float[] transformValues,
+			int transformValues_offset) {
 		current.glCoverStrokePathInstancedNV(numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues, transformValues_offset);
 	}
 
@@ -3947,7 +3972,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetActiveUniformARB(programObj, index, maxLength, length, size, type, name);
 	}
 
-	public void glGetActiveUniformARB(int programObj, int index, int maxLength, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset, byte[] name, int name_offset) {
+	public void glGetActiveUniformARB(int programObj, int index, int maxLength, int[] length, int length_offset, int[] size, int size_offset, int[] type, int type_offset,
+			byte[] name, int name_offset) {
 		current.glGetActiveUniformARB(programObj, index, maxLength, length, length_offset, size, size_offset, type, type_offset, name, name_offset);
 	}
 
@@ -4571,11 +4597,13 @@ public class GL2Wrapper implements GL2 {
 		current.glGetPathParameterivNV(path, pname, value, value_offset);
 	}
 
-	public void glGetPathSpacingNV(int pathListMode, int numPaths, int pathNameType, Buffer paths, int pathBase, float advanceScale, float kerningScale, int transformType, FloatBuffer returnedSpacing) {
+	public void glGetPathSpacingNV(int pathListMode, int numPaths, int pathNameType, Buffer paths, int pathBase, float advanceScale, float kerningScale, int transformType,
+			FloatBuffer returnedSpacing) {
 		current.glGetPathSpacingNV(pathListMode, numPaths, pathNameType, paths, pathBase, advanceScale, kerningScale, transformType, returnedSpacing);
 	}
 
-	public void glGetPathSpacingNV(int pathListMode, int numPaths, int pathNameType, Buffer paths, int pathBase, float advanceScale, float kerningScale, int transformType, float[] returnedSpacing, int returnedSpacing_offset) {
+	public void glGetPathSpacingNV(int pathListMode, int numPaths, int pathNameType, Buffer paths, int pathBase, float advanceScale, float kerningScale, int transformType,
+			float[] returnedSpacing, int returnedSpacing_offset) {
 		current.glGetPathSpacingNV(pathListMode, numPaths, pathNameType, paths, pathBase, advanceScale, kerningScale, transformType, returnedSpacing, returnedSpacing_offset);
 	}
 
@@ -4619,7 +4647,8 @@ public class GL2Wrapper implements GL2 {
 		current.glGetPerfMonitorCountersAMD(group, numCounters, maxActiveCounters, counterSize, counters);
 	}
 
-	public void glGetPerfMonitorCountersAMD(int group, int[] numCounters, int numCounters_offset, int[] maxActiveCounters, int maxActiveCounters_offset, int counterSize, int[] counters, int counters_offset) {
+	public void glGetPerfMonitorCountersAMD(int group, int[] numCounters, int numCounters_offset, int[] maxActiveCounters, int maxActiveCounters_offset, int counterSize,
+			int[] counters, int counters_offset) {
 		current.glGetPerfMonitorCountersAMD(group, numCounters, numCounters_offset, maxActiveCounters, maxActiveCounters_offset, counterSize, counters, counters_offset);
 	}
 
@@ -5483,7 +5512,8 @@ public class GL2Wrapper implements GL2 {
 		current.glMapVertexAttrib2dAPPLE(index, size, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 	}
 
-	public void glMapVertexAttrib2dAPPLE(int index, int size, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points, int points_offset) {
+	public void glMapVertexAttrib2dAPPLE(int index, int size, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double[] points,
+			int points_offset) {
 		current.glMapVertexAttrib2dAPPLE(index, size, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points, points_offset);
 	}
 
@@ -5491,7 +5521,8 @@ public class GL2Wrapper implements GL2 {
 		current.glMapVertexAttrib2fAPPLE(index, size, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 	}
 
-	public void glMapVertexAttrib2fAPPLE(int index, int size, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points, int points_offset) {
+	public void glMapVertexAttrib2fAPPLE(int index, int size, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float[] points,
+			int points_offset) {
 		current.glMapVertexAttrib2fAPPLE(index, size, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points, points_offset);
 	}
 
@@ -6087,7 +6118,8 @@ public class GL2Wrapper implements GL2 {
 		current.glMultiTexSubImage2DEXT(texunit, target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
-	public void glMultiTexSubImage3DEXT(int texunit, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels) {
+	public void glMultiTexSubImage3DEXT(int texunit, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type,
+			Buffer pixels) {
 		current.glMultiTexSubImage3DEXT(texunit, target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -6347,11 +6379,13 @@ public class GL2Wrapper implements GL2 {
 		current.glPathFogGenNV(genMode);
 	}
 
-	public void glPathGlyphRangeNV(int firstPathName, int fontTarget, Buffer fontName, int fontStyle, int firstGlyph, int numGlyphs, int handleMissingGlyphs, int pathParameterTemplate, float emScale) {
+	public void glPathGlyphRangeNV(int firstPathName, int fontTarget, Buffer fontName, int fontStyle, int firstGlyph, int numGlyphs, int handleMissingGlyphs,
+			int pathParameterTemplate, float emScale) {
 		current.glPathGlyphRangeNV(firstPathName, fontTarget, fontName, fontStyle, firstGlyph, numGlyphs, handleMissingGlyphs, pathParameterTemplate, emScale);
 	}
 
-	public void glPathGlyphsNV(int firstPathName, int fontTarget, Buffer fontName, int fontStyle, int numGlyphs, int type, Buffer charcodes, int handleMissingGlyphs, int pathParameterTemplate, float emScale) {
+	public void glPathGlyphsNV(int firstPathName, int fontTarget, Buffer fontName, int fontStyle, int numGlyphs, int type, Buffer charcodes, int handleMissingGlyphs,
+			int pathParameterTemplate, float emScale) {
 		current.glPathGlyphsNV(firstPathName, fontTarget, fontName, fontStyle, numGlyphs, type, charcodes, handleMissingGlyphs, pathParameterTemplate, emScale);
 	}
 
@@ -6395,7 +6429,8 @@ public class GL2Wrapper implements GL2 {
 		current.glPathSubCommandsNV(path, commandStart, commandsToDelete, numCommands, commands, numCoords, coordType, coords);
 	}
 
-	public void glPathSubCommandsNV(int path, int commandStart, int commandsToDelete, int numCommands, byte[] commands, int commands_offset, int numCoords, int coordType, Buffer coords) {
+	public void glPathSubCommandsNV(int path, int commandStart, int commandsToDelete, int numCommands, byte[] commands, int commands_offset, int numCoords, int coordType,
+			Buffer coords) {
 		current.glPathSubCommandsNV(path, commandStart, commandsToDelete, numCommands, commands, commands_offset, numCoords, coordType, coords);
 	}
 
@@ -6495,7 +6530,8 @@ public class GL2Wrapper implements GL2 {
 		return current.glPointAlongPathNV(path, startSegment, numSegments, distance, x, y, tangentX, tangentY);
 	}
 
-	public boolean glPointAlongPathNV(int path, int startSegment, int numSegments, float distance, float[] x, int x_offset, float[] y, int y_offset, float[] tangentX, int tangentX_offset, float[] tangentY, int tangentY_offset) {
+	public boolean glPointAlongPathNV(int path, int startSegment, int numSegments, float distance, float[] x, int x_offset, float[] y, int y_offset, float[] tangentX,
+			int tangentX_offset, float[] tangentY, int tangentY_offset) {
 		return current.glPointAlongPathNV(path, startSegment, numSegments, distance, x, x_offset, y, y_offset, tangentX, tangentX_offset, tangentY, tangentY_offset);
 	}
 
@@ -7263,7 +7299,8 @@ public class GL2Wrapper implements GL2 {
 		current.glStencilFillPathInstancedNV(numPaths, pathNameType, paths, pathBase, fillMode, mask, transformType, transformValues);
 	}
 
-	public void glStencilFillPathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int fillMode, int mask, int transformType, float[] transformValues, int transformValues_offset) {
+	public void glStencilFillPathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int fillMode, int mask, int transformType, float[] transformValues,
+			int transformValues_offset) {
 		current.glStencilFillPathInstancedNV(numPaths, pathNameType, paths, pathBase, fillMode, mask, transformType, transformValues, transformValues_offset);
 	}
 
@@ -7275,7 +7312,8 @@ public class GL2Wrapper implements GL2 {
 		current.glStencilStrokePathInstancedNV(numPaths, pathNameType, paths, pathBase, reference, mask, transformType, transformValues);
 	}
 
-	public void glStencilStrokePathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int reference, int mask, int transformType, float[] transformValues, int transformValues_offset) {
+	public void glStencilStrokePathInstancedNV(int numPaths, int pathNameType, Buffer paths, int pathBase, int reference, int mask, int transformType, float[] transformValues,
+			int transformValues_offset) {
 		current.glStencilStrokePathInstancedNV(numPaths, pathNameType, paths, pathBase, reference, mask, transformType, transformValues, transformValues_offset);
 	}
 
@@ -7707,7 +7745,8 @@ public class GL2Wrapper implements GL2 {
 		current.glTextureSubImage2DEXT(texture, target, level, xoffset, yoffset, width, height, format, type, pixels);
 	}
 
-	public void glTextureSubImage3DEXT(int texture, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type, Buffer pixels) {
+	public void glTextureSubImage3DEXT(int texture, int target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, int format, int type,
+			Buffer pixels) {
 		current.glTextureSubImage3DEXT(texture, target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
 	}
 
@@ -9079,6 +9118,14 @@ public class GL2Wrapper implements GL2 {
 		current.glWriteMaskEXT(res, in, outX, outY, outZ, outW);
 	}
 
+	public GLBufferStorage mapNamedBuffer(int bufferName, int access) throws GLException {
+		return current.mapNamedBuffer(bufferName, access);
+	}
+
+	public GLBufferStorage mapNamedBufferRange(int bufferName, long offset, long length, int access) throws GLException {
+		return current.mapNamedBufferRange(bufferName, offset, length, access);
+	}
+
 	public ByteBuffer glAllocateMemoryNV(int size, float readFrequency, float writeFrequency, float priority) {
 		return current.glAllocateMemoryNV(size, readFrequency, writeFrequency, priority);
 	}
@@ -9102,6 +9149,7 @@ public class GL2Wrapper implements GL2 {
 	public void glVertexAttribIPointer(int index, int size, int type, int stride, Buffer pointer) {
 		current.glVertexAttribIPointer(index, size, type, stride, pointer);
 	}
-	
+
+
 	
 }

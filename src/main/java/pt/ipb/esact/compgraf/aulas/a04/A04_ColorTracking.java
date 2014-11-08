@@ -4,8 +4,6 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import java.nio.FloatBuffer;
-
 public class A04_ColorTracking extends DefaultGLWindow {
 
 	public A04_ColorTracking() {

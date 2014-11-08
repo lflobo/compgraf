@@ -13,13 +13,14 @@ import java.util.regex.Pattern;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLException;
+import javax.vecmath.Vector3f;
 
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.GlTools;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
-import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Color;
+import pt.ipb.esact.compgraf.tools.math.Colors;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
-import pt.ipb.esact.compgraf.tools.math.Vector;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -55,11 +56,11 @@ public class ObjLoader implements ReleaseListener {
 	
 	private Map<String, Boolean> shadeModel = Maps.newHashMap();
 	
-	private List<Vector> vertices = Lists.newArrayList();
+	private List<Vector3f> vertices = Lists.newArrayList();
 	
-	private List<Vector> normals = Lists.newArrayList();
+	private List<Vector3f> normals = Lists.newArrayList();
 	
-	private List<Vector> texcoords = Lists.newArrayList();
+	private List<Vector3f> texcoords = Lists.newArrayList();
 
 	private IntBuffer vboIds = IntBuffer.allocate(OBJ_BUFFER_COUNT);
 	
@@ -67,9 +68,9 @@ public class ObjLoader implements ReleaseListener {
 	
 	private boolean compress = false;
 	
-	private Vector bbMax = new Vector();
+	private Vector3f bbMax = new Vector3f();
 	
-	private Vector bbMin = new Vector();
+	private Vector3f bbMin = new Vector3f();
 
 	private DefaultGLWindow reference;
 	
@@ -201,9 +202,9 @@ public class ObjLoader implements ReleaseListener {
 		
 		GL2 gl = GlTools.gl();
 		
-		List<Vector> verts = Lists.newArrayList();
-		List<Vector> norms = Lists.newArrayList();
-		List<Vector> texes = Lists.newArrayList();
+		List<Vector3f> verts = Lists.newArrayList();
+		List<Vector3f> norms = Lists.newArrayList();
+		List<Vector3f> texes = Lists.newArrayList();
 		
 		gl.glGenBuffers(OBJ_BUFFER_COUNT, vboIds);
 		
@@ -219,7 +220,7 @@ public class ObjLoader implements ReleaseListener {
 			
 			m = rv.matcher(line);
 			if(m.matches()) {
-				verts.add(new Vector(
+				verts.add(new Vector3f(
 					Float.parseFloat(m.group(1)) * scale,
 					Float.parseFloat(m.group(2)) * scale,
 					Float.parseFloat(m.group(3)) * scale
@@ -228,7 +229,7 @@ public class ObjLoader implements ReleaseListener {
 			
 			m = rvt.matcher(line);
 			if(m.matches()) {
-				texes.add(new Vector(
+				texes.add(new Vector3f(
 					Float.parseFloat(m.group(1)),
 					Float.parseFloat(m.group(2)),
 					0.0f
@@ -237,7 +238,7 @@ public class ObjLoader implements ReleaseListener {
 			
 			m = rvt3.matcher(line);
 			if(m.matches()) {
-				texes.add(new Vector(
+				texes.add(new Vector3f(
 					Float.parseFloat(m.group(1)),
 					Float.parseFloat(m.group(2)),
 					0.0f
@@ -246,7 +247,7 @@ public class ObjLoader implements ReleaseListener {
 			
 			m = rvn.matcher(line);
 			if(m.matches()) {
-				norms.add(new Vector(
+				norms.add(new Vector3f(
 					Float.parseFloat(m.group(1)),
 					Float.parseFloat(m.group(2)),
 					Float.parseFloat(m.group(3))
@@ -273,9 +274,9 @@ public class ObjLoader implements ReleaseListener {
 				List<String> tokens = Lists.newArrayList(Splitter.onPattern("[ ]+").split(m.group(1)));
 				int vertexCount = tokens.size();
 
-				Vector fVerts[] = new Vector[vertexCount];
-				Vector fNorms[] = new Vector[vertexCount];
-				Vector fTexes[] = new Vector[vertexCount];
+				Vector3f fVerts[] = new Vector3f[vertexCount];
+				Vector3f fNorms[] = new Vector3f[vertexCount];
+				Vector3f fTexes[] = new Vector3f[vertexCount];
 				
 				for(int f=0; f<tokens.size(); f++) {
 					List<String> ns = Lists.newArrayList(Splitter.onPattern("/").split(tokens.get(f)));
@@ -284,21 +285,21 @@ public class ObjLoader implements ReleaseListener {
 						int vx = Integer.parseInt(ns.get(0));
 						fVerts[f] = verts.get(vx-1);
 					} catch (NumberFormatException|IndexOutOfBoundsException e) {
-						fVerts[f] = new Vector();
+						fVerts[f] = new Vector3f();
 					}
 					
 					try {
 						int tx = Integer.parseInt(ns.get(1));
 						fTexes[f] = texes.get(tx-1);
 					} catch (NumberFormatException|IndexOutOfBoundsException e) {
-						fTexes[f] = new Vector();
+						fTexes[f] = new Vector3f();
 					}
 					
 					try {
 						int nx = Integer.parseInt(ns.get(2));
 						fNorms[f] = norms.get(nx-1);
 					} catch (NumberFormatException|IndexOutOfBoundsException e) {
-						fNorms[f] = new Vector();
+						fNorms[f] = new Vector3f();
 					}
 					
 				}
@@ -358,7 +359,7 @@ public class ObjLoader implements ReleaseListener {
 	private FloatBuffer vertsPointer() {
 		float[] buffer = new float[vertices.size() * 3];
 		for(int i=0; i<vertices.size(); i++) {
-			Vector v = vertices.get(i);
+			Vector3f v = vertices.get(i);
 			buffer[3 * i + 0] = v.x;
 			buffer[3 * i + 1] = v.y;
 			buffer[3 * i + 2] = v.z;
@@ -369,7 +370,7 @@ public class ObjLoader implements ReleaseListener {
 	private FloatBuffer normsPointer() {
 		float[] buffer = new float[normals.size() * 3];
 		for(int i=0; i<normals.size(); i++) {
-			Vector v = normals.get(i);
+			Vector3f v = normals.get(i);
 			buffer[3 * i + 0] = v.x;
 			buffer[3 * i + 1] = v.y;
 			buffer[3 * i + 2] = v.z;
@@ -380,14 +381,14 @@ public class ObjLoader implements ReleaseListener {
 	private FloatBuffer texesPointer() {
 		float[] buffer = new float[texcoords.size() * 2];
 		for(int i=0; i<texcoords.size(); i++) {
-			Vector v = texcoords.get(i);
+			Vector3f v = texcoords.get(i);
 			buffer[2 * i + 0] = v.x;
 			buffer[2 * i + 1] = v.y;
 		}
 		return FloatBuffer.wrap(buffer);
 	}
 
-	private void addFace(Vector[] verts, Vector[] norms, Vector[] texes, int count, String o) {
+	private void addFace(Vector3f[] verts, Vector3f[] norms, Vector3f[] texes, int count, String o) {
 		if(count < 3 || count > 4)
 			return;
 
@@ -397,17 +398,17 @@ public class ObjLoader implements ReleaseListener {
 		final float e = 0.00001f;
 
 		for(int i=0; i<count; i++) {
-			Vector v = verts[i];
-			Vector t = texes[i];
-			Vector n = norms[i];
+			Vector3f v = verts[i];
+			Vector3f t = texes[i];
+			Vector3f n = norms[i];
 
 			int matchIdx = 0;
 			if(compress) {
 				for(matchIdx = 0; matchIdx < vertices.size(); matchIdx++) {
 					if(
-						v.sub(vertices.get(matchIdx)).lengthSquared() <= e &&
-						n.sub(normals.get(matchIdx)).lengthSquared() <= e &&
-						t.sub(texcoords.get(matchIdx)).lengthSquared() <= e
+						Vectors.sub(v, vertices.get(matchIdx)).lengthSquared() <= e &&
+						Vectors.sub(n, normals.get(matchIdx)).lengthSquared() <= e &&
+						Vectors.sub(t, texcoords.get(matchIdx)).lengthSquared() <= e
 					) { // there's a match
 						boolean match = false;
 						if(count == 3) { triIndexes.get(o).add(matchIdx); match=true; }
@@ -494,7 +495,7 @@ public class ObjLoader implements ReleaseListener {
 					}
 					gl.glShadeModel(shadeModel.get(o) ? GL2.GL_SMOOTH : GL2.GL_FLAT);
 				} else {
-					Color.WHITE.set();
+					Colors.WHITE.set();
 				}
 	
 				// Triangle Indexes
@@ -531,13 +532,13 @@ public class ObjLoader implements ReleaseListener {
 		float xSize = bbMax.x - bbMin.x;
 		float ySize = bbMax.y - bbMin.y;
 		float zSize = bbMax.z - bbMin.z;
-		Vector center = new Vector(bbMin.x + xSize / 2.0f, bbMin.y + ySize / 2.0f, bbMin.z + zSize / 2.0f);
+		Vector3f center = new Vector3f(bbMin.x + xSize / 2.0f, bbMin.y + ySize / 2.0f, bbMin.z + zSize / 2.0f);
 		gl.glPushAttrib(GL2.GL_CURRENT_BIT | GL2.GL_ENABLE_BIT);
 			gl.glDisable(GL2.GL_TEXTURE_2D);
 			gl.glDisable(GL2.GL_DEPTH_TEST);
 			gl.glDisable(GL2.GL_LIGHTING);
 			gl.glDisable(GL2.GL_BLEND);
-			Color.GREEN.set();
+			Colors.GREEN.set();
 			gl.glPushMatrix();
 				gl.glTranslatef(center.x, center.y, center.z);
 				gl.glScalef(xSize, ySize, zSize);

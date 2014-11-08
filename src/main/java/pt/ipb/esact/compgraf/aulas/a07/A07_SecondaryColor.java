@@ -6,9 +6,9 @@ import java.nio.IntBuffer;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Color;
+import pt.ipb.esact.compgraf.tools.math.Colors;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
-import pt.ipb.esact.compgraf.tools.math.Vector;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 public class A07_SecondaryColor extends DefaultGLWindow {
 
@@ -210,7 +210,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT | GL_ENABLE_BIT);
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_LIGHTING);
-			GLPrimitives.drawCircle(radius, Color.DARKGRAY, Vector.ORIGIN);
+			GLPrimitives.drawCircle(radius, Colors.DARKGRAY, Vectors.ORIGIN);
 		glPopAttrib();
 	}
 	

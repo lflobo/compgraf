@@ -7,7 +7,6 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
-import pt.ipb.esact.compgraf.tools.math.Vector;
 
 public class A12_Movement extends DefaultGLWindow {
 
@@ -37,7 +36,7 @@ public class A12_Movement extends DefaultGLWindow {
 		camera.eye.y = 3.0f;
 		camera.eye.z = 3.0f;
 		
-		camera.at = new Vector(position);
+		camera.at = new Vector3f(position);
 		
 		Cameras.setCurrent(camera);
 	}
@@ -175,7 +174,7 @@ public class A12_Movement extends DefaultGLWindow {
 		// Se houve movimento -> atualizar a camara
 		if(velocity.lengthSquared() > 0) {
 			// Olhar para a posição atual (vetor at)
-			camera.at = new Vector(position);
+			camera.at = new Vector3f(position);
 			// Forçar a atualização da camera
 			setupCamera();
 		}

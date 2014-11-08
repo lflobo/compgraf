@@ -3,7 +3,6 @@ package pt.ipb.esact.compgraf.aulas.a03a;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Color;
 
 /**
  * Esta classe demonstra a primitiva POINTS
