@@ -1,10 +1,5 @@
 package pt.ipb.esact.compgraf.aulas.a06;
 
-import java.nio.FloatBuffer;
-
-import javax.vecmath.Color4f;
-
-import pt.ipb.esact.compgraf.engine.light.Light;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -14,16 +9,11 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class A06_Texture extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	FloatBuffer positionLitght0 = newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f);
-	
 	private Texture TEX_BRICK;
 	private Texture TEX_FLOOR;
 	private Texture TEX_CEILING;
 	private Texture TEX_STONE;
 
-	private Light light0;
-	
 	public A06_Texture() {
 		super("A06 Texture", true);
 		setMousePan(true);
@@ -67,12 +57,7 @@ public class A06_Texture extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
-
-		light0 = new Light(this, GL_LIGHT0);
-		light0.setAmbient(this, new Color4f(1, 0, 0, 1));
-		light0.setDiffuse(this, new Color4f(1, 0, 0, 1));
-		light0.setSpecular(this, new Color4f(1, 0, 0, 1));
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 	}
 	
 	private void configureTextures() {
@@ -106,9 +91,6 @@ public class A06_Texture extends DefaultGLWindow {
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		// Posicionar a luz
-		light0.setPosition(this);
 		
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glPushMatrix();
