@@ -143,8 +143,6 @@ public class A06_Texture extends DefaultGLWindow {
 			glTranslatef(0, 0, 1);
 			GLPrimitives.drawSphere(0.6f, 32, 32);
 		glPopMatrix();
-		
-		renderText("Permir 'n' para GL_NEAREST na lua", 10, 20);
 	}
 	
 	/**
