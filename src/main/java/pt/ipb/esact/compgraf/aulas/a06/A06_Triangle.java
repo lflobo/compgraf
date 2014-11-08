@@ -1,7 +1,5 @@
 package pt.ipb.esact.compgraf.aulas.a06;
 
-import java.nio.FloatBuffer;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -11,9 +9,6 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class A06_Triangle extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	FloatBuffer positionLitght0 = newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f);
-	
 	private Texture TEX_STONE;
 
 	public A06_Triangle() {
