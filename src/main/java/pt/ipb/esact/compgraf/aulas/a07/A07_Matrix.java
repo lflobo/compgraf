@@ -15,15 +15,6 @@ public class A07_Matrix extends DefaultGLWindow {
 
 	public A07_Matrix() {
 		super("A07 Matrix", true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 5.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -126,6 +117,7 @@ public class A07_Matrix extends DefaultGLWindow {
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 30.0f, 0.001f, 30.0f);
 //		setProjectionOrtho(width, height, 5.0f, 0.001f, 30.0f);
+		Cameras.setCurrent(new Camera(0, 0, 5));
 		setupCamera();
 		
 		// Ler a matrix on resize

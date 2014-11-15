@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.a06;
 
+import java.awt.event.KeyEvent;
+
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -76,7 +78,7 @@ public class A06_Texture extends DefaultGLWindow {
 		*/
 
 		// Carregar as texturas
-		TEX_STONE = createTexture("stone.png");
+		TEX_STONE = createTexture("tex/stone.png");
 		TEX_BRICK = createTexture("brick.png");
 		TEX_FLOOR = createTexture("floor.png");
 		TEX_CEILING = createTexture("ceiling.png");
@@ -101,6 +103,11 @@ public class A06_Texture extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar recursos
+		TEX_STONE.destroy(this);
+		TEX_BRICK.destroy(this);
+		TEX_CEILING.destroy(this);
+		TEX_MOON.destroy(this);
+		TEX_FLOOR.destroy(this);
 	}
 	
 	@Override
@@ -136,13 +143,59 @@ public class A06_Texture extends DefaultGLWindow {
 			glRotatef(90f, 0f, 0f, 1f);
 			drawWall();
 		glPopMatrix();
+
+		if(isKeyPressed('j')) {
+			rot += GL_PI * 0.5f * timeElapsed() * 10f;
+			rot %= 2 * GL_PI;
+		}
 		
 		TEX_MOON.bind(this);
 		glPushMatrix();
 			glRotatef(90, -1, 0, 0);
-			glTranslatef(0, 0, 1);
+			glTranslatef(0, 0, 1f + (float) Math.sin(rot) / 2f);
+			glRotatef(rot * 180f / GL_PI, 0, 0, 1);
 			GLPrimitives.drawSphere(0.6f, 32, 32);
 		glPopMatrix();
+		
+	}
+	
+	float rot = 0;
+
+	@Override
+	protected void onKeyUp(KeyEvent e) {
+		
+		/**
+		 * Altera o filtering da textura TEX_STONE com base na tecla premida
+		 */
+		switch (e.getKeyChar()) {
+		case '1':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			break;
+		case '2':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			break;
+		case '3':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			break;
+		case '4':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			break;
+		case '5':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			break;
+		case '6':
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			break;
+		}
+		
+		if(e.getKeyChar() == 'r')
+			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(1.0f, 0f, 0f, 1.0f));
 	}
 	
 	/**

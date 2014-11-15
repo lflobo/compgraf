@@ -8,26 +8,16 @@ import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.texture.Texture;
 
 public class A10_BufferObjects extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { 0.0f, 3.0f, 7.0f, 1.0f };
+	private Texture TEX_CUBE; 
 	
 	public A10_BufferObjects() {
 		super("A10 Buffer Objects", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 3.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -55,27 +45,15 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		configureBufferObjects();
 	}
 	
-	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures;
-	private int TEX_CUBE; 
-	
 	private void configureTextures() {
-		int textureCount = 1;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_CUBE = textures.get(0);
-		
 		// Carregar as texturas
-		loadPackageTexture("stone.png", TEX_CUBE);
+		TEX_CUBE = loadPackageTexture("stone.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
 	}
 	
+
 	private void configureMaterials() {
 		// Configurar Color Tracking
 		glEnable(GL_COLOR_MATERIAL);
@@ -83,8 +61,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
@@ -92,20 +69,12 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
-
-		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.2f, 0.2f, 0.2f, 1.0f };
-		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
-		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.2f, 0.2f, 0.2f, 1.0f));		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
@@ -115,7 +84,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 	public void release() {
 		// Libertar
 		glDeleteBuffers(3, buffers);
-		glDeleteTextures(1, textures);
+		TEX_CUBE.destroy(this);
 	}
 
 	// Arrays com vertex, normal, texes e indices
@@ -201,10 +170,10 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 3.0f, 7.0f, 1.0f));
 		glColor3f(1.0f, 1.0f, 1.0f);
 		
-		glBindTexture(GL_TEXTURE_2D, TEX_CUBE);
+		TEX_CUBE.bind(this);
 		
 		glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
 			// Ativar funcionalidade necessaria no client side
@@ -242,6 +211,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(0, 0, 3));
 		setupCamera();
 	}
 

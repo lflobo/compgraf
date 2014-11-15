@@ -9,8 +9,11 @@ import javax.media.opengl.GLContext;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.gl2.GLUgl2;
 
+import com.google.common.base.Preconditions;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class GlTools {
 
@@ -43,61 +46,43 @@ public class GlTools {
 	 * @param reference O objeto que serve de referencia
 	 * @param path A path dentro da package atual
 	 * @param textureId O ID do Texture Object
+	 * @return 
 	 */
-	public static void loadPackageTexture(Object reference, String path, int textureId) {
-//		GL2 gl = gl();
-//		GLU glu = glu();
-//		ByteBuffer buffer = null;
-//		
-//		// Tentar carregar a imagem a partir do package atual
-//		int width = 0;
-//		int height = 0;
-//		int format = 0;
-//		try(InputStream stream = reference.getClass().getResourceAsStream(path)) {
-//			if(path.toLowerCase().endsWith("png")) {
-//				PNGImage image = PNGImage.read(stream);
-//				width = image.getWidth();
-//				height = image.getHeight();
-//				format = image.getGLFormat();
-//				buffer = image.getData();
-//			} else if(path.toLowerCase().endsWith("jpg")) {
-//				JPEGImage image = JPEGImage.read(stream);
-//				width = image.getWidth();
-//				height = image.getHeight();
-//				format = image.getGLFormat();
-//				buffer = image.getData();
-//			} else if(path.toLowerCase().endsWith("tga")) {
-//				TGAImage image = TGAImage.read(gl().getGLProfile(), stream);
-//				width = image.getWidth();
-//				height = image.getHeight();
-//				format = image.getGLFormat();
-//				buffer = image.getData();
-//			} else
-//				throw new GLException("Unsupported file type: " + path);
-//		} catch (Exception e) {
-//			// Ocorreu um erro --> Terminar o programa
-//			exit("Foi impossivel carregar a imagem '" + path + "':\n" + e.getMessage());
-//		}
-//		
-//		// Fazer o bind do estado da textura ao identificador
-//		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);
-//
-//		// Carregar os mipmaps para a textura
-//		try {
-//			glu.gluBuild2DMipmaps(GL2.GL_TEXTURE_2D, GL2.GL_RGBA, width, height, format, GL2.GL_UNSIGNED_BYTE, buffer);
-//		} catch(BufferUnderflowException e) {
-//			gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, GL2.GL_RGB, width, height, 0, format, GL2.GL_UNSIGNED_BYTE, buffer);
-//		}
-//
-//		// Parametros da textura (ignorar para ja)
-//		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
-//		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
-//		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
-//		gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
-//
-//		// Configurar a anisotropy para a nossa textura
-//		if(isAnisotropicAvailable())
-//			gl.glTexParameterf(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+	public static Texture loadPackageTexture(Object reference, String path) {
+		Preconditions.checkNotNull(reference, "The reference cannot be null");
+		GL2 gl = gl();
+		
+		String type = getImageType(path);
+		try {
+			Texture tex = TextureIO.newTexture(reference.getClass().getResourceAsStream(path), true, type);
+			tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+			tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+			tex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
+			tex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
+			if(isAnisotropicAvailable())
+				tex.setTexParameterf(gl, GL2.GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+			return tex;
+		} catch (Exception e) {
+			// Ocorreu um erro --> Terminar o programa
+			exit("Foi impossivel carregar a imagem '" + path + "': " + e.getMessage());
+			return null;
+		}
+	}
+
+	private static String getImageType(String path) {
+		String ext = path.substring(path.lastIndexOf('.') + 1).replace(".", "");
+		switch (ext.toLowerCase()) {
+		case "dds": return TextureIO.DDS;
+		case "gis": return TextureIO.GIF;
+		case "jpg": return TextureIO.JPG;
+		case "pam": return TextureIO.PAM;
+		case "ppm": return TextureIO.PPM;
+		case "sgi": return TextureIO.SGI;
+		case "tga": return TextureIO.TGA;
+		case "tiff": case "tif": return TextureIO.TIFF;
+		default:
+		case "png": return TextureIO.PNG;
+		}
 	}
 
 	public static float getMaxAnisotropy() {

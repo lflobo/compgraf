@@ -1,17 +1,15 @@
 package pt.ipb.esact.compgraf.aulas.a08;
 
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
+import com.jogamp.opengl.util.texture.Texture;
+
 public class A08_Bezier3D extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
-	
 	/**
 	 * Configuração do Bezier 3D
 	 */
@@ -132,26 +130,13 @@ public class A08_Bezier3D extends DefaultGLWindow {
 	}
 	
 	// Representam as posições (identificadores) das texturas
-	private int TEX_FLOOR;
-	private int TEX_MESH;
-	
-	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures; 
+	private Texture TEX_FLOOR;
+	private Texture TEX_MESH;
 	
 	private void configureTextures() {
-		int textureCount = 2;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_FLOOR = textures.get(0);
-		TEX_MESH = textures.get(1);
-		
 		// Carregar as texturas
-		loadPackageTexture("floor.png", TEX_FLOOR);
-		loadPackageTexture("mesh.png", TEX_MESH);
+		TEX_FLOOR = loadPackageTexture("floor.png");
+		TEX_MESH = loadPackageTexture("mesh.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
@@ -160,7 +145,8 @@ public class A08_Bezier3D extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		glDeleteTextures(textures.capacity(), textures);
+		TEX_FLOOR.destroy(this);
+		TEX_MESH.destroy(this);
 	}
 	
 	// Variavel para o bounce do ponto central
@@ -171,11 +157,11 @@ public class A08_Bezier3D extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f));
 		
 		glColor3f(0.5f, 0.5f, 0.5f);
 
-		glBindTexture(GL_TEXTURE_2D, TEX_MESH);
+		TEX_MESH.bind(this);
 
 		// Mexer os pontos de baixo da Mesh
 		delta += 1.0f * timeElapsed() * GL_PI;
@@ -229,7 +215,7 @@ public class A08_Bezier3D extends DefaultGLWindow {
 		drawBaseCones();
 
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, TEX_FLOOR);
+		TEX_FLOOR.bind(this);
 		demo().drawGround(GL_TRIANGLE_STRIP, FLOOR_SIZE, 20, 10.0f);
 	}
 

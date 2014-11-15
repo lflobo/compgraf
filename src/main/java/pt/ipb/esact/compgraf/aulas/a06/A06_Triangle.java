@@ -61,7 +61,7 @@ public class A06_Triangle extends DefaultGLWindow {
 		// Ativar as texturas globalmente
 		glEnable(GL_TEXTURE_2D);
 		try {
-			TEX_STONE = TextureIO.newTexture(packageFile("stone.png"), true, TextureIO.PNG);
+			TEX_STONE = TextureIO.newTexture(packageFile("tex/stone.png"), true, TextureIO.PNG);
 		} catch (Exception e) {
 			// Ocorreu um erro --> Terminar o programa
 			exit("Foi impossivel carregar a imagem 'stone.png'");

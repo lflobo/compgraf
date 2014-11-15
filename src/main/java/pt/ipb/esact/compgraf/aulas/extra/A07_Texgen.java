@@ -1,34 +1,22 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.extra;
 
 import java.awt.event.KeyEvent;
-import java.nio.IntBuffer;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
+import com.jogamp.opengl.util.texture.Texture;
+
 public class A07_Texgen extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
-	
 	// Texto que diz qual o metodo de texgen usago
 	private String text = "Texgen: Object Linear Mapping";
 	
 	public A07_Texgen() {
 		super("A07 Texgen", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 10.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -92,27 +80,14 @@ public class A07_Texgen extends DefaultGLWindow {
 	}
 	
 	// Representam as posições (identificadores) das texturas
-	private int TEX_STRIPES;
-	private int TEX_ENVIRONMENT;
-	private int currentTex;
-	
-	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures; 
+	private Texture TEX_STRIPES;
+	private Texture TEX_ENVIRONMENT;
+	private Texture TEX_CURRENT;
 	
 	private void configureTextures() {
-		int textureCount = 2;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_STRIPES = textures.get(0);
-		TEX_ENVIRONMENT = textures.get(1);
-		
 		// Carregar as texturas
-		loadPackageTexture("texgen/stripes.png", TEX_STRIPES);
-		loadPackageTexture("texgen/environment.png", TEX_ENVIRONMENT);
+		TEX_STRIPES = loadPackageTexture("texgen/stripes.png");
+		TEX_ENVIRONMENT = loadPackageTexture("texgen/environment.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
@@ -130,8 +105,8 @@ public class A07_Texgen extends DefaultGLWindow {
 
 	void setObjectLinear() {
 		text = "Texgen: Object Linear Mapping";
-		currentTex = TEX_STRIPES;
-		glBindTexture(GL_TEXTURE_2D, currentTex);
+		TEX_CURRENT = TEX_STRIPES;
+		TEX_CURRENT.bind(this);
 		float[] zPlane = { 1.0f, 0.0f, 0.0f, 0.0f };
 		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 		glTexGenfv(GL_S, GL_OBJECT_PLANE, zPlane, 0);
@@ -141,8 +116,8 @@ public class A07_Texgen extends DefaultGLWindow {
 	
 	void setEyeLinear() {
 		text = "Texgen: Eye Linear Mapping";
-		currentTex = TEX_STRIPES;
-		glBindTexture(GL_TEXTURE_2D, currentTex);
+		TEX_CURRENT = TEX_STRIPES;
+		TEX_CURRENT.bind(this);
 		float[] zPlane = { 0.0f, 0.0f, 1.0f, 0.0f };
 		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR);
 		glTexGenfv(GL_S, GL_EYE_PLANE, zPlane, 0);
@@ -152,8 +127,8 @@ public class A07_Texgen extends DefaultGLWindow {
 	
 	void setSphereMap() {
 		text = "Texgen: Sphere Mapping";
-		currentTex = TEX_ENVIRONMENT;
-		glBindTexture(GL_TEXTURE_2D, currentTex);
+		TEX_CURRENT = TEX_ENVIRONMENT;
+		TEX_CURRENT.bind(this);
 		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	}
@@ -161,7 +136,8 @@ public class A07_Texgen extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		glDeleteTextures(textures.capacity(), textures);
+		TEX_ENVIRONMENT.destroy(this);
+		TEX_STRIPES.destroy(this);
 	}
 	
 	@Override
@@ -169,11 +145,11 @@ public class A07_Texgen extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f));
 		
 		// Utilizar cor branca onde não há textura
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, currentTex);
+		TEX_CURRENT.bind(this);
 
 		glPushAttrib(GL_ENABLE_BIT);
 			// Activar a Geração de Coordenadas
@@ -217,6 +193,7 @@ public class A07_Texgen extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 30.0f);
+		Cameras.setCurrent(new Camera(0, 0, 10));
 		setupCamera();
 	}
 

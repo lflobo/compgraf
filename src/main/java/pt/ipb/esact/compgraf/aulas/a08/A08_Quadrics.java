@@ -1,7 +1,5 @@
 package pt.ipb.esact.compgraf.aulas.a08;
 
-import java.nio.IntBuffer;
-
 import javax.media.opengl.glu.GLUquadric;
 
 import pt.ipb.esact.compgraf.engine.Skybox;
@@ -9,11 +7,10 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
+import com.jogamp.opengl.util.texture.Texture;
+
 public class A08_Quadrics extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { -10.0f, 20.0f, -10.0f, 1.0f };
-	
 	/**
 	 * Variáveis de controlo do planeta / asteróides
 	 */
@@ -65,7 +62,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		skybox = new Skybox(this);
 	}
 	
-	private int createListAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, int texture) {
+	private int createListAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, Texture texture) {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
@@ -79,7 +76,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		gluQuadricTexture(quad, true);
 		
 		// Utilizar a textura passada como argumento
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.bind(this);
 
 		// Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
 		for(int i=0; i<count; i++) {
@@ -103,7 +100,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		return id;
 	}
 		
-	private int createListPlanet(float radius, int texture) {
+	private int createListPlanet(float radius, Texture texture) {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
@@ -117,7 +114,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		gluQuadricTexture(quad, true);
 		
 		// Utilizar a textura passada como argumento
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.bind(this);
 		
 		glPushMatrix();
 			// Colocar a esfera de pé
@@ -202,29 +199,15 @@ public class A08_Quadrics extends DefaultGLWindow {
 	}
 	
 	// Representam as posições (identificadores) das texturas
-	private int TEX_PLANET;
-	private int TEX_CLOUDS;
-	private int TEX_ASTEROIDS;
-	
-	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures; 
+	private Texture TEX_PLANET;
+	private Texture TEX_CLOUDS;
+	private Texture TEX_ASTEROIDS;
 	
 	private void configureTextures() {
-		int textureCount = 3;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_PLANET = textures.get(0);
-		TEX_CLOUDS = textures.get(1);
-		TEX_ASTEROIDS = textures.get(2);
-		
 		// Carregar as texturas
-		loadPackageTexture("earth.png", TEX_PLANET);
-		loadPackageTexture("clouds.png", TEX_CLOUDS);
-		loadPackageTexture("asteroid.png", TEX_ASTEROIDS);
+		TEX_PLANET = loadPackageTexture("earth.png");
+		TEX_CLOUDS = loadPackageTexture("clouds.png");
+		TEX_ASTEROIDS = loadPackageTexture("asteroid.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
@@ -241,7 +224,9 @@ public class A08_Quadrics extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		glDeleteTextures(textures.capacity(), textures);
+		TEX_ASTEROIDS.destroy(this);
+		TEX_CLOUDS.destroy(this);
+		TEX_PLANET.destroy(this);
 	}
 	
 	@Override
@@ -249,7 +234,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f));
 
 		// Desenhar primeiro a skybox
 		skybox.render();

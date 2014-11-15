@@ -1,7 +1,6 @@
 package pt.ipb.esact.compgraf.engine.obj;
 
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.Set;
 
 import javax.media.opengl.GL2;
@@ -12,6 +11,7 @@ import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
 import com.google.common.collect.Sets;
+import com.jogamp.opengl.util.texture.Texture;
 
 
 public class ObjMaterial implements ReleaseListener {
@@ -42,9 +42,9 @@ public class ObjMaterial implements ReleaseListener {
 	
 	private boolean mbumpset;
 	
-	private int TEX_BUMP = 0;
+	private Texture TEX_BUMP;
 	
-	private int TEX_DIFFUSE = 0;
+	private Texture TEX_DIFFUSE;
 
 	public ObjMaterial(String name) {
 		this.name = name;
@@ -68,12 +68,7 @@ public class ObjMaterial implements ReleaseListener {
 	public void setMapKd(Object reference, String prefix, String value) {
 		mkdset = true;
 		String name = findPath(value);
-		GL2 gl = GlTools.gl();
-		
-		IntBuffer texture = IntBuffer.allocate(1);
-		gl.glGenTextures(1, texture);
-		TEX_DIFFUSE = texture.get(0);
-		GlTools.loadPackageTexture(reference, prefix + name, TEX_DIFFUSE);
+		TEX_DIFFUSE = GlTools.loadPackageTexture(reference, prefix + name);
 	}
 
 	private String findPath(String value) {
@@ -91,12 +86,7 @@ public class ObjMaterial implements ReleaseListener {
 	public void setMapBump(Object reference, String prefix, String value) {
 		mbumpset = true;
 		String name = findPath(value);
-		GL2 gl = GlTools.gl();
-		
-		IntBuffer texture = IntBuffer.allocate(1);
-		gl.glGenTextures(1, texture);
-		TEX_BUMP = texture.get(0);
-		GlTools.loadPackageTexture(reference, prefix + name, TEX_BUMP);
+		TEX_BUMP = GlTools.loadPackageTexture(reference, prefix + name);
 	}
 
 	public void setD(float value) {
@@ -153,12 +143,12 @@ public class ObjMaterial implements ReleaseListener {
 
 		if(mbumpset) {
 			gl.glActiveTexture(Shader.NORMAL_MAP_INDEX);
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_BUMP);
+			TEX_BUMP.bind(gl);
 		}
 
 		if(mkdset) {
 			gl.glActiveTexture(Shader.DIFFUSE_MAP_INDEX);
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_DIFFUSE);
+			TEX_DIFFUSE.bind(gl);
 		}
 
 		if(!mkdset && !mbumpset)
@@ -172,10 +162,10 @@ public class ObjMaterial implements ReleaseListener {
 
 	@Override
 	public void release(GL2 gl) {
-		if(mkdset)
-			gl.glDeleteTextures(1, new int[] { TEX_DIFFUSE }, 0);
-		if(mbumpset)
-			gl.glDeleteTextures(1, new int[] { TEX_BUMP }, 0);
+		if(TEX_DIFFUSE != null)
+			TEX_DIFFUSE.destroy(gl);
+		if(TEX_BUMP != null)
+			TEX_BUMP.destroy(gl);
 	}
 	
 	

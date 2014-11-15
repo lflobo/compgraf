@@ -39,6 +39,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
 
 public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener, GLWindow {
 	
@@ -250,10 +251,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	/**
 	 * Carrega uma textura a partir da package da classe atual
 	 * @param path A path dentro da package atual
-	 * @param textureId O ID do Texture Object
+	 * @return The texture
 	 */
-	public void loadPackageTexture(String path, int textureId) {
-		GlTools.loadPackageTexture(this, path, textureId);
+	public Texture loadPackageTexture(String path) {
+		return GlTools.loadPackageTexture(this, path);
 	}
 
 

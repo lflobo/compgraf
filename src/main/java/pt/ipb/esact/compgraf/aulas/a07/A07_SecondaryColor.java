@@ -1,8 +1,8 @@
 package pt.ipb.esact.compgraf.aulas.a07;
 
 import java.awt.event.KeyEvent;
-import java.nio.IntBuffer;
 
+import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -10,38 +10,34 @@ import pt.ipb.esact.compgraf.tools.math.Colors;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
 import pt.ipb.esact.compgraf.tools.math.Vectors;
 
-public class A07_SecondaryColor extends DefaultGLWindow {
+import com.jogamp.opengl.util.texture.Texture;
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { -20.0f, 0.0f, 0.0f, 1.0f };
+public class A07_SecondaryColor extends DefaultGLWindow {
 
 	// Variaveis das rotações dos objetos
 	private float earthRot = 0.0f;
-	private float earthRotSpeed = 0.01f * GL_PI;
+	private float earthRotSpeed = 0.1f * GL_PI;
 
 	private float moonEarthDistance = 3.0f;
 	private float moonTilt = 0.1f * GL_PI;
 
 	private float moonRot = 0.0f;
-	private float moonRotSpeed = 0.02f * GL_PI;
+	private float moonRotSpeed = 0.2f * GL_PI;
 
 	private float moonTrl = 0.0f;
-	private float moonTrlSpeed = 0.005f * GL_PI;
+	private float moonTrlSpeed = 0.05f * GL_PI;
 
+	// Texturas do exemplo
+	private Texture TEX_EARTH;
+	private Texture TEX_MOON;
+	
+	// Colocar uma skybox no exemplo
+	private Skybox skybox;
+	
 	public A07_SecondaryColor() {
 		super("A06 Secondary Color", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 4.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -54,8 +50,6 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_CULL_FACE);
 
-		glCullFace(GL_BACK);
-
 		// Configurar as luzes
 		configureLighting();
 		
@@ -64,6 +58,10 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		
 		// Configurar as texturas
 		configureTextures();
+		
+		// Criar uma skybox
+		skybox = new Skybox(this);
+		skybox.load("skybox/px.png", "skybox/py.png", "skybox/pz.png", "skybox/nx.png", "skybox/ny.png", "skybox/nz.png");
 	}
 
 
@@ -74,55 +72,29 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
-		
-		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
-		float[] ambientLowLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.8f, 0.8f, 0.0f, 1.0f };
 		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-
 		// Definição do Modelo de luz para a luz ambiente
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.6f, 0.6f, 0.6f, 1.0f));;		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.8f, 0.8f, 0.0f, 1.0f));;		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));;		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
 	}
 	
-	// Representam as posições (identificadores) das texturas
-	private int TEX_EARTH;
-	private int TEX_MOON;
-	
-	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures; 
-	
 	private void configureTextures() {
-		int textureCount = 2;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_EARTH = textures.get(0);
-		TEX_MOON = textures.get(1);
-		
 		// Setup das texturas
-		loadPackageTexture("earth.png", TEX_EARTH);
-		loadPackageTexture("moon.png", TEX_MOON);
+		TEX_EARTH = loadPackageTexture("earth.png");
+		TEX_MOON = loadPackageTexture("moon.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
@@ -150,7 +122,8 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		glDeleteTextures(textures.capacity(), textures);
+		TEX_EARTH.destroy(this);
+		TEX_MOON.destroy(this);
 	}
 	
 	@Override
@@ -158,7 +131,10 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-20.0f, 0.0f, 0.0f, 1.0f));
+		
+		// Desenhar a skybox primeiro
+		skybox.render();
 		
 		// Utilizar cor cinza onde não há textura
 		glColor3f(0.5f, 0.5f, 0.5f);
@@ -168,7 +144,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 			// Desenhar e rodar a Terra
 			glPushMatrix();
-				glBindTexture(GL_TEXTURE_2D, TEX_EARTH);
+				TEX_EARTH.bind(this);
 				glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 				/*
 				 * Por causa do rotate 90º em X -> o eixo vertical é agora o Z
@@ -191,7 +167,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 			// Estamos no sítio certo para desenhar a lua
 			// Desenhar e rodar a Lua
 			glPushMatrix();
-				glBindTexture(GL_TEXTURE_2D, TEX_MOON);
+				TEX_MOON.bind(this);
 				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 				glRotatef(toDegrees(moonRot), 0.0f, 0.0f, 1.0f);
 				GLPrimitives.drawSphere(0.3f, 100, 100);
@@ -215,7 +191,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 	}
 	
 	private float incrementRadians(float current, float increment) {
-		current += increment;
+		current += increment * timeElapsed();
 		current %= 2.0f * GL_PI; // garantir que não passamos de 2PI
 		return current;
 	}
@@ -231,7 +207,8 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 	@Override
 	public void resize(int width, int height) {
-		setProjectionPerspective(width, height, 100.0f, 0.001f, 30.0f);
+		setProjectionPerspective(width, height, 100.0f, 0.001f, 3000.0f);
+		Cameras.setCurrent(new Camera(0, 0, 4));
 		setupCamera();
 	}
 

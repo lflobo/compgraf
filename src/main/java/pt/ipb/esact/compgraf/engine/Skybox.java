@@ -11,14 +11,16 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.math.Vectors;
 
+import com.jogamp.opengl.util.texture.Texture;
+
 public class Skybox implements ReleaseListener {
 
-	private int TEX_POSITIVE_X;
-	private int TEX_POSITIVE_Y;
-	private int TEX_POSITIVE_Z;
-	private int TEX_NEGATIVE_X;
-	private int TEX_NEGATIVE_Y;
-	private int TEX_NEGATIVE_Z;
+	private Texture TEX_POSITIVE_X;
+	private Texture TEX_POSITIVE_Y;
+	private Texture TEX_POSITIVE_Z;
+	private Texture TEX_NEGATIVE_X;
+	private Texture TEX_NEGATIVE_Y;
+	private Texture TEX_NEGATIVE_Z;
 	
 	private DefaultGLWindow gl;
 	private IntBuffer textures = IntBuffer.allocate(6);
@@ -41,24 +43,13 @@ public class Skybox implements ReleaseListener {
 	}
 	
 	public void load(String ddpx, String ddpy, String ddpz, String ddnx, String ddny, String ddnz) {
-		// Allocar as texturas
-		gl.glGenTextures(6, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_POSITIVE_X = textures.get(0);
-		TEX_POSITIVE_Y = textures.get(1);
-		TEX_POSITIVE_Z = textures.get(2);
-		TEX_NEGATIVE_X = textures.get(3);
-		TEX_NEGATIVE_Y = textures.get(4);
-		TEX_NEGATIVE_Z = textures.get(5);
-		
 		// Setup das texturas
-		gl.loadPackageTexture(ddpx, TEX_POSITIVE_X);
-		gl.loadPackageTexture(ddpy, TEX_POSITIVE_Y);
-		gl.loadPackageTexture(ddpz, TEX_POSITIVE_Z);
-		gl.loadPackageTexture(ddnx, TEX_NEGATIVE_X);
-		gl.loadPackageTexture(ddny, TEX_NEGATIVE_Y);
-		gl.loadPackageTexture(ddnz, TEX_NEGATIVE_Z);
+		TEX_POSITIVE_X = gl.loadPackageTexture(ddpx);
+		TEX_POSITIVE_Y = gl.loadPackageTexture(ddpy);
+		TEX_POSITIVE_Z = gl.loadPackageTexture(ddpz);
+		TEX_NEGATIVE_X = gl.loadPackageTexture(ddnx);
+		TEX_NEGATIVE_Y = gl.loadPackageTexture(ddny);
+		TEX_NEGATIVE_Z = gl.loadPackageTexture(ddnz);
 		
 		create();
 	}
@@ -83,7 +74,7 @@ public class Skybox implements ReleaseListener {
 			int mode = GL2.GL_QUADS;
 	
 			// Quad anterior
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_POSITIVE_Z);
+			TEX_POSITIVE_Z.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(0, 0); gl.glVertex3f(  scale, -scale, -scale );
 				gl.glTexCoord2f(1, 0); gl.glVertex3f( -scale, -scale, -scale );
@@ -92,7 +83,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnd();
 	
 			// Quad na direit
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_POSITIVE_X);
+			TEX_POSITIVE_X.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(0, 0); gl.glVertex3f(  scale, -scale,  scale );
 				gl.glTexCoord2f(1, 0); gl.glVertex3f(  scale, -scale, -scale );
@@ -101,7 +92,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnd();
 	
 			// Quad posterior
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_NEGATIVE_Z);
+			TEX_NEGATIVE_Z.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(0, 0); gl.glVertex3f( -scale, -scale,  scale );
 				gl.glTexCoord2f(1, 0); gl.glVertex3f(  scale, -scale,  scale );
@@ -110,7 +101,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnd();
 	
 			// Quad da esquerda
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_NEGATIVE_X);
+			TEX_NEGATIVE_X.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(0, 0); gl.glVertex3f( -scale, -scale, -scale );
 				gl.glTexCoord2f(1, 0); gl.glVertex3f( -scale, -scale,  scale );
@@ -119,7 +110,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnd();
 	
 			// Quad superior
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_POSITIVE_Y);
+			TEX_POSITIVE_Y.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(0, 1); gl.glVertex3f( -scale,  scale, -scale );
 				gl.glTexCoord2f(0, 0); gl.glVertex3f( -scale,  scale,  scale );
@@ -128,7 +119,7 @@ public class Skybox implements ReleaseListener {
 			gl.glEnd();
 	
 			// Quad inferior
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, TEX_NEGATIVE_Y);
+			TEX_NEGATIVE_Y.bind(gl);
 			gl.glBegin(mode);
 				gl.glTexCoord2f(1, 0); gl.glVertex3f(  scale, -scale, -scale );
 				gl.glTexCoord2f(1, 1); gl.glVertex3f(  scale, -scale,  scale );

@@ -1,12 +1,12 @@
 package pt.ipb.esact.compgraf.aulas.a11;
 
-import java.nio.IntBuffer;
-
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+
+import com.jogamp.opengl.util.texture.Texture;
 
 public class A11_ResolucaoExercicio extends DefaultGLWindow {
 
@@ -102,24 +102,11 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 	}
 	
 	// Array com os IDs dos texture objects ('gavetas')
-	private IntBuffer textures;
-	private int TEX_QUAD; 
+	private Texture TEX_QUAD; 
 	
 	private void configureTextures() {
-		int textureCount = 1;
-		textures = IntBuffer.allocate(textureCount);
-
-		// Allocar as texturas
-		glGenTextures(textureCount, textures);
-		
-		// Associar os IDs às variáveis
-		TEX_QUAD = textures.get(0);
-		
 		// Carregar as texturas
-		loadPackageTexture("stone.png", TEX_QUAD);
-		
-		// Activar as texturas
-		glEnable(GL_TEXTURE_2D);
+		TEX_QUAD = loadPackageTexture("stone.png");
 	}
 
 
@@ -206,7 +193,7 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 
 			// Primeiro o QUAD opaco
 			glColor3f(1, 1, 1);
-			glBindTexture(GL_TEXTURE_2D, TEX_QUAD);
+			TEX_QUAD.bind(this);
 			glTexCoord2f(1, 0); glVertex3f(2, 2, -1);
 			glTexCoord2f(1, 1); glVertex3f(2, 4, -1);
 			glTexCoord2f(0, 1); glVertex3f(-2, 4, -1);
@@ -221,7 +208,7 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 		
 			// Primeiro o QUAD transparente
 			glColor4f(1, 1, 1, 0.5f);
-			glBindTexture(GL_TEXTURE_2D, TEX_QUAD);
+			TEX_QUAD.bind(this);
 			glBegin(GL_QUADS);
 				glTexCoord2f(1, 0); glVertex3f(2, 2, 1);
 				glTexCoord2f(1, 1); glVertex3f(2, 4, 1);

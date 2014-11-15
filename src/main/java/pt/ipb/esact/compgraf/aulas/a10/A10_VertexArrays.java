@@ -12,7 +12,6 @@ import com.jogamp.common.nio.Buffers;
 public class A10_VertexArrays extends DefaultGLWindow {
 
 	// Array com a posição da luz
-	float[] positionLitght0 = { 0.0f, 3.0f, 7.0f, 1.0f };
 	private FloatBuffer vertices;
 	private IntBuffer indices;
 	private FloatBuffer colors;
@@ -140,7 +139,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 3.0f, 7.0f, 1.0f));
 		glColor3f(1.0f, 1.0f, 1.0f);
 		
 		glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
