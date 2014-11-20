@@ -19,13 +19,13 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 	private float earthRotSpeed = 0.1f * GL_PI;
 
 	private float moonEarthDistance = 3.0f;
-	private float moonTilt = 0.1f * GL_PI;
+	private float moonTilt = 0.3f * GL_PI;
 
 	private float moonRot = 0.0f;
-	private float moonRotSpeed = 0.2f * GL_PI;
+	private float moonRotSpeed = 5.7f * GL_PI;
 
 	private float moonTrl = 0.0f;
-	private float moonTrlSpeed = 0.05f * GL_PI;
+	private float moonTrlSpeed = 1.05f * GL_PI;
 
 	// Texturas do exemplo
 	private Texture TEX_EARTH;
@@ -145,9 +145,9 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 			// Desenhar e rodar a Terra
 			glPushMatrix();
 				TEX_EARTH.bind(this);
-				glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 				/*
-				 * Por causa do rotate 90º em X -> o eixo vertical é agora o Z
+				 * Por causa do rotate 90º em -X -> o eixo vertical é agora o Z
 				 */
 				glRotatef(toDegrees(earthRot), 0.0f, 0.0f, 1.0f);
 				glScalef(1.0f, 1.0f, 0.8f); // Achatar ligeiramente os polos
@@ -155,7 +155,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 			glPopMatrix();
 
 			// Aplicar o tilt da lua
-			glRotatef(toDegrees(moonTilt), 1.0f, 0.0f, 0.0f);
+			glRotatef(toDegrees(moonTilt), 0.0f, 0.0f, 1.0f);
 
 			// Desenhar a orbita da lua
 			drawOrbit(moonEarthDistance);
@@ -179,6 +179,9 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		updateRotations();
 		
 		renderText("separate color: " + (separateColor ? "enabled" : "disabled"), 10, 20);
+		renderText("      earthRot: " + toDegrees(earthRotSpeed) + " DEG/s - " + toDegrees(earthRot) + " DEG", 10, 40);
+		renderText("       moonRot: " + toDegrees(moonRotSpeed) + " DEG/s - " + toDegrees(moonRot) + " DEG", 10, 50);
+		
 		renderText("s: toggle separate color", width - 200, 20);
 	}
 	
@@ -207,7 +210,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 	@Override
 	public void resize(int width, int height) {
-		setProjectionPerspective(width, height, 100.0f, 0.001f, 3000.0f);
+		setProjectionPerspective(width, height, 100.0f, 0.001f, 300.0f);
 		Cameras.setCurrent(new Camera(0, 0, 4));
 		setupCamera();
 	}
