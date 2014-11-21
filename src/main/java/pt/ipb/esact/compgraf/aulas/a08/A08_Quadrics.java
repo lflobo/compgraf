@@ -41,25 +41,12 @@ public class A08_Quadrics extends DefaultGLWindow {
 	private int LIST_CLOUDS;
 	
 	// Objeto que desenha uma skybox (inicializada no construtor)
-	Skybox skybox;
+	Skybox skybox = new Skybox(this);
 	
 	public A08_Quadrics() {
 		super("A08 Quadrics", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.5f;
-		camera.eye.z = 6.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
-		
-		// Inicializar a skybox
-		skybox = new Skybox(this);
 	}
 	
 	private int createListAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, Texture texture) {
@@ -157,7 +144,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 		configureDisplayLists();
 		
 		// carregar as texturas da skybox
-		skybox.load("skybox/dd-px.png", "skybox/dd-py.png", "skybox/dd-pz.png", "skybox/dd-nx.png", "skybox/dd-ny.png", "skybox/dd-nz.png");
+		skybox.load("skybox/px.png", "skybox/py.png", "skybox/pz.png", "skybox/nx.png", "skybox/ny.png", "skybox/nz.png");
 	}
 
 	private void configureMaterials() {
@@ -263,20 +250,20 @@ public class A08_Quadrics extends DefaultGLWindow {
 		cRot += cRotSpeed * timeElapsed();
 		cRot %= 2.0f * GL_PI;
 
-		glDisable(GL_COLOR_MATERIAL);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glPushMatrix();
-			glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
+		glPushAttrib(GL_DEPTH_BITS | GL_ENABLE_BIT);
+			glDisable(GL_COLOR_MATERIAL);
+			glEnable(GL_BLEND);
+			glDepthMask(false);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 			glPushMatrix();
-				glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
-				glCallList(LIST_CLOUDS);
+				glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
+				glPushMatrix();
+					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
+					glCallList(LIST_CLOUDS);
+				glPopMatrix();
 			glPopMatrix();
-		glPopMatrix();
-
-		glDisable(GL_BLEND);
-		glEnable(GL_COLOR_MATERIAL);
+		glPopAttrib();
 	}
 
 	private void drawAsteroids() {
@@ -302,6 +289,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 2000.0f);
+		Cameras.setCurrent(new Camera(0, 0.5f, 6));
 		setupCamera();
 	}
 

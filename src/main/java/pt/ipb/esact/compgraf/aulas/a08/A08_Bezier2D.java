@@ -32,18 +32,8 @@ public class A08_Bezier2D extends DefaultGLWindow {
 	
 	public A08_Bezier2D() {
 		super("A08 Bezier 2D", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 6.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -135,6 +125,7 @@ public class A08_Bezier2D extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 50.0f, 0.001f, 30.0f);
+		Cameras.setCurrent(new Camera(0, 0, 6));
 		setupCamera();
 	}
 

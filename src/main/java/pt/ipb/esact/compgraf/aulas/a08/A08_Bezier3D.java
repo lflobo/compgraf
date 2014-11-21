@@ -58,18 +58,8 @@ public class A08_Bezier3D extends DefaultGLWindow {
 	
 	public A08_Bezier3D() {
 		super("A08 Bezier 3D", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 5.0f;
-		camera.eye.y = 7.0f;
-		camera.eye.z = 5.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -247,6 +237,7 @@ public class A08_Bezier3D extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(5, 7, 5));
 		setupCamera();
 	}
 
