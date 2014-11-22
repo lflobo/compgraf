@@ -231,7 +231,6 @@ public class A08_Quadrics extends DefaultGLWindow {
 		drawPlanet();
 		drawAsteroids();
 		drawClouds();
-		drawClouds();
 		
 		// Mostrar FPS
 		renderText("FPS: " + (int)(1/timeElapsed()), 10, 20);
