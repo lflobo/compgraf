@@ -54,6 +54,16 @@ public class A08_Quadrics extends DefaultGLWindow {
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
 		
+		// Desenhar a geometria
+		drawAsteroidBelt(count, radius, thickness, sizeMin, sizeMax, texture);
+		
+		// Terminamos a lista...
+		glEndList();
+		
+		return id;
+	}
+
+	private void drawAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, Texture texture) {
 		// Criar um quadric para as esferas (asteroides)
 		GLUquadric quad = gluNewQuadric();
 		
@@ -80,18 +90,23 @@ public class A08_Quadrics extends DefaultGLWindow {
 		
 		// Apagar o quad (libertar memoria)
 		gluDeleteQuadric(quad);
-		
-		// Terminamos a lista...
-		glEndList();
-		
-		return id;
 	}
 		
 	private int createListPlanet(float radius, Texture texture) {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
+
+		// Desenhar o planeta
+		drawPlanet(radius, texture);
 		
+		// Terminamos a lista...
+		glEndList();
+		
+		return id;
+	}
+
+	private void drawPlanet(float radius, Texture texture) {
 		// Criar um quadric para desenhar o planeta
 		GLUquadric quad = gluNewQuadric();
 		
@@ -111,11 +126,6 @@ public class A08_Quadrics extends DefaultGLWindow {
 		
 		// Apagar o quad (libertar memoria)
 		gluDeleteQuadric(quad);
-		
-		// Terminamos a lista...
-		glEndList();
-		
-		return id;
 	}
 	
 	@Override
@@ -154,29 +164,20 @@ public class A08_Quadrics extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 		
-		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
-		float[] ambientLowLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
-		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-
 		// Definição do Modelo de luz para a luz ambiente
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.6f, 0.6f, 0.6f, 1.0f));		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
@@ -231,6 +232,10 @@ public class A08_Quadrics extends DefaultGLWindow {
 		drawAsteroids();
 		drawClouds();
 		drawClouds();
+		
+		// Mostrar FPS
+		renderText("FPS: " + (int)(1/timeElapsed()), 10, 20);
+		renderText("tecla 'd' -> desativar DLs", width - 220, 20);
 	}
 	
 	private void drawPlanet() {
@@ -241,7 +246,10 @@ public class A08_Quadrics extends DefaultGLWindow {
 			glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
-				glCallList(LIST_PLANET);
+				if(isKeyPressed('d'))
+					drawPlanet(1.95f, TEX_PLANET);
+				else
+					glCallList(LIST_PLANET);
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -252,15 +260,19 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 		glPushAttrib(GL_DEPTH_BITS | GL_ENABLE_BIT);
 			glDisable(GL_COLOR_MATERIAL);
+			glDisable(GL_DEPTH_TEST);
+
 			glEnable(GL_BLEND);
-			glDepthMask(false);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 			glPushMatrix();
 				glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 				glPushMatrix();
 					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
-					glCallList(LIST_CLOUDS);
+					if(isKeyPressed('d'))
+						drawPlanet(2.0f, TEX_CLOUDS);
+					else
+						glCallList(LIST_CLOUDS);
 				glPopMatrix();
 			glPopMatrix();
 		glPopAttrib();
@@ -277,11 +289,17 @@ public class A08_Quadrics extends DefaultGLWindow {
 			glRotatef(toDegrees(aTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
-				glCallList(LIST_AST_0);
+				if(isKeyPressed('d'))
+					drawAsteroidBelt(2000, 3.5f, 0.6f, 0.001f, 0.02f, TEX_ASTEROIDS);
+				else
+					glCallList(LIST_AST_0);
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
-				glCallList(LIST_AST_1);
+				if(isKeyPressed('d'))
+					drawAsteroidBelt(1000, 4.3f, 0.1f, 0.001f, 0.02f, TEX_ASTEROIDS);
+				else
+					glCallList(LIST_AST_1);
 			glPopMatrix();
 		glPopMatrix();
 	}
