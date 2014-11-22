@@ -25,6 +25,8 @@ public class A07_Anisotropic extends DefaultGLWindow {
 		// Definir a cor de background (RGBA={0, 0, 0, 255})
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		
+		System.out.println(glGetString(GL_EXTENSIONS));
+		
 		// Activar o teste de profundidade
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_MULTISAMPLE);
@@ -112,7 +114,9 @@ public class A07_Anisotropic extends DefaultGLWindow {
 			currentAnisotropy += e.getKeyChar() == 'o' ? -increment : increment;
 			
 			// fazer o clamp do valore entre (maxAnisotropy e minAnisotropy)
-			currentAnisotropy = Math.max(minAnisotropy, Math.min(maxAnisotropy, currentAnisotropy));
+			currentAnisotropy = Math.max(minAnisotropy,
+				Math.min(maxAnisotropy, currentAnisotropy)
+			);
 			
 			// Definira a anisotropia para a única textura que temos
 			TEX_BRICK.setTexParameterf(this, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);

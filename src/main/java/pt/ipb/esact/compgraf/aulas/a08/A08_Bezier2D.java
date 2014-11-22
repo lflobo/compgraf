@@ -17,12 +17,12 @@ public class A08_Bezier2D extends DefaultGLWindow {
 	private static final int NUM_POINTS = 4;
 	
 	// Cordenadas dos pontos de Controlo
-	private static final FloatBuffer CONTROL_POINTS = FloatBuffer.wrap(new float[] {
+	private static final FloatBuffer CONTROL_POINTS = newFloatBuffer(
 		-5.0f,  0.0f, 0.0f,
 		-5.0f,  5.0f, 0.0f,
 		 5.0f, -5.0f, 0.0f,
 		 5.0f,  0.0f, 0.0f
-	});
+	);
 
 	// Inicio da curva
 	private static final float U_MIN = 0.0f;

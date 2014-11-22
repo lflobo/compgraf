@@ -20,7 +20,7 @@ public class A08_Bezier3D extends DefaultGLWindow {
 	private static final int NUM_POINTS_U = 3;
 	private static final int NUM_POINTS_V = 3;
 
-	FloatBuffer TEX_POINTS = FloatBuffer.wrap(new float[] {
+	FloatBuffer TEX_POINTS = newFloatBuffer(
 		// u0
 		0.0f, 1.0f, // v0
 		0.0f, 0.5f, // v1
@@ -32,10 +32,10 @@ public class A08_Bezier3D extends DefaultGLWindow {
 		// u2
 		1.0f, 1.0f, // v0
 		1.0f, 0.5f, // v1
-		1.0f, 0.0f, // v2
-	});
+		1.0f, 0.0f  // v2
+	);
 
-	FloatBuffer CONTROL_POINTS = FloatBuffer.wrap(new float[] {
+	FloatBuffer CONTROL_POINTS = newFloatBuffer(
 		// u0
 		-2.0f, 6.0f, 0.0f, // v0
 		-2.0f, 4.0f, 0.0f, // v1
@@ -47,8 +47,8 @@ public class A08_Bezier3D extends DefaultGLWindow {
 		// u2
 		2.0f, 6.0f, 0.0f,  // v0
 		2.0f, 4.0f, 0.0f,  // v1
-		2.0f, 2.0f, 0.0f,  // v2
-	});
+		2.0f, 2.0f, 0.0f   // v2
+	);
 
 	private static final float U_MIN = 0.0f;
 	private static final float U_MAX = 100.0f;
@@ -91,29 +91,20 @@ public class A08_Bezier3D extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 		
-		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
-		float[] ambientLowLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
-		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-
 		// Definição do Modelo de luz para a luz ambiente
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.6f, 0.6f, 0.6f, 1.0f));		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
