@@ -1,7 +1,10 @@
 package pt.ipb.esact.compgraf.engine.obj;
 
+import static java.text.MessageFormat.format;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -104,24 +107,34 @@ public class ObjLoader implements ReleaseListener {
 		if(last != -1)
 			prefix = model.substring(0, last) + '/';
 		
-		try (
-			BufferedReader modelStream = new BufferedReader(new InputStreamReader(reference.getClass().getResourceAsStream(model)));
-			BufferedReader materialStream = new BufferedReader(new InputStreamReader(reference.getClass().getResourceAsStream(material)));
-		) {
+		InputStream modelIs = reference.getClass().getResourceAsStream(model);
+		if(modelIs == null)
+			GlTools.exit(format("Cannot open ''{0}'' (file missing?).", model));
+		
+		try (BufferedReader modelStream = new BufferedReader(new InputStreamReader(modelIs))) {
 			String line = null;
-
+			List<String> modelLines = Lists.newArrayList();
+			while((line = modelStream.readLine()) != null)
+				modelLines.add(line);
+			parseModel(modelLines, prefix);
+		} catch (IOException e) {
+			GlTools.exit(format("Error reading model from ''{0}'': {1}", model, e.getMessage()));
+		}
+		
+		InputStream materialIs = reference.getClass().getResourceAsStream(material);
+		if(materialIs == null)
+			GlTools.exit(format("Cannot open ''{0}'' (file missing?).", material));
+		
+		try(BufferedReader materialStream = new BufferedReader(new InputStreamReader(materialIs))) {
+			String line = null;
 			List<String> materialLines = Lists.newArrayList();
 			while((line = materialStream.readLine()) != null)
 				materialLines.add(line);
 			parseMaterial(materialLines, prefix);
-
-			List<String> modelLines = Lists.newArrayList();
-			while((line = modelStream.readLine()) != null)
-				modelLines.add(line);
-			parse(modelLines, prefix);
 		} catch (IOException e) {
-			GlTools.exit(e.getMessage());
+			GlTools.exit(format("Error reading material from ''{0}'': {1}", material, e.getMessage()));
 		}
+	
 	}
 	
 	private void parseMaterial(List<String> lines, String prefix) {
@@ -185,7 +198,7 @@ public class ObjLoader implements ReleaseListener {
 		}
 	}
 
-	private void parse(List<String> lines, String prefix) {
+	private void parseModel(List<String> lines, String prefix) {
 		vertices.clear();
 		texcoords.clear();
 		normals.clear();
