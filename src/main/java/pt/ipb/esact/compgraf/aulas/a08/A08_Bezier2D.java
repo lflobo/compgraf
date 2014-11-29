@@ -76,7 +76,7 @@ public class A08_Bezier2D extends DefaultGLWindow {
 			U_MIN,				// Valor minimo do u
 			U_MAX,				// Valor maximo do u
 			3,					// Distancia entre pointos no array
-			NUM_POINTS,			// Numero de pontos
+			NUM_POINTS,			// Numero de pontos 
 			CONTROL_POINTS		// Pontos de controlo
 		);
 		
