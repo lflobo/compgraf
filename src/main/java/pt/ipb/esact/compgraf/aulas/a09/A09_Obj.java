@@ -8,9 +8,6 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 public class A09_Obj extends DefaultGLWindow {
 
-	// Array com a posição da luz
-	float[] positionLitght0 = { 0.0f, 3.0f, 0.0f, 1.0f };
-	
 	// .obj loaders
 	private ObjLoader wheatley;
 	private ObjLoader moon;
@@ -24,18 +21,8 @@ public class A09_Obj extends DefaultGLWindow {
 
 	public A09_Obj() {
 		super("A09 Obj", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 3.0f;
-		camera.eye.y = 3.0f;
-		camera.eye.z = 3.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -85,8 +72,7 @@ public class A09_Obj extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
@@ -94,20 +80,15 @@ public class A09_Obj extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.2f, 0.2f, 0.2f, 1.0f };
 		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
 		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
-
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.2f, 0.2f, 0.2f, 1.0f));		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
@@ -133,12 +114,15 @@ public class A09_Obj extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 3.0f, 0.0f, 1.0f));
+		
+		// Cor por omissão do cenário
 		glColor3f(0.5f, 0.5f, 0.5f);
 
 		// Atualizar as variaveis de rotação
 		updateRotation();
-		
+
+		// Desenhar primeiro a skybox
 		skybox.render();
 
 		// Desenhar a MiniGun
@@ -175,6 +159,7 @@ public class A09_Obj extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(3, 3, 3));
 		setupCamera();
 	}
 

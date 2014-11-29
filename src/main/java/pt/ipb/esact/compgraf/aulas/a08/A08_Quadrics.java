@@ -16,7 +16,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 	 */
 	// Rotação do planeta
 	float pRot = 0.0f;
-	float pRotSpeed = 0.005f * GL_PI;
+	float pRotSpeed = 0.05f * GL_PI;
 	float pTilt = 0.05f * GL_PI;
 
 	// Rotação das nuvens (clouds)
@@ -25,7 +25,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 	// Rotação dos asteroides
 	float aRot0 = 0.0f;
-	float aRot0Speed = 0.05f * GL_PI;
+	float aRot0Speed = 0.5f * GL_PI;
 
 	float aRot1 = 0.0f;
 	float aRot1Speed = 0.1f * GL_PI;
@@ -203,8 +203,8 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 
 	private void configureDisplayLists() {
-		LIST_AST_0 = createListAsteroidBelt(2000, 3.5f, 0.6f, 0.001f, 0.02f, TEX_ASTEROIDS);
-		LIST_AST_1 = createListAsteroidBelt(1000, 4.3f, 0.1f, 0.001f, 0.02f, TEX_ASTEROIDS);
+		LIST_AST_0 = createListAsteroidBelt(1000, 2.5f, 1.6f, 0.001f, 0.02f, TEX_ASTEROIDS);
+		LIST_AST_1 = createListAsteroidBelt(2000, 4.3f, 0.5f, 0.001f, 0.02f, TEX_ASTEROIDS);
 		LIST_PLANET = createListPlanet(1.95f, TEX_PLANET);
 		LIST_CLOUDS = createListPlanet(2.0f, TEX_CLOUDS); 
 	}
@@ -238,7 +238,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 	}
 	
 	private void drawPlanet() {
-		pRot -= pRotSpeed;
+		pRot -= pRotSpeed * timeElapsed();
 		pRot %= 2.0f * GL_PI;
 
 		glPushMatrix();
@@ -278,7 +278,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 	}
 
 	private void drawAsteroids() {
-		aRot0 += aRot0Speed * timeElapsed() * 5.0f;
+		aRot0 += aRot0Speed * timeElapsed();
 		aRot0 %= 2.0f * GL_PI;
 
 		aRot1 += aRot1Speed * timeElapsed();

@@ -94,7 +94,7 @@ public class A08_Bezier2D extends DefaultGLWindow {
 		// Bounce do 2o e 3o ponto de controlo (coordenada X)
 		bounce += GL_PI * 0.5f * timeElapsed();
 		bounce %= GL_PI * 2.0f;
-		CONTROL_POINTS.put(3, -5.0f + 3.0f * sinf(bounce));
+		CONTROL_POINTS.put(3, -5.0f + 3.0f * cosf(bounce));
 		CONTROL_POINTS.put(6, 5.0f + 3.0f * cosf(bounce));
 		
 		glColor3f(1.0f, 1.0f, 1.0f);
