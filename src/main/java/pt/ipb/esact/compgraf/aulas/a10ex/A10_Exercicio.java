@@ -12,12 +12,6 @@ import com.jogamp.opengl.util.texture.Texture;
 
 public class A10_Exercicio extends DefaultGLWindow {
 
-	// .obj loaders
-	private ObjLoader wheatley;
-	private ObjLoader floor;
-	
-	// skybox
-	private Skybox skybox;
 	private int sphereDisplayList;
 
 	public A10_Exercicio() {
@@ -53,16 +47,13 @@ public class A10_Exercicio extends DefaultGLWindow {
 		// Criar a display list com as esferas aleatorias
 		createSpheres(20, 10);
 	
-		// Carregar os ficheiros .obj/.mtl
-		wheatley = new ObjLoader(this);
-		wheatley.load("wheatley/wheatley.obj", "wheatley/wheatley.mtl");
+		/**
+		 * II
+		 * 	e) utilizando ObjLoader carregar 'floor/floor.obj'
+		 *  f) carregar o modelo 'wheatley/wheatley.obj'
+		 */
 		
-		floor = new ObjLoader(this);
-		floor.load("floor/floor.obj", "floor/floor.mtl");
-		
-		// carregar as texturas da skybox
-		skybox = new Skybox(this);
-		skybox.load("skybox/dd-px.png", "skybox/dd-py.png", "skybox/dd-pz.png", "skybox/dd-nx.png", "skybox/dd-ny.png", "skybox/dd-nz.png");
+		// I d) carregar aqui a skybox
 	}
 
 	/**
@@ -93,12 +84,8 @@ public class A10_Exercicio extends DefaultGLWindow {
 		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
 	}
 	
-	// Array com os IDs dos texture objects ('gavetas')
-	private Texture TEX_QUAD; 
-	
 	private void configureTextures() {
-		// Carregar as texturas
-		TEX_QUAD = loadPackageTexture("stone.png");
+		// II b) Carregar aqui as texturas para os 2 planos
 	}
 
 	FloatBuffer positionLitght0 = newFloatBuffer(10.0f, 10.0f, 0.0f, 1.0f);
@@ -112,39 +99,12 @@ public class A10_Exercicio extends DefaultGLWindow {
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
-		glLightfv(GL_LIGHT0, GL_AMBIENT,  newFloatBuffer(.1f, 0, 0, 1));
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,  newFloatBuffer(1, 0, 0, 1));
-		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(1, 0, 0, 1));
-		glEnable(GL_LIGHT0);
-
-		glLightfv(GL_LIGHT1, GL_AMBIENT,  newFloatBuffer(0, 0, .1f, 1));
-		glLightfv(GL_LIGHT1, GL_DIFFUSE,  newFloatBuffer(0, 0, 1, 1));
-		glLightfv(GL_LIGHT1, GL_SPECULAR, newFloatBuffer(0, 0, 1, 1));
-		glEnable(GL_LIGHT1);
-
-		glLightfv(GL_LIGHT2, GL_AMBIENT,  newFloatBuffer(.1f, .1f, 0, 1));
-		glLightfv(GL_LIGHT2, GL_DIFFUSE,  newFloatBuffer(1, 1, 0, 1));
-		glLightfv(GL_LIGHT2, GL_SPECULAR, newFloatBuffer(1, 1, 0, 1));
-		glEnable(GL_LIGHT2);
+		// I c) Configurar aqui as 'light points'
 
 	}
 	
 	private void configureFog() {
-		glEnable(GL_FOG);
-		
-		// Cor do nevoeiro
-		float[] fogColor = {0.25f, 0.25f, 0.25f, 1.0f};
-		
-		// Definir a cor do nevoeiro
-		glFogfv(GL_FOG_COLOR, fogColor, 0);
-		// A que distância os objectos começam a ser afetados
-		glFogf(GL_FOG_START, 1.0f);
-		// A que distância o FOG toma conta por completo
-		glFogf(GL_FOG_END, 30.0f);
-		// Curva para o cálculo do Fog
-		glFogi(GL_FOG_MODE, GL_LINEAR);
-		
-		glFogf(GL_FOG_DENSITY, 0.1f);
+		// II g) configurar aqui o FOG
 	}
 
 	@Override
@@ -163,57 +123,28 @@ public class A10_Exercicio extends DefaultGLWindow {
 
 		glColor3f(0.5f, 0.5f, 0.5f);
 
-		skybox.render();
+		// I d) fazer aqui o render da skybox
 
-		// Desenhar o Wheatley
-		glPushMatrix();
-			glTranslatef(0.0f, 1.0f, 0.0f);
-			wheatley.render();
-		glPopMatrix();
+		// II e) Desenhar o floor no centro do cenário
 		
-		// Desenhar o Chão
-		floor.render();
-
-		// Invocar a lista das esferas
-		glCallList(sphereDisplayList);
+		// II f) Desenhar o wheatley
 		
-		// Desenhar os QUADS
-		glBegin(GL_QUADS);
-
-			// Primeiro o QUAD opaco
-			glColor3f(1, 1, 1);
-			TEX_QUAD.bind(this);
-			glTexCoord2f(1, 0); glVertex3f(2, 2, -1);
-			glTexCoord2f(1, 1); glVertex3f(2, 4, -1);
-			glTexCoord2f(0, 1); glVertex3f(-2, 4, -1);
-			glTexCoord2f(0, 0); glVertex3f(-2, 2, -1);
+		// II h) desenhar aqui a display list 'sphereDisplayList'
 		
-		glEnd();
-	
-		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
-			glEnable(GL_BLEND);
-			glDepthMask(false); // Desativar teste de profundidade
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
-			// Primeiro o QUAD transparente
-			glColor4f(1, 1, 1, 0.5f);
-			TEX_QUAD.bind(this);
-			glBegin(GL_QUADS);
-				glTexCoord2f(1, 0); glVertex3f(2, 2, 1);
-				glTexCoord2f(1, 1); glVertex3f(2, 4, 1);
-				glTexCoord2f(0, 1); glVertex3f(-2, 4, 1);
-				glTexCoord2f(0, 0); glVertex3f(-2, 2, 1);
-			glEnd();
-
-		glPopAttrib();
-
-		
+		/**
+		 * II
+		 * 	a) criar 2 planos
+		 *  c) aplicar as texturas a cada plano
+		 *  d) adicione blending a um dos planos para simular transparencia
+		 */
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
-		Cameras.setCurrent(new Camera(10, 10, 10));
+		// I a) Configurar a projection aqui
+		
+		// I b) Configurar a Camera aqui
+		
 		setupCamera();
 	}
 
