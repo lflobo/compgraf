@@ -7,7 +7,6 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 
 public class A10_BufferObjects extends DefaultGLWindow {
@@ -95,34 +94,34 @@ public class A10_BufferObjects extends DefaultGLWindow {
 	
 	public void initData() {
 		// Preparar os vertices
-		vertices = Buffers.newDirectFloatBuffer(new float[] {
+		vertices = newFloatBuffer(
 			 1.0f, -1.0f,  0.0f, // bottom-right - index: 0 
 			 1.0f,  1.0f,  0.0f, // top-right    - index: 1
 			-1.0f,  1.0f,  0.0f, // top-left     - index: 2
-			-1.0f, -1.0f,  0.0f, // bottom-left  - index: 3
-		});
+			-1.0f, -1.0f,  0.0f // bottom-left  - index: 3
+		);
 		
 		// Normais dos vertices
-		normals = Buffers.newDirectFloatBuffer(new float[] {
+		normals = newFloatBuffer(
 			0.0f, 0.0f, 1.0f, // bottom-right - index: 0
 			0.0f, 0.0f, 1.0f, // top-right    - index: 1
 			0.0f, 0.0f, 1.0f, // top-left     - index: 2
-			0.0f, 0.0f, 1.0f, // bottom-left  - index: 3
-		});
+			0.0f, 0.0f, 1.0f // bottom-left  - index: 3
+		);
 
 		// Coordenadas das texturas
-		texes = Buffers.newDirectFloatBuffer(new float[] {
+		texes = newFloatBuffer(
 			1.0f, 0.0f, // bottom-right - index: 0
 			1.0f, 1.0f, // top-right    - index: 1
 			0.0f, 1.0f, // top-left     - index: 2
 			0.0f, 0.0f  // bottom-left  - index: 3
-		});
+		);
 
 		// Indices que ligam os vertices com as primitivas
 		// ATENCAO: Winding interessa
-		quadIndexes = Buffers.newDirectIntBuffer(new int[] {
+		quadIndexes = newIntBuffer(
 			0, 1, 2, 3 // Face
-		});
+		);
 	}
 	
 	// Identificadores dos VBOs

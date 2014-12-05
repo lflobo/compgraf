@@ -7,8 +7,6 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import com.jogamp.common.nio.Buffers;
-
 public class A10_VertexArrays extends DefaultGLWindow {
 
 	// Array com a posição da luz
@@ -18,18 +16,8 @@ public class A10_VertexArrays extends DefaultGLWindow {
 	
 	public A10_VertexArrays() {
 		super("A10 Vertex Arrays", true);
-		
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 0.0f;
-		camera.eye.z = 3.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -61,8 +49,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	private void configureLighting() {
@@ -70,20 +57,12 @@ public class A10_VertexArrays extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
-
-		// Este é o array com o RGB da luz ambiente
-		float[] ambientLight = { 0.2f, 0.2f, 0.2f, 1.0f };
-		// Este é o array com o RGB da luz difusa
-		float[] diffuseLight = { 0.4f, 0.4f, 0.4f, 1.0f };
-		// Este é o array com o RGB da luz especular
-		float[] specularLight = { 0.5f, 0.5f, 0.5f, 1.0f };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Configurar e Activar a Luz 0
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight, 0);		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight, 0);		// Componente difusa
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight, 0);		// Componente especular
+		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.2f, 0.2f, 0.2f, 1.0f));		// Componente ambiente
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
@@ -96,7 +75,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 	
 	public void configureVertexArrays() {
 		// Preparar os vertices
-		vertices = Buffers.newDirectFloatBuffer(new float[] {
+		vertices = newFloatBuffer(
 			// Face frontal
 			 1.0f, -1.0f,  1.0f, // front-bottom-right - index: 0 
 			 1.0f,  1.0f,  1.0f, // front-top-right    - index: 1
@@ -106,22 +85,22 @@ public class A10_VertexArrays extends DefaultGLWindow {
 			 1.0f, -1.0f, -1.0f, // back-bottom-right  - index: 4
 			 1.0f,  1.0f, -1.0f, // back-top-right     - index: 5
 			-1.0f,  1.0f, -1.0f, // back-top-left      - index: 6
-			-1.0f, -1.0f, -1.0f, // back-bottom-left   - index: 7
-		});
+			-1.0f, -1.0f, -1.0f // back-bottom-left   - index: 7
+		);
 		
 		// Indices que ligam os vertices com as primitivas
 		// ATENCAO: Winding interessa
-		indices = Buffers.newDirectIntBuffer(new int[] {
+		indices = newIntBuffer(
 			0, 1, 2, 3, // front
 			7, 6, 5, 4, // back
 			0, 4, 5, 1, // right
 			3, 2, 6, 7, // left
 			3, 7, 4, 0, // bottom
 			1, 5, 6, 2  // top
-		});
+		);
 		
 		// Cores dos vertices
-		colors = Buffers.newDirectFloatBuffer(new float[] {
+		colors = newFloatBuffer(
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 1.0f,
@@ -130,8 +109,8 @@ public class A10_VertexArrays extends DefaultGLWindow {
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-		});
+			1.0f, 1.0f, 1.0f
+		);
 	}
 	
 	@Override
@@ -161,13 +140,17 @@ public class A10_VertexArrays extends DefaultGLWindow {
 			glDrawElements(GL_POINTS, indices.capacity(), GL_UNSIGNED_INT, indices);
 		glPopClientAttrib();
 		
+		handleUserInput();
+	}
+
+	private void handleUserInput() {
 		/**
 		 * Alterar o cubo... mover a face frontal no z usando as teclas +/-
 		 */
-		if(isKeyPressed('+') || isKeyPressed('-')) {
+		if(isKeyPressed('w') || isKeyPressed('s')) {
 			float increment = 1.0f;
-			// se é '-' inverter o incremento
-			if(isKeyPressed('-'))
+			// se é 's' inverter o incremento
+			if(isKeyPressed('s'))
 				increment *= -1.0f;
 			
 			// Mover a coordenada z dos primeiros 4 vertices
@@ -182,6 +165,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(0, 0, 3));
 		setupCamera();
 	}
 

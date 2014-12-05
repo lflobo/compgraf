@@ -18,6 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -541,6 +542,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 
     protected static FloatBuffer newFloatBuffer(float ... values) {
         return FloatBuffer.wrap(values);
+    }
+    
+    protected static IntBuffer newIntBuffer(int ... values) {
+    	return IntBuffer.wrap(values);
     }
 
 }

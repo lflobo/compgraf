@@ -1,4 +1,6 @@
-package pt.ipb.esact.compgraf.aulas.a11;
+package pt.ipb.esact.compgraf.aulas.a10ex;
+
+import java.nio.FloatBuffer;
 
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
@@ -8,7 +10,7 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A11_ResolucaoExercicio extends DefaultGLWindow {
+public class A10_ResolucaoExercicio extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
@@ -18,20 +20,10 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 	private Skybox skybox;
 	private int sphereDisplayList;
 
-	public A11_ResolucaoExercicio() {
-		super("A11 Resolucao Exercicio", true);
-		
+	public A10_ResolucaoExercicio() {
+		super("A10 Resolucao Exercicio", true);
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 10.0f;
-		camera.eye.y = 10.0f;
-		camera.eye.z = 10.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -109,32 +101,30 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 		TEX_QUAD = loadPackageTexture("stone.png");
 	}
 
-
-	float[] positionLitght0 = { 10.0f, 10.0f, 0.0f, 1.0f };
-	float[] positionLitght1 = { 0.0f, 10.0f, 0.0f, 1.0f };
-	float[] positionLitght2 = { -10.0f, 10.0f, 0.0f, 1.0f };
+	FloatBuffer positionLitght0 = newFloatBuffer(10.0f, 10.0f, 0.0f, 1.0f);
+	FloatBuffer positionLitght1 = newFloatBuffer(0.0f, 10.0f, 0.0f, 1.0f);
+	FloatBuffer positionLitght2 = newFloatBuffer(-10.0f, 10.0f, 0.0f, 1.0f);
 
 	private void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
-		glLightfv(GL_LIGHT0, GL_AMBIENT,  new float[] { .1f, 0, 0, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,  new float[] { 1, 0, 0, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, new float[] { 1, 0, 0, 1 }, 0);
+		glLightfv(GL_LIGHT0, GL_AMBIENT,  newFloatBuffer(.1f, 0, 0, 1));
+		glLightfv(GL_LIGHT0, GL_DIFFUSE,  newFloatBuffer(1, 0, 0, 1));
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(1, 0, 0, 1));
 		glEnable(GL_LIGHT0);
 
-		glLightfv(GL_LIGHT1, GL_AMBIENT,  new float[] { 0, 0, .1f, 1 }, 0);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE,  new float[] { 0, 0, 1, 1 }, 0);
-		glLightfv(GL_LIGHT1, GL_SPECULAR, new float[] { 0, 0, 1, 1 }, 0);
+		glLightfv(GL_LIGHT1, GL_AMBIENT,  newFloatBuffer(0, 0, .1f, 1));
+		glLightfv(GL_LIGHT1, GL_DIFFUSE,  newFloatBuffer(0, 0, 1, 1));
+		glLightfv(GL_LIGHT1, GL_SPECULAR, newFloatBuffer(0, 0, 1, 1));
 		glEnable(GL_LIGHT1);
 
-		glLightfv(GL_LIGHT2, GL_AMBIENT,  new float[] { .1f, .1f, 0, 1 }, 0);
-		glLightfv(GL_LIGHT2, GL_DIFFUSE,  new float[] { 1, 1, 0, 1 }, 0);
-		glLightfv(GL_LIGHT2, GL_SPECULAR, new float[] { 1, 1, 0, 1 }, 0);
+		glLightfv(GL_LIGHT2, GL_AMBIENT,  newFloatBuffer(.1f, .1f, 0, 1));
+		glLightfv(GL_LIGHT2, GL_DIFFUSE,  newFloatBuffer(1, 1, 0, 1));
+		glLightfv(GL_LIGHT2, GL_SPECULAR, newFloatBuffer(1, 1, 0, 1));
 		glEnable(GL_LIGHT2);
 
 	}
@@ -167,14 +157,13 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Posicionar as luzes
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
-		glLightfv(GL_LIGHT1, GL_POSITION, positionLitght1, 0);
-		glLightfv(GL_LIGHT2, GL_POSITION, positionLitght2, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
+		glLightfv(GL_LIGHT1, GL_POSITION, positionLitght1);
+		glLightfv(GL_LIGHT2, GL_POSITION, positionLitght2);
 
 		glColor3f(0.5f, 0.5f, 0.5f);
 
 		skybox.render();
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0, 0);
 
 		// Desenhar o Wheatley
 		glPushMatrix();
@@ -224,12 +213,13 @@ public class A11_ResolucaoExercicio extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(10, 10, 10));
 		setupCamera();
 	}
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A11_ResolucaoExercicio();
+		new A10_ResolucaoExercicio();
 	}
 
 }
