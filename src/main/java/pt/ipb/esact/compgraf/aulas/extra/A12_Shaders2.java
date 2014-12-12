@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a12;
+package pt.ipb.esact.compgraf.aulas.extra;
 
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;

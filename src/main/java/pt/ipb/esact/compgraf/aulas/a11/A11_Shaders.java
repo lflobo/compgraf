@@ -1,31 +1,21 @@
-package pt.ipb.esact.compgraf.aulas.a12;
+package pt.ipb.esact.compgraf.aulas.a11;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.Shader;
 
-public class A12_Shaders extends DefaultGLWindow {
+public class A11_Shaders extends DefaultGLWindow {
 
 	// .obj loaders
 	private Shader phongShader;
 	private Shader ambientShader;
 	
 	// skybox
-	public A12_Shaders() {
-		super("A12 Shaders", true);
-		
+	public A11_Shaders() {
+		super("A11 Shaders", true);
 		setMousePan(true);
 		setMouseZoom(true);
-		
-		Camera camera = new Camera();
-		camera.eye.x = 0.0f;
-		camera.eye.y = 1.0f;
-		camera.eye.z = 3.0f;
-		
-		camera.at.y = 0.0f;
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -60,8 +50,7 @@ public class A12_Shaders extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 	
 	private void configureLighting() {
@@ -69,13 +58,12 @@ public class A12_Shaders extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Configurar uma point light
-		glLightfv(GL_LIGHT0, GL_AMBIENT,  new float[] { .4f, .4f, .4f, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,  new float[] { 1, 1, 1, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, new float[] { 1, 1, 1, 1 }, 0);
+		glLightfv(GL_LIGHT0, GL_AMBIENT,  newFloatBuffer(.4f, .4f, .4f, 1));
+		glLightfv(GL_LIGHT0, GL_DIFFUSE,  newFloatBuffer(1, 1, 1, 1));
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(1, 1, 1, 1));
 		glEnable(GL_LIGHT0);
 
 	}
@@ -90,7 +78,7 @@ public class A12_Shaders extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Posicionar as luzes
-		glLightfv(GL_LIGHT0, GL_POSITION, new float[] { 0.0f, 5.0f, 5.0f, 1.0f }, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 5.0f, 1.0f));
 
 		// Desenhar o Wheatley
 		glPushMatrix();
@@ -112,12 +100,13 @@ public class A12_Shaders extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera(0, 1, 3));
 		setupCamera();
 	}
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A12_Shaders();
+		new A11_Shaders();
 	}
 
 }

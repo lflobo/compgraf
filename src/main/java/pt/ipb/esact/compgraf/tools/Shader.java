@@ -205,4 +205,9 @@ public class Shader {
 		return program;
 	}
 	
+	public void release() {
+		GL2 gl = GlTools.gl();
+		gl.glDeleteProgram(program);
+	}
+	
 }

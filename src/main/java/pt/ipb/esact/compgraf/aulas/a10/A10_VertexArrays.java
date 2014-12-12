@@ -75,7 +75,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 	
 	public void configureVertexArrays() {
 		// Preparar os vertices
-		vertices = newFloatBuffer(
+		vertices = newDirectFloatBuffer(
 			// Face frontal
 			 1.0f, -1.0f,  1.0f, // front-bottom-right - index: 0 
 			 1.0f,  1.0f,  1.0f, // front-top-right    - index: 1
@@ -90,7 +90,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 		
 		// Indices que ligam os vertices com as primitivas
 		// ATENCAO: Winding interessa
-		indices = newIntBuffer(
+		indices = newDirectIntBuffer(
 			0, 1, 2, 3, // front
 			7, 6, 5, 4, // back
 			0, 4, 5, 1, // right
@@ -100,7 +100,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 		);
 		
 		// Cores dos vertices
-		colors = newFloatBuffer(
+		colors = newDirectFloatBuffer(
 			1.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 1.0f,

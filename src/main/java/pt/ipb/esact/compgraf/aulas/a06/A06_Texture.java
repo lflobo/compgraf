@@ -63,7 +63,7 @@ public class A06_Texture extends DefaultGLWindow {
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 	}
-	
+
 	private void configureTextures() {
 		// Ativar as texturas globalmente
 		glEnable(GL_TEXTURE_2D);

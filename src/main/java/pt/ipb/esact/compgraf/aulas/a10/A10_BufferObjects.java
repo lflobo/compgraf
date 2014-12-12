@@ -94,7 +94,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 	
 	public void initData() {
 		// Preparar os vertices
-		vertices = newFloatBuffer(
+		vertices = newDirectFloatBuffer(
 			 1.0f, -1.0f,  0.0f, // bottom-right - index: 0 
 			 1.0f,  1.0f,  0.0f, // top-right    - index: 1
 			-1.0f,  1.0f,  0.0f, // top-left     - index: 2
@@ -102,7 +102,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		);
 		
 		// Normais dos vertices
-		normals = newFloatBuffer(
+		normals = newDirectFloatBuffer(
 			0.0f, 0.0f, 1.0f, // bottom-right - index: 0
 			0.0f, 0.0f, 1.0f, // top-right    - index: 1
 			0.0f, 0.0f, 1.0f, // top-left     - index: 2
@@ -110,7 +110,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 		);
 
 		// Coordenadas das texturas
-		texes = newFloatBuffer(
+		texes = newDirectFloatBuffer(
 			1.0f, 0.0f, // bottom-right - index: 0
 			1.0f, 1.0f, // top-right    - index: 1
 			0.0f, 1.0f, // top-left     - index: 2
@@ -119,7 +119,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 
 		// Indices que ligam os vertices com as primitivas
 		// ATENCAO: Winding interessa
-		quadIndexes = newIntBuffer(
+		quadIndexes = newDirectIntBuffer(
 			0, 1, 2, 3 // Face
 		);
 	}

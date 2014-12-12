@@ -24,11 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.media.nativewindow.CapabilitiesImmutable;
+import javax.media.opengl.DefaultGLCapabilitiesChooser;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLCapabilitiesChooser;
+import javax.media.opengl.GLCapabilitiesImmutable;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.vecmath.Vector3f;
@@ -38,6 +41,7 @@ import pt.ipb.esact.compgraf.tools.math.Vectors;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
@@ -169,17 +173,43 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		}
 	};
 	
+	static final class CGCapabilitiesChooser extends DefaultGLCapabilitiesChooser {
+		@Override
+		public int chooseCapabilities(CapabilitiesImmutable desired, List<? extends CapabilitiesImmutable> available, int windowSystemRecommendedChoice) {
+			boolean anyHaveSampleBuffers = false;
+			for (int i = 0; i < available.size(); i++) {
+				GLCapabilitiesImmutable caps = (GLCapabilitiesImmutable) available.get(i);
+				if (caps != null && caps.getSampleBuffers()) {
+					anyHaveSampleBuffers = true;
+					break;
+				}
+			}
+			int selection = super.chooseCapabilities(desired, available, windowSystemRecommendedChoice);
+			if (!anyHaveSampleBuffers) {
+				System.err.println("WARNING: antialiasing will be disabled because none of the available pixel formats had it to offer");
+			} else if (selection >= 0) {
+				GLCapabilitiesImmutable caps = (GLCapabilitiesImmutable) available.get(selection);
+				if (!caps.getSampleBuffers()) {
+					System.err.println("WARNING: antialiasing will be disabled because the DefaultGLCapabilitiesChooser didn't supply it");
+				}
+			}
+			return selection;
+		}
+	}
+	
 	public DefaultGLWindow(String caption, boolean continuous) {
 		frame = new JFrame(caption);
 		
-		GLProfile profile = GLProfile.getMaxFixedFunc(true);
-		GLCapabilities capabilities = new GLCapabilities(profile);
-
+		// GLProfile profile = GLProfile.getMaxFixedFunc(true);
+		GLCapabilities capabilities = new GLCapabilities(null);
+		GLCapabilitiesChooser chooser = new CGCapabilitiesChooser();
+		
 		capabilities.setDepthBits(16);
 		capabilities.setDoubleBuffered(true);
-		capabilities.setNumSamples(2);
+		capabilities.setSampleBuffers(true);
+		capabilities.setNumSamples(4);
 
-		canvas = new GLCanvas(capabilities);
+		canvas = new GLCanvas(capabilities, chooser, null);
 		
 		canvas.addGLEventListener(eventProxy);
 		canvas.addKeyListener(keyProxy);
@@ -547,5 +577,13 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
     protected static IntBuffer newIntBuffer(int ... values) {
     	return IntBuffer.wrap(values);
     }
-
+    
+    protected static IntBuffer newDirectIntBuffer(int ... values) {
+    	return Buffers.newDirectIntBuffer(values);
+    }
+    
+    protected static FloatBuffer newDirectFloatBuffer(float ... values) {
+    	return Buffers.newDirectFloatBuffer(values);
+    }
+    
 }

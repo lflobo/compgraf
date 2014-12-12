@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a12;
+package pt.ipb.esact.compgraf.aulas.a11;
 
 import javax.vecmath.Vector3f;
 
@@ -6,39 +6,38 @@ import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
-public class A12_Movement extends DefaultGLWindow {
+public class A11_Shaders2 extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
 	private ObjLoader floor;
-	private Camera camera;
 	
 	// Vetores de movimento
-	Vector3f position = new Vector3f(0, 1, 0);
-	Vector3f forward = GlMath.VECTOR_FORWARD;
-	Vector3f velocity = new Vector3f(0, 0, 0);
-	private float orientation = 0.0f;
 	
+	// Limites de velocidade (linear e angular)
 	private static final float MAX_VELOCITY = 3.0f;
 	private static final float MAX_ANGULAR_VELOCITY = 90.0f;
 	
+	// Armazena a posição atual do personagem
+	Vector3f position = new Vector3f(0, 1, 0);
+	
+	// Armazena o vetor "FORWARD" da personagem
+	Vector3f forward = GlMath.VECTOR_FORWARD;
+	
+	// Armazena a velocidade atual do personagem
+	Vector3f velocity = new Vector3f(0, 0, 0);
+	
+	// Armazena a orientação atual do personagem
+	private float orientation = 0.0f;
+	private Shader diffuseShader;
+	
 	// skybox
-	public A12_Movement() {
-		super("A12 Movement", true);
-		
-		setMousePan(true);
+	public A11_Shaders2() {
+		super("A11 Movement", true);
 		setMouseZoom(true);
-		
-		camera = new Camera();
-		camera.eye.x = 3.0f;
-		camera.eye.y = 3.0f;
-		camera.eye.z = 3.0f;
-		
-		camera.at = new Vector3f(position);
-		
-		Cameras.setCurrent(camera);
 	}
 	
 	@Override
@@ -56,7 +55,13 @@ public class A12_Movement extends DefaultGLWindow {
 		configureLighting();
 		configureMaterials();
 		configureModels();
+		configureShaders();
 
+	}
+	
+	private void configureShaders() {
+		diffuseShader = new Shader();
+		diffuseShader.load(this, "shaders/diffuse.vert", "shaders/diffuse.frag");
 	}
 
 	private void configureModels() {
@@ -73,8 +78,7 @@ public class A12_Movement extends DefaultGLWindow {
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
 		
 		// Especularidade do material definida explicitamente
-		float[] specRef = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specRef, 0);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 	
 	private void configureLighting() {
@@ -82,28 +86,44 @@ public class A12_Movement extends DefaultGLWindow {
 		glEnable(GL_LIGHTING);
 		
 		// Definição do Modelo de luz para a luz ambiente
-		float[] ambientLowLight = { 0.1f, 0.1f, 0.1f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLowLight, 0);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Configurar uma point light
-		glLightfv(GL_LIGHT0, GL_AMBIENT,  new float[] { .1f, .1f, .1f, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,  new float[] { 1, 1, 1, 1 }, 0);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, new float[] { 1, 1, 1, 1 }, 0);
+		glLightfv(GL_LIGHT0, GL_AMBIENT,  newFloatBuffer( .1f, .1f, .1f, 1));
+		glLightfv(GL_LIGHT0, GL_DIFFUSE,  newFloatBuffer( 1, 1, 1, 1));
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer( 1, 1, 1, 1));
 		glEnable(GL_LIGHT0);
+		
+		// Configurar uma spot light
+		glLightfv(GL_LIGHT1, GL_AMBIENT,  newFloatBuffer( .1f, .1f, .1f, 1 ));
+		glLightfv(GL_LIGHT1, GL_DIFFUSE,  newFloatBuffer( 1, 1, 1, 1 ));
+		glLightfv(GL_LIGHT1, GL_SPECULAR, newFloatBuffer( 1, 1, 1, 1 ));
+		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 25.0f);
+		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.1f);
+		glEnable(GL_LIGHT1);
 
 	}
 	
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)z
+		diffuseShader.release();
 	}
 	
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		// se a tecla 'f' está premida desativa o shader
+		if(!isKeyPressed('f'))
+			diffuseShader.bind();
+		else
+			diffuseShader.unbind();
+		
 		// Posicionar as luzes e ajustar a direção do SPOT
-		glLightfv(GL_LIGHT0, GL_POSITION, new float[] { 0.0f, 5.0f, 0.0f, 1.0f }, 0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
+		glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(0, -1, 0));
 
 		// Desenhar o Wheatley
 		glPushMatrix();
@@ -115,16 +135,27 @@ public class A12_Movement extends DefaultGLWindow {
 		floor.render();
 		
 		// Atualizar o Movimento
-		updateRotation();
-		updateMovement();
+		boolean isMoved = updateRotation();
+		boolean isRotated = updateMovement();
+		
+		// Atualizar a Camera se houver movimento/rotação
+		if(isMoved || isRotated)
+			updateCameraPosition();
 	}
 	
-	private void updateRotation() {
+	/**
+	 * Atualiza a orientação do objeto
+	 * @return @c TRUE no caso de ter havido alteração na orientação
+	 */
+	private boolean updateRotation() {
 		if(isKeyPressed("left")) {
 			// Aumentar o valor do ângulo da orientação
 			orientation += MAX_ANGULAR_VELOCITY * timeElapsed();
 			// Aplicar esse ângulo ao vetor FORWARD atual
 			forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
+			
+			// foi gerado movimento
+			return true;
 		}
 
 		if(isKeyPressed("right")) {
@@ -132,10 +163,20 @@ public class A12_Movement extends DefaultGLWindow {
 			orientation -= MAX_ANGULAR_VELOCITY * timeElapsed();
 			// Aplicar esse ângulo ao vetor FORWARD atual
 			forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
+			
+			// foi gerado movimento
+			return true;
 		}
+		
+		// _não_ foi gerado movimento
+		return false;
 	}
 
-	private void updateMovement() {
+	/**
+	 * Efetua os cálculos da velocidade com base no user input
+	 * @return @c TRUE no caso de ser gerado movimento (velocity>0)
+	 */
+	private boolean updateMovement() {
 		// Colocar a velocidade a 0s
 		velocity.set(0, 0, 0);
 		
@@ -171,24 +212,40 @@ public class A12_Movement extends DefaultGLWindow {
 		// Somar essa velocidade à nossa posição atual
 		position.add(velocity);
 		
-		// Se houve movimento -> atualizar a camara
-		if(velocity.lengthSquared() > 0) {
-			// Olhar para a posição atual (vetor at)
-			camera.at = new Vector3f(position);
-			// Forçar a atualização da camera
-			setupCamera();
-		}
+		// Se a velocidade > 0 houve movimento
+		return velocity.lengthSquared() > 0;
+	}
+	
+	private void updateCameraPosition() {
+		// Obter a camera atual
+		Camera camera = Cameras.getCurrent();
+		
+		// O novo eye da camera vai ser relativa à posição do wheatley
+		// Movê-lo para trás na direção do "FORWARD"
+		// Um pouco para cima (y+)
+		camera.eye = new Vector3f(position);
+		camera.eye.sub(forward);
+		camera.eye.y += 1.0f;
+		
+		// Olhar um pouco à frente do wheatley
+		camera.at = new Vector3f(position);
+		camera.at.add(forward);
+		
+		// Forçar a atualização da camera
+		setupCamera();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
+		Cameras.setCurrent(new Camera());
+		updateCameraPosition();
 		setupCamera();
 	}
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A12_Movement();
+		new A11_Shaders2();
 	}
 
 }
