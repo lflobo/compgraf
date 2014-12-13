@@ -110,11 +110,11 @@ public class A11_Movement extends DefaultGLWindow {
 		floor.render();
 		
 		// Atualizar o Movimento
-		boolean isMoved = updateRotation();
-		boolean isRotated = updateMovement();
+		boolean isRotated = updateRotation();
+		boolean isMoved = updateMovement();
 		
 		// Atualizar a Camera se houver movimento/rotação
-		if(isMoved || isRotated)
+		if(isRotated || isMoved)
 			updateCameraPosition();
 	}
 	
