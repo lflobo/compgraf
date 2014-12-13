@@ -38,6 +38,7 @@ import pt.ipb.esact.compgraf.tools.math.Vectors;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
@@ -548,4 +549,12 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
     	return IntBuffer.wrap(values);
     }
 
+    protected static FloatBuffer newDirectFloatBuffer(float ... values) {
+    	return Buffers.newDirectFloatBuffer(values);
+    }
+    
+    protected static IntBuffer newDirectIntBuffer(int ... values) {
+    	return Buffers.newDirectIntBuffer(values);
+    }
+    
 }
