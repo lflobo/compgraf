@@ -17,7 +17,7 @@ public class A11_Movement extends DefaultGLWindow {
 	// Vetores de movimento
 	
 	// Limites de velocidade (linear e angular)
-	private static final float MAX_VELOCITY = 3.0f;
+	private static final float MAX_LINEAR_VELOCITY = 3.0f;
 	private static final float MAX_ANGULAR_VELOCITY = 90.0f;
 	
 	// Armazena a posição atual do personagem
@@ -182,7 +182,7 @@ public class A11_Movement extends DefaultGLWindow {
 		}
 		
 		// Aplicar a MAX_VELOCITY definida ao vetor velocidade 
-		velocity.scale(timeElapsed() * MAX_VELOCITY);
+		velocity.scale(timeElapsed() * MAX_LINEAR_VELOCITY);
 
 		// Somar essa velocidade à nossa posição atual
 		position.add(velocity);
