@@ -115,7 +115,7 @@ public class ObjMaterial implements ReleaseListener {
 		GL2 gl = GlTools.gl();
 		
 		if(kdset) {
-			if(dset && d < 1.0f)
+			if(dset && d < 1.0f && !(mkdset || mbumpset))
 				kd.put(3, d);
 			gl.glColor4fv(kd);
 //			logger.info("{} --> {}", name, debugBuffer("kd", kd));
