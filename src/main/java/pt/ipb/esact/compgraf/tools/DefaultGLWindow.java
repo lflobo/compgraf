@@ -31,6 +31,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 import javax.vecmath.Vector3f;
 
 import pt.ipb.esact.compgraf.tools.math.Vectors;
@@ -145,6 +146,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 
 	private MouseListener mouseProxy = new MouseAdapter() {
 		public void mousePressed(MouseEvent e) {
+			if(menu != null && e.isPopupTrigger()) {
+				menu.show(e.getComponent(), e.getX(), e.getY());
+				return;
+			}
 			mouseDown = true;
 			lastMouseLocation = MouseInfo.getPointerInfo().getLocation();
 			altDown = e.isAltDown();
@@ -154,6 +159,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		};
 		
 		public void mouseReleased(MouseEvent e) {
+			if(menu != null && e.isPopupTrigger()) {
+				menu.show(e.getComponent(), e.getX(), e.getY());
+				return;
+			}
 			mouseDown = false;
 			altDown = e.isAltDown();
 			controlDown = e.isControlDown();
@@ -169,6 +178,8 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 			zoom = e.getWheelRotation();
 		}
 	};
+
+	private JPopupMenu menu;
 	
 	public DefaultGLWindow(String caption, boolean continuous) {
 		frame = new JFrame(caption);
@@ -216,6 +227,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		animator.start();
 
 		fillKeyMap();
+	}
+	
+	public void setPopupMenu(JPopupMenu menu) {
+		this.menu = menu;
 	}
 	
 	/**
