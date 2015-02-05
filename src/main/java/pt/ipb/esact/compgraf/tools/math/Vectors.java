@@ -46,6 +46,12 @@ public class Vectors {
 	public static void paint(Vector3f v, Color4f color) {
 		paint(v, Vectors.ZERO, color);
 	}
+	
+	public static void mult(Vector3f v, float scalar) {
+		v.x *= scalar;
+		v.y *= scalar;
+		v.z *= scalar;
+	}
 
 	public static void paint(Vector3f v, Vector3f at, Color4f color) {
 		GL2 gl = GLContext.getCurrentGL().getGL2();
