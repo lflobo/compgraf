@@ -29,7 +29,7 @@ public class Exercicio2 extends DefaultGLWindow {
 		 */
 		setProjectionPerspective(width, height, 25, 0.001f, 1000);
 
-		// Camera na posição [10, 10, 10]
+		// Camera na posição [0, 0, 4]
 		Camera camera = new Camera(0, 0, 4);
 		Cameras.setCurrent(camera);
 		
