@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a03a;
+package pt.ipb.esact.compgraf.aulas.a03;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -9,10 +9,10 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
  * 
  * @author Luis Lobo <lflobo@gmail.com>
  */
-public class A03a_Triangles extends DefaultGLWindow {
+public class A03_Quads extends DefaultGLWindow {
 
-	public A03a_Triangles() {
-		super("GL_TRIANGLES", true);
+	public A03_Quads() {
+		super("GL_QUADS", true);
 	}
 	
 	@Override
@@ -22,6 +22,9 @@ public class A03a_Triangles extends DefaultGLWindow {
 		
 		// Activar o teste de profundidade (ignorar para já)
 		glEnable(GL_DEPTH_TEST);
+		
+		// Shading FLAT para mostrar os triangulos
+		glShadeModel(GL_FLAT);
 	}
 
 	@Override
@@ -37,20 +40,22 @@ public class A03a_Triangles extends DefaultGLWindow {
 		// A cor da 'caneta' será branca (RGBA={255, 255, 255, 255})
 		glColor4f(1f, 1f, 1f, 1f);
 
-		glBegin(GL_TRIANGLES);
-			glVertex3f(8, -4, 0);
-			glVertex3f(0, 8, 0);
-			glVertex3f(-8, -4, 0);
+		glBegin(GL_QUADS);
+			// primeiro triangulo
+			glVertex3f(1, -1, 0);
+			glVertex3f(1, 1, 0);
+			glVertex3f(-1, 1, 0);
+			glVertex3f(-1, -1, 0);
 		glEnd();
 		
 		// Dizer o que estamos a desenhar
-		renderText("Triangles", 10, 20);
+		renderText("Quads", 10, 20);
 	}
 	
 	@Override
 	public void resize(int width, int height) {
 		// Configurar uma camara na posição [0,0,100]
-		Camera camera = new Camera(0, 0, 10);
+		Camera camera = new Camera(0, 0, 3);
 		// Dizer que a nossa camara é a camara atual
 		Cameras.setCurrent(camera);
 
@@ -61,7 +66,7 @@ public class A03a_Triangles extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A03a_Triangles();
+		new A03_Quads();
 	}
 
 }

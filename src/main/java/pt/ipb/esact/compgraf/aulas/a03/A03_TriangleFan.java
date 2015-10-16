@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a03a;
+package pt.ipb.esact.compgraf.aulas.a03;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -9,10 +9,10 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
  * 
  * @author Luis Lobo <lflobo@gmail.com>
  */
-public class A03a_Quads extends DefaultGLWindow {
+public class A03_TriangleFan extends DefaultGLWindow {
 
-	public A03a_Quads() {
-		super("GL_QUADS", true);
+	public A03_TriangleFan() {
+		super("GL_TRIANGLE_FAN", true);
 	}
 	
 	@Override
@@ -40,16 +40,28 @@ public class A03a_Quads extends DefaultGLWindow {
 		// A cor da 'caneta' será branca (RGBA={255, 255, 255, 255})
 		glColor4f(1f, 1f, 1f, 1f);
 
-		glBegin(GL_QUADS);
+		glBegin(GL_TRIANGLE_FAN);
 			// primeiro triangulo
-			glVertex3f(1, -1, 0);
-			glVertex3f(1, 1, 0);
-			glVertex3f(-1, 1, 0);
-			glVertex3f(-1, -1, 0);
+			glVertex3f(0, 0, 0);
+			glVertex3f(0, 2, 0);
+			glVertex3f(-1.3f, 1.3f, 0);
+			
+			// +1 vertice = +1 triangulo
+			glColor3f(1, 0, 0);
+			glVertex3f(-2, 0, 0);
+
+			// +1 vertice = +1 triangulo
+			glColor3f(0, 1, 0);
+			glVertex3f(-1.3f, -1.3f, 0);
+			
+			// +1 vertice = +1 triangulo
+			glColor3f(0, 0, 1);
+			glVertex3f(0, -2, 0);
+			
 		glEnd();
 		
 		// Dizer o que estamos a desenhar
-		renderText("Quads", 10, 20);
+		renderText("Triangle Fan", 10, 20);
 	}
 	
 	@Override
@@ -66,7 +78,7 @@ public class A03a_Quads extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A03a_Quads();
+		new A03_TriangleFan();
 	}
 
 }

@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a03a;
+package pt.ipb.esact.compgraf.aulas.a03;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -9,9 +9,9 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
  * 
  * @author Luis Lobo <lflobo@gmail.com>
  */
-public class A03a_QuadStrip extends DefaultGLWindow {
+public class A03_QuadStrip extends DefaultGLWindow {
 
-	public A03a_QuadStrip() {
+	public A03_QuadStrip() {
 		super("GL_QUAD_STRIP", true);
 	}
 	
@@ -72,7 +72,7 @@ public class A03a_QuadStrip extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A03a_QuadStrip();
+		new A03_QuadStrip();
 	}
 
 }

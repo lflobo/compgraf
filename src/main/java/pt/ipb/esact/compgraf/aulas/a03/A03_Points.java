@@ -37,19 +37,14 @@ public class A03_Points extends DefaultGLWindow {
 		// A cor da 'caneta' será bracne (RGBA={255, 255, 255, 255})
 		glColor4f(1f, 1f, 1f, 1f);
 
-		float angle, x, z;
-		// Valor do y (altura) começa em -50 e vai aumentar até +50
-		float y = -50.0f;
 		// Começar a primitiva GL_POINTS
 		glBegin(GL_POINTS);
-			// O angulo varia entre 0 e 3 * 2pi <==> dar 3 voltas
-			for(angle=0.0f; angle<=(2.0f * GL_PI) * 3.0f; angle += 0.1f) {
-				// equacao da circunferencia x = sin(angle), y = cos(angle)
-				x = 30.0f * sinf(angle);
-				z = 30.0f * cosf(angle);
-				glVertex3f(x, y, z); // Colocar um Vertex
-				y += 0.5f;		   // A altura aumenta em 0.5
-			}
+            float x = -30, y = -30;
+            while(x <= 30) {
+                glVertex3f(x, y, 0);
+                x += 1;
+                y += 1;
+            }
 		glEnd();
 		
 		// Dizer o que estamos a desenhar
@@ -59,13 +54,13 @@ public class A03_Points extends DefaultGLWindow {
 	
 	@Override
 	public void resize(int width, int height) {
-		// Configurar uma camara na posição [0,0,100]
-		Camera camera = new Camera(0, 0, 100);
+		// Configurar uma camara na posição [0, 0, 100]
+		Camera camera = new Camera(0, 0, 50);
 		// Dizer que a nossa camara é a camara atual
 		Cameras.setCurrent(camera);
 
 		// Configurar a projeção ortogonal
-		setProjectionOrtho(width, height, 100, 0.001f, 10000);
+		setProjectionOrtho(width, height, 50, 0.001f, 10000);
 		setupCamera();
 	}
 

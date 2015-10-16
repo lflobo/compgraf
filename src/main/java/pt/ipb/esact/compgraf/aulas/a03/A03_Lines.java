@@ -37,16 +37,14 @@ public class A03_Lines extends DefaultGLWindow {
 		// A cor da 'caneta' será branca (RGBA={255, 255, 255, 255})
 		glColor4f(1f, 1f, 1f, 1f);
 
-		float angle, x, y;
 		// Começar a primitiva GL_LINES
 		glBegin(GL_LINES);
-			// O angulo varia entre 0 e 2pi
-			for(angle=0.0f; angle<=2.0f * GL_PI; angle += GL_PI / 10f) {
-				// equacao da circunferencia x = sin(angle), y = cos(angle)
-				x = 30.0f * sinf(angle);
-				y = 30.0f * cosf(angle);
-				glVertex3f(x, y, 0); // Colocar um Vertex
-			}
+            float x = -30, y = -30;
+            while(x <= 30) {
+                glVertex3f(x, y, 0);
+                x += 5;
+                y += 5;
+            }
 		glEnd();
 		
 		// Dizer o que estamos a desenhar
@@ -56,12 +54,12 @@ public class A03_Lines extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		// Configurar uma camara na posição [0,0,100]
-		Camera camera = new Camera(0, 0, 100);
+		Camera camera = new Camera(0, 0, 50);
 		// Dizer que a nossa camara é a camara atual
 		Cameras.setCurrent(camera);
 
 		// Configurar a projeção ortogonal
-		setProjectionOrtho(width, height, 100, 0.001f, 10000);
+		setProjectionOrtho(width, height, 50, 0.001f, 10000);
 		setupCamera();
 	}
 

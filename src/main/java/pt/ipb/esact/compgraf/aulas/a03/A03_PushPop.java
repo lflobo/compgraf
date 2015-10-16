@@ -1,16 +1,16 @@
-package pt.ipb.esact.compgraf.aulas.a03a;
+package pt.ipb.esact.compgraf.aulas.a03;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A03a_PushPop extends DefaultGLWindow {
+public class A03_PushPop extends DefaultGLWindow {
 
 	// Variáveies que armazenam os valores das rotações dos planetas
 	float rotEarth = 0.0f;
 	float rotMoon = 0.0f;
 
-	public A03a_PushPop() {
+	public A03_PushPop() {
 		super("A03 Push Pop", true);
 	}
 	
@@ -108,7 +108,7 @@ public class A03a_PushPop extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A03a_PushPop();
+		new A03_PushPop();
 	}
 
 }
