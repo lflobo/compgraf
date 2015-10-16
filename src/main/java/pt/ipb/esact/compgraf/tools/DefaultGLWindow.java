@@ -2,10 +2,7 @@ package pt.ipb.esact.compgraf.tools;
 
 import static pt.ipb.esact.compgraf.tools.math.GlMath.rotate;
 
-import java.awt.BorderLayout;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -34,6 +31,8 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.vecmath.Vector3f;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import com.google.common.base.Splitter;
@@ -45,7 +44,9 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 
 public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener, GLWindow {
-	
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultGLWindow.class);
+
 	private GLCanvas canvas;
 
 	private GLContext context;
@@ -199,10 +200,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		canvas.addMouseWheelListener(scrollProxy);
 		
 		frame.setLayout(new BorderLayout());
-		canvas.setSize(800, 600);
+		canvas.setSize(400, 300);
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.pack();
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -213,7 +214,6 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		animator = new Animator();
 		animator.setRunAsFastAsPossible(true);
 		animator.add(canvas);
-		
 
 		// Setup initial camera
 		Cameras.addDefaultCamera();
@@ -228,7 +228,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 
 		fillKeyMap();
 	}
-	
+
 	public void setPopupMenu(JPopupMenu menu) {
 		this.menu = menu;
 	}

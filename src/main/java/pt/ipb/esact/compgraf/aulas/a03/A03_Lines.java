@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.a03;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -46,11 +48,13 @@ public class A03_Lines extends DefaultGLWindow {
                 y += 5;
             }
 		glEnd();
-		
-		// Dizer o que estamos a desenhar
+
+        // Dizer o que estamos a desenhar
 		renderText("Lines", 10, 20);
 	}
-	
+
+    private static final Logger logger = LoggerFactory.getLogger(A03_Lines.class);
+
 	@Override
 	public void resize(int width, int height) {
 		// Configurar uma camara na posição [0,0,100]

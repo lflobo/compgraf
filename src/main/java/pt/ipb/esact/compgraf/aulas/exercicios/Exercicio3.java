@@ -19,9 +19,6 @@ public class Exercicio3 extends DefaultGLWindow {
 	 * Invocado para inicializar a cena (alocar recursos)
 	 */
 	public void init() {
-		// Fazer o Culling das faces
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class A03_PushPop extends DefaultGLWindow {
 	@Override
 	public void resize(int width, int height) {
 		// Configurar uma camara na posição [5,5,5]
-		Camera camera = new Camera(5, 5, 5);
+		Camera camera = new Camera(5, 5, 10);
 		// Dizer que a nossa camera deve ser usada por omissão 
 		Cameras.setCurrent(camera);
 		
