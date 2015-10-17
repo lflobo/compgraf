@@ -200,7 +200,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		canvas.addMouseWheelListener(scrollProxy);
 		
 		frame.setLayout(new BorderLayout());
-		canvas.setSize(400, 300);
+		canvas.setSize(800, 600);
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.pack();
 
