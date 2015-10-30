@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a06;
+package pt.ipb.esact.compgraf.aulas.a05;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -7,12 +7,14 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class A06_Triangle extends DefaultGLWindow {
+import java.io.InputStream;
 
-	private Texture TEX_STONE;
+public class A05_Triangle extends DefaultGLWindow {
 
-	public A06_Triangle() {
-		super("A06 Triangle", true);
+	private Texture texStone;
+
+	public A05_Triangle() {
+		super("A05 Triangle", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -60,8 +62,8 @@ public class A06_Triangle extends DefaultGLWindow {
 	private void configureTextures() {
 		// Ativar as texturas globalmente
 		glEnable(GL_TEXTURE_2D);
-		try {
-			TEX_STONE = TextureIO.newTexture(packageFile("tex/stone.png"), true, TextureIO.PNG);
+		try (InputStream stream = fileStream("assets/tex/stone.png")) {
+            texStone = TextureIO.newTexture(stream, true, TextureIO.PNG);
 		} catch (Exception e) {
 			// Ocorreu um erro --> Terminar o programa
 			exit("Foi impossivel carregar a imagem 'stone.png'");
@@ -74,7 +76,7 @@ public class A06_Triangle extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar recursos
-		TEX_STONE.destroy(this);
+		texStone.destroy(this);
 	}
 	
 	@Override
@@ -89,7 +91,7 @@ public class A06_Triangle extends DefaultGLWindow {
 		glPopAttrib();
 
 		// Desenhar a Parede da Direita
-		TEX_STONE.bind(this);
+		texStone.bind(this);
 		glBegin(GL_TRIANGLES);
 			// Vertice inferior direito
 			glTexCoord2f(1.0f, 0.0f);
@@ -117,7 +119,7 @@ public class A06_Triangle extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A06_Triangle();
+		new A05_Triangle();
 	}
 
 }

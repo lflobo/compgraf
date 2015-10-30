@@ -146,7 +146,11 @@ public class A05_Blending extends DefaultGLWindow {
 			
 			// Desenhar depois objetos transparentes
 			drawWorld();
-			
+
+            if(transOn) {
+                glDisable(GL_BLEND);
+            }
+
 		glPopAttrib();
 		
 		renderText("t - toggle transparency", 10, 20);

@@ -1,6 +1,7 @@
-package pt.ipb.esact.compgraf.aulas.a06;
+package pt.ipb.esact.compgraf.aulas.a05;
 
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -10,16 +11,16 @@ import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class A06_Texture extends DefaultGLWindow {
+public class A05_Texture extends DefaultGLWindow {
 
-	private Texture TEX_BRICK;
-	private Texture TEX_FLOOR;
-	private Texture TEX_CEILING;
-	private Texture TEX_STONE;
-	private Texture TEX_MOON;
+	private Texture textBrick;
+	private Texture texFloor;
+	private Texture texCeiling;
+	private Texture textStone;
+	private Texture textMoon;
 
-	public A06_Texture() {
-		super("A06 Texture", true);
+	public A05_Texture() {
+		super("A05 Texture", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -78,16 +79,16 @@ public class A06_Texture extends DefaultGLWindow {
 		*/
 
 		// Carregar as texturas
-		TEX_STONE = createTexture("tex/stone.png");
-		TEX_BRICK = createTexture("brick.png");
-		TEX_FLOOR = createTexture("floor.png");
-		TEX_CEILING = createTexture("ceiling.png");
-		TEX_MOON = createTexture("moon.png");
+		textStone = createTexture("assets/tex/stone.png");
+		textBrick = createTexture("assets/tex/brick.png");
+		texFloor = createTexture("assets/tex/floor.png");
+		texCeiling = createTexture("assets/tex/ceiling.png");
+		textMoon = createTexture("assets/tex/moon.png");
 	}
 
 	private Texture createTexture(String name) {
-		try {
-			Texture tex = TextureIO.newTexture(packageFile(name), true, TextureIO.PNG);
+		try(InputStream stream = fileStream(name)) {
+            Texture tex = TextureIO.newTexture(stream, true, TextureIO.PNG);
 			tex.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			tex.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			tex.setTexParameteri(this, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -103,11 +104,11 @@ public class A06_Texture extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar recursos
-		TEX_STONE.destroy(this);
-		TEX_BRICK.destroy(this);
-		TEX_CEILING.destroy(this);
-		TEX_MOON.destroy(this);
-		TEX_FLOOR.destroy(this);
+		textStone.destroy(this);
+		textBrick.destroy(this);
+		texCeiling.destroy(this);
+		textMoon.destroy(this);
+		texFloor.destroy(this);
 	}
 	
 	@Override
@@ -117,11 +118,11 @@ public class A06_Texture extends DefaultGLWindow {
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		// Desenhar o chao
-		TEX_FLOOR.bind(this);
+		texFloor.bind(this);
 		drawWall();
 
 		// Desenhar o tecto
-		TEX_CEILING.bind(this);
+		texCeiling.bind(this);
 		glPushMatrix();
 			glTranslatef(0f, 2f, 0f);
 			glRotatef(180f, 0f, 0f, -1f);
@@ -129,7 +130,7 @@ public class A06_Texture extends DefaultGLWindow {
 		glPopMatrix();
 
 		// Desenhar a Parede da Esquerda
-		TEX_BRICK.bind(this);
+		textBrick.bind(this);
 		glPushMatrix();
 			glTranslatef(-1f, 1f, 0f);
 			glRotatef(90f, 0f, 0f, -1f);
@@ -137,7 +138,7 @@ public class A06_Texture extends DefaultGLWindow {
 		glPopMatrix();
 
 		// Desenhar a Parede da Direita
-		TEX_STONE.bind(this);
+		textStone.bind(this);
 		glPushMatrix();
 			glTranslatef(1f, 1f, 0f);
 			glRotatef(90f, 0f, 0f, 1f);
@@ -149,7 +150,7 @@ public class A06_Texture extends DefaultGLWindow {
 			rot %= 2 * GL_PI;
 		}
 		
-		TEX_MOON.bind(this);
+		textMoon.bind(this);
 		glPushMatrix();
 			glRotatef(90, -1, 0, 0);
 			glTranslatef(0, 0, 1f + (float) Math.sin(rot) / 2f);
@@ -165,32 +166,32 @@ public class A06_Texture extends DefaultGLWindow {
 	protected void onKeyUp(KeyEvent e) {
 		
 		/**
-		 * Altera o filtering da textura TEX_STONE com base na tecla premida
+		 * Altera o filtering da textura textStone com base na tecla premida
 		 */
 		switch (e.getKeyChar()) {
 		case '1':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			break;
 		case '2':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			break;
 		case '3':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			break;
 		case '4':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 			break;
 		case '5':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 			break;
 		case '6':
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-			TEX_STONE.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 			break;
 		}
 		
@@ -231,7 +232,7 @@ public class A06_Texture extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A06_Texture();
+		new A05_Texture();
 	}
 
 }

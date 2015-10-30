@@ -13,6 +13,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -184,11 +186,11 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	
 	public DefaultGLWindow(String caption, boolean continuous) {
 		frame = new JFrame(caption);
-		
-		GLProfile profile = GLProfile.getMaxFixedFunc(true);
-		GLCapabilities capabilities = new GLCapabilities(profile);
 
-		capabilities.setDepthBits(16);
+        GLProfile profile = GLProfile.getDefault();
+        GLCapabilities capabilities = new GLCapabilities(profile);
+
+        capabilities.setDepthBits(24);
 		capabilities.setDoubleBuffered(true);
 		capabilities.setNumSamples(2);
 
@@ -238,11 +240,13 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	 * @param filename O nome relativo do ficheiro
 	 * @return A stream de dados
 	 */
-	public InputStream packageFile(String filename) {
-		return getClass().getResourceAsStream(filename);
-	}
-	
-	public int getWidth() {
+	public InputStream fileStream(String filename) throws FileNotFoundException {
+        return new FileInputStream(filename);
+//		return getClass().getResourceAsStream(filename);
+
+    }
+
+    public int getWidth() {
 		return frame.getWidth();
 	}
 	

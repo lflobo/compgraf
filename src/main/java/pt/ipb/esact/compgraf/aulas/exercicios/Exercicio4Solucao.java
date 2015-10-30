@@ -3,6 +3,7 @@ package pt.ipb.esact.compgraf.aulas.exercicios;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+import pt.ipb.esact.compgraf.tools.GlTools;
 
 public class Exercicio4Solucao extends DefaultGLWindow {
 
@@ -22,8 +23,10 @@ public class Exercicio4Solucao extends DefaultGLWindow {
 
         // Activar algumas features uteis
         glEnable(GL_DEPTH_TEST);
+
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
+
 
         configureLights();
         configureMaterials();
@@ -69,20 +72,20 @@ public class Exercicio4Solucao extends DefaultGLWindow {
         setupObjectMaterial();
 
         glPushMatrix();
-            glTranslatef(20, 0, 0);
-            glutSolidCube(40);
+            glTranslatef(-20, 0, 0);
+            glutSolidSphere(20.0, 130, 130);
         glPopMatrix();
 
         glPushMatrix();
-            glTranslatef(-20, 0, 0);
-            glutSolidSphere(20.0, 130, 130);
+            glTranslatef(20, 0, 0);
+            glutSolidCube(40);
         glPopMatrix();
     }
 
     @Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100, 0.001f, 1000);
-		Camera camera = new Camera(0, 30, 60);
+		Camera camera = new Camera(-20, 30, 60);
 		Cameras.setCurrent(camera);
 		setupCamera();
 	}
