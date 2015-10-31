@@ -1,17 +1,16 @@
-package pt.ipb.esact.compgraf.aulas.a05;
+package pt.ipb.esact.compgraf.aulas.exercicios;
 
-import java.awt.event.KeyEvent;
-import java.io.InputStream;
-
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
 
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
+import java.awt.event.KeyEvent;
+import java.io.InputStream;
 
-public class A05_Texture extends DefaultGLWindow {
+public class Exercicio5Solucao extends DefaultGLWindow {
 
 	private Texture textBrick;
 	private Texture texFloor;
@@ -19,8 +18,8 @@ public class A05_Texture extends DefaultGLWindow {
 	private Texture textStone;
 	private Texture textMoon;
 
-	public A05_Texture() {
-		super("A05 Texture", true);
+	public Exercicio5Solucao() {
+		super("Exercício 5 Solução", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -145,7 +144,10 @@ public class A05_Texture extends DefaultGLWindow {
 			drawWall();
 		glPopMatrix();
 
+        // alínea 2
 		textMoon.bind(this);
+        textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glPushMatrix();
 			glRotatef(90, -1, 0, 0);
 			glTranslatef(0, 0, 1f);
@@ -157,6 +159,36 @@ public class A05_Texture extends DefaultGLWindow {
 	@Override
 	protected void onKeyUp(KeyEvent e) {
 
+        /**
+		 * Altera o filtering da textura textStone com base na tecla premida
+		 */
+        // alínea 4
+		switch (e.getKeyChar()) {
+		case '1':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			break;
+		case '2':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			break;
+		case '3':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			break;
+		case '4':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			break;
+		case '5':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			break;
+		case '6':
+			textStone.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			break;
+		}
     }
 	
 	/**
@@ -192,7 +224,7 @@ public class A05_Texture extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A05_Texture();
+		new Exercicio5Solucao();
 	}
 
 }
