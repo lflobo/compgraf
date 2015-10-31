@@ -146,7 +146,7 @@ public class A05_Texture extends DefaultGLWindow {
 		glPopMatrix();
 
 		if(isKeyPressed('j')) {
-			rot += GL_PI * 0.5f * timeElapsed() * 10f;
+			rot += GL_PI * 0.5f * timeElapsed();
 			rot %= 2 * GL_PI;
 		}
 		

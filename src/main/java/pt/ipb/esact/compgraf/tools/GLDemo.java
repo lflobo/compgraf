@@ -12,11 +12,11 @@ public class GLDemo extends GL2Wrapper {
 		setCurrent(GLContext.getCurrentGL().getGL2());
 	}
 	
-	public void drawPlain() {
-		drawPlain(false);
+	public void drawPlane() {
+		drawPlane(false);
 	}
 	
-	public void drawPlain(boolean paintNormals) {
+	public void drawPlane(boolean paintNormals) {
 		sync();
 		
 		boolean calculateNormals = true;

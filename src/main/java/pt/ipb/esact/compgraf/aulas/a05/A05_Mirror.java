@@ -153,7 +153,7 @@ public class A05_Mirror extends DefaultGLWindow {
 		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
 
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 			// Desenhar agora o chão transparente
 			glEnable(GL_BLEND);
 			glDepthMask(false); // Desativar teste de profundidade
