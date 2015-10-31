@@ -145,27 +145,19 @@ public class A05_Texture extends DefaultGLWindow {
 			drawWall();
 		glPopMatrix();
 
-		if(isKeyPressed('j')) {
-			rot += GL_PI * 0.5f * timeElapsed();
-			rot %= 2 * GL_PI;
-		}
-		
 		textMoon.bind(this);
 		glPushMatrix();
 			glRotatef(90, -1, 0, 0);
-			glTranslatef(0, 0, 1f + (float) Math.sin(rot) / 2f);
-			glRotatef(rot * 180f / GL_PI, 0, 0, 1);
+			glTranslatef(0, 0, 1f);
 			GLPrimitives.drawSphere(0.6f, 32, 32);
 		glPopMatrix();
 		
 	}
 	
-	float rot = 0;
-
 	@Override
 	protected void onKeyUp(KeyEvent e) {
-		
-		/**
+
+        /**
 		 * Altera o filtering da textura textStone com base na tecla premida
 		 */
 		switch (e.getKeyChar()) {
