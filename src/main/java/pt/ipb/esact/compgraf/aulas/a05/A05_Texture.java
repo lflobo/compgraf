@@ -194,10 +194,7 @@ public class A05_Texture extends DefaultGLWindow {
 			textStone.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 			break;
 		}
-		
-		if(e.getKeyChar() == 'r')
-			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(1.0f, 0f, 0f, 1.0f));
-	}
+    }
 	
 	/**
 	 * Desenha uma parede no plano x/z com largura = 2 e comprimento = 6
