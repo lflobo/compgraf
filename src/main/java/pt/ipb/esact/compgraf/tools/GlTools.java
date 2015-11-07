@@ -2,6 +2,7 @@ package pt.ipb.esact.compgraf.tools;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.FileInputStream;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL2;
@@ -40,7 +41,28 @@ public class GlTools {
 		glu = new GLUgl2();
 		glut = new GLUT();
 	}
-	
+
+    public static Texture loadTexture(String path) {
+        Preconditions.checkNotNull(path, "The path cannot be null");
+        GL2 gl = gl();
+
+        String type = getImageType(path);
+        try (FileInputStream stream = new FileInputStream(path)) {
+            Texture tex = TextureIO.newTexture(stream, true, type);
+            tex.setTexParameteri(gl, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+            tex.setTexParameteri(gl, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
+            tex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
+            tex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
+            if(isAnisotropicAvailable())
+                tex.setTexParameterf(gl, GL2.GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+            return tex;
+        } catch (Exception e) {
+            // Ocorreu um erro --> Terminar o programa
+            exit("Foi impossivel carregar a imagem '" + path + "': " + e.getMessage());
+            return null;
+        }
+    }
+
 	/**
 	 * Carrega uma textura a partir da package da classe do objeto reference
 	 * @param reference O objeto que serve de referencia

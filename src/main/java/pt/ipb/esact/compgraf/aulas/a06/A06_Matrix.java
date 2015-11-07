@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.a06;
 
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
@@ -8,13 +8,13 @@ import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.Colors;
 
-public class A07_Matrix extends DefaultGLWindow {
+public class A06_Matrix extends DefaultGLWindow {
 	
 	// Current Matrix
 	private FloatBuffer mv = FloatBuffer.allocate(16);
 
-	public A07_Matrix() {
-		super("A07 Matrix", true);
+	public A06_Matrix() {
+		super("A06 Matrix", true);
 	}
 	
 	@Override
@@ -104,10 +104,10 @@ public class A07_Matrix extends DefaultGLWindow {
 
 		StringBuilder help = new StringBuilder();
 		help.append("        X  Y  Z  T\n");
-		help.append(String.format("    x - 1, 2, 3, 4\n", mv.get(0), mv.get(4), mv.get(8), mv.get(12)));
-		help.append(String.format("    y - q, w, e, r\n", mv.get(1), mv.get(5), mv.get(9), mv.get(13)));
-		help.append(String.format("    z - a, s, d, f\n", mv.get(2), mv.get(6), mv.get(10), mv.get(14)));
-		help.append(String.format("    w - z, x, c, v\n"  , mv.get(3), mv.get(7), mv.get(11), mv.get(15)));
+		help.append("    x - 1, 2, 3, 4\n");
+		help.append("    y - q, w, e, r\n");
+		help.append("    z - a, s, d, f\n");
+		help.append("    w - z, x, c, v\n");
 		help.append("shift - decrementa");
 		renderText(help.toString(), width - 180, 20);
 
@@ -126,7 +126,7 @@ public class A07_Matrix extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A07_Matrix();
+		new A06_Matrix();
 	}
 
 }

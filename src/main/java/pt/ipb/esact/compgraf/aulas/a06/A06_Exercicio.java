@@ -1,25 +1,22 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.a06;
 
-import java.awt.event.KeyEvent;
-
+import com.jogamp.opengl.util.texture.Texture;
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.Colors;
 import pt.ipb.esact.compgraf.tools.math.GLPrimitives;
-import pt.ipb.esact.compgraf.tools.math.Vectors;
 
-import com.jogamp.opengl.util.texture.Texture;
+import java.awt.event.KeyEvent;
 
-public class A07_SecondaryColor extends DefaultGLWindow {
+public class A06_Exercicio extends DefaultGLWindow {
 
 	// Variaveis das rotações dos objetos
 	private float earthRot = 0.0f;
 	private float earthRotSpeed = 0.1f * GL_PI;
 
 	private float moonEarthDistance = 3.0f;
-	private float moonTilt = 0.3f * GL_PI;
+	private float moonTilt = 0.1f * GL_PI;
 
 	private float moonRot = 0.0f;
 	private float moonRotSpeed = 5.7f * GL_PI;
@@ -28,14 +25,14 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 	private float moonTrlSpeed = 1.05f * GL_PI;
 
 	// Texturas do exemplo
-	private Texture TEX_EARTH;
-	private Texture TEX_MOON;
-	
+	private Texture texEarth;
+	private Texture texMoon;
+
 	// Colocar uma skybox no exemplo
 	private Skybox skybox;
-	
-	public A07_SecondaryColor() {
-		super("A06 Secondary Color", true);
+
+	public A06_Exercicio() {
+		super("Exercicio 6", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -61,7 +58,14 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		
 		// Criar uma skybox
 		skybox = new Skybox(this);
-		skybox.load("skybox/px.png", "skybox/py.png", "skybox/pz.png", "skybox/nx.png", "skybox/ny.png", "skybox/nz.png");
+		skybox.load(
+            "assets/skyboxes/stars/px.png",
+            "assets/skyboxes/stars/py.png",
+            "assets/skyboxes/stars/pz.png",
+            "assets/skyboxes/stars/nx.png",
+            "assets/skyboxes/stars/ny.png",
+            "assets/skyboxes/stars/nz.png"
+        );
 	}
 
 
@@ -90,15 +94,15 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		// Activação da luz 0
 		glEnable(GL_LIGHT0);
 	}
-	
+
 	private void configureTextures() {
-		// Setup das texturas
-		TEX_EARTH = loadPackageTexture("earth.png");
-		TEX_MOON = loadPackageTexture("moon.png");
+        // Setup das texturas
+		texEarth = loadTexture("assets/tex/earth.png");
+		texMoon = loadTexture("assets/tex/moon.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
-		
+
 		// Activar separate color por omissão
 		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 	}
@@ -122,8 +126,8 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		TEX_EARTH.destroy(this);
-		TEX_MOON.destroy(this);
+		texEarth.destroy(this);
+		texMoon.destroy(this);
 	}
 	
 	@Override
@@ -132,7 +136,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 		
 		// Reposicionar a luz
 		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-20.0f, 0.0f, 0.0f, 1.0f));
-		
+
 		// Desenhar a skybox primeiro
 		skybox.render();
 		
@@ -144,7 +148,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 			// Desenhar e rodar a Terra
 			glPushMatrix();
-				TEX_EARTH.bind(this);
+				texEarth.bind(this);
 				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 				/*
 				 * Por causa do rotate 90º em -X -> o eixo vertical é agora o Z
@@ -157,9 +161,6 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 			// Aplicar o tilt da lua
 			glRotatef(toDegrees(moonTilt), 0.0f, 0.0f, 1.0f);
 
-			// Desenhar a orbita da lua
-			drawOrbit(moonEarthDistance);
-
 			// Avançar e transladar a Lua
 			glRotatef(toDegrees(moonTrl), 0.0f, 1.0f, 0.0f);
 			glTranslatef(moonEarthDistance, 0.0f, 0.0f);
@@ -167,7 +168,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 			// Estamos no sítio certo para desenhar a lua
 			// Desenhar e rodar a Lua
 			glPushMatrix();
-				TEX_MOON.bind(this);
+				texMoon.bind(this);
 				glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
 				glRotatef(toDegrees(moonRot), 0.0f, 0.0f, 1.0f);
 				GLPrimitives.drawSphere(0.3f, 100, 100);
@@ -177,22 +178,14 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 		// Ataualizar as variáveis das rotações
 		updateRotations();
-		
+
 		renderText("separate color: " + (separateColor ? "enabled" : "disabled"), 10, 20);
 		renderText("      earthRot: " + toDegrees(earthRotSpeed) + " DEG/s - " + toDegrees(earthRot) + " DEG", 10, 40);
 		renderText("       moonRot: " + toDegrees(moonRotSpeed) + " DEG/s - " + toDegrees(moonRot) + " DEG", 10, 50);
-		
+
 		renderText("s: toggle separate color", width - 200, 20);
 	}
-	
-	void drawOrbit(float radius) {
-		glPushAttrib(GL_CURRENT_BIT | GL_LIGHTING_BIT | GL_ENABLE_BIT);
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_LIGHTING);
-			GLPrimitives.drawCircle(radius, Colors.DARKGRAY, Vectors.ORIGIN);
-		glPopAttrib();
-	}
-	
+
 	private float incrementRadians(float current, float increment) {
 		current += increment * timeElapsed();
 		current %= 2.0f * GL_PI; // garantir que não passamos de 2PI
@@ -217,7 +210,7 @@ public class A07_SecondaryColor extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A07_SecondaryColor();
+		new A06_Exercicio();
 	}
 
 }

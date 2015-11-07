@@ -278,6 +278,10 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		return GlTools.loadPackageTexture(this, path);
 	}
 
+    public Texture loadTexture(String path) {
+        return GlTools.loadTexture(path);
+    }
+
 
 	protected void internalInit() {
 		

@@ -60,7 +60,7 @@ public class A05_Texture extends DefaultGLWindow {
 	private void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
-		
+
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));
 	}
@@ -185,7 +185,6 @@ public class A05_Texture extends DefaultGLWindow {
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 30.0f);
 		Camera camera = new Camera(0, 1, 1);
-		camera.at.y = 1.0f;
 		Cameras.setCurrent(camera);
 		setupCamera();
 	}

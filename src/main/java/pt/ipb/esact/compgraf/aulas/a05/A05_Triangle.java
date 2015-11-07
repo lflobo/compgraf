@@ -84,7 +84,7 @@ public class A05_Triangle extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		glColor3f(1.0f, 1.0f, 1.0f);
-		
+
 		glPushAttrib(GL_ENABLE_BIT);
 			glDisable(GL_TEXTURE_2D);
 			demo().drawFloor(12, 10);

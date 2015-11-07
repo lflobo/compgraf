@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.a06;
 
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
@@ -9,13 +9,13 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A07_Anisotropic extends DefaultGLWindow {
+public class A06_Anisotropic extends DefaultGLWindow {
 
 	// Representam as posições (identificadores) das texturas
-	private Texture TEX_BRICK;
+	private Texture texBrick;
 
-	public A07_Anisotropic() {
-		super("A07 Anisotropic", true);
+	public A06_Anisotropic() {
+		super("A06 Anisotropic", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -52,22 +52,22 @@ public class A07_Anisotropic extends DefaultGLWindow {
 	private float maxAnisotropy = 0.0f;
 	private float currentAnisotropy = 0.0f;
 	private boolean anisotropicAvailable = false;
-	
+
 	private void setupAnisotropy() {
 		// Verificar se a extensão está disponível
 		anisotropicAvailable = isExtensionAvailable("GL_EXT_texture_filter_anisotropic");
-		
+
 		// Se não está disponível parar por aqui
 		if(!anisotropicAvailable) {
 			System.out.println("Anisotropic filtering não está disponível.");
 			return;
 		}
-		
+
 		// Obter o valor mínimo/máximo de anisotropia suportado
 		FloatBuffer values = FloatBuffer.allocate(1);
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, values);
 		maxAnisotropy = values.get(0);
-		
+
 		System.out.println("Max anisotropy is: " + maxAnisotropy);
 	}
 
@@ -101,7 +101,7 @@ public class A07_Anisotropic extends DefaultGLWindow {
 	
 	private void configureTextures() {
 		glEnable(GL_TEXTURE_2D);
-		TEX_BRICK = loadPackageTexture("brick.png");
+		texBrick = loadTexture("assets/tex/brick.png");
 	}
 
 	@Override
@@ -119,14 +119,14 @@ public class A07_Anisotropic extends DefaultGLWindow {
 			);
 			
 			// Definira a anisotropia para a única textura que temos
-			TEX_BRICK.setTexParameterf(this, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);
+			texBrick.setTexParameterf(this, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);
 		}
 	}
 	
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		TEX_BRICK.destroy(this);
+		texBrick.destroy(this);
 	}
 	
 	@Override
@@ -151,7 +151,7 @@ public class A07_Anisotropic extends DefaultGLWindow {
 	}
 	
 	private void drawWall() {
-		TEX_BRICK.bind(this);
+		texBrick.bind(this);
 		for (float z = 6f; z >= 0f; z -= 1f) {
 			glBegin(GL_QUADS);
 				glTexCoord2f(0f, 0f);
@@ -178,7 +178,7 @@ public class A07_Anisotropic extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A07_Anisotropic();
+		new A06_Anisotropic();
 	}
 
 }

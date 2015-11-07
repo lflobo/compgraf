@@ -3,10 +3,7 @@ package pt.ipb.esact.compgraf.engine;
 import javax.media.opengl.GL2;
 import javax.vecmath.Vector3f;
 
-import pt.ipb.esact.compgraf.tools.Camera;
-import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.ReleaseListener;
+import pt.ipb.esact.compgraf.tools.*;
 import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -32,7 +29,7 @@ public class Skybox implements ReleaseListener {
 		this.gl = window;
 		window.addReleaseListener(this);
 	}
-	
+
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
@@ -43,18 +40,14 @@ public class Skybox implements ReleaseListener {
 	
 	public void load(String ddpx, String ddpy, String ddpz, String ddnx, String ddny, String ddnz) {
 		// Setup das texturas
-		TEX_POSITIVE_X = gl.loadPackageTexture(ddpx);
-		TEX_POSITIVE_Y = gl.loadPackageTexture(ddpy);
-		TEX_POSITIVE_Z = gl.loadPackageTexture(ddpz);
-		TEX_NEGATIVE_X = gl.loadPackageTexture(ddnx);
-		TEX_NEGATIVE_Y = gl.loadPackageTexture(ddny);
-		TEX_NEGATIVE_Z = gl.loadPackageTexture(ddnz);
+		TEX_POSITIVE_X = GlTools.loadTexture(ddpx);
+		TEX_POSITIVE_Y = GlTools.loadTexture(ddpy);
+		TEX_POSITIVE_Z = GlTools.loadTexture(ddpz);
+		TEX_NEGATIVE_X = GlTools.loadTexture(ddnx);
+		TEX_NEGATIVE_Y = GlTools.loadTexture(ddny);
+		TEX_NEGATIVE_Z = GlTools.loadTexture(ddnz);
 		
 		createMultiple();
-	}
-	
-	public void laod(String image) {
-		
 	}
 
 	private void createMultiple() {
