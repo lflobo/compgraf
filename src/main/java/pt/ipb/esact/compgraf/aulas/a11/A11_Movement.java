@@ -58,9 +58,9 @@ public class A11_Movement extends DefaultGLWindow {
 
 	private void configureModels() {
 		wheatley = new ObjLoader(this);
-		wheatley.load("wheatley/wheatley.obj", "wheatley/wheatley.mtl");
+		wheatley.load("assets/models/wheatley/wheatley.obj", "assets/models/wheatley/wheatley.mtl");
 		floor = new ObjLoader(this);
-		floor.load("floor/floor.obj", "floor/floor.mtl");
+		floor.load("assets/models/floor/floor.obj", "assets/models/floor/floor.mtl");
 	}
 
 	private void configureMaterials() {

@@ -29,12 +29,12 @@ public class A06_Skybox extends DefaultGLWindow {
 
         skybox = new Skybox(this);
         skybox.load(
-                "assets/skyboxes/planet1/px.png",
-                "assets/skyboxes/planet1/py.png",
-                "assets/skyboxes/planet1/pz.png",
-                "assets/skyboxes/planet1/nx.png",
-                "assets/skyboxes/planet1/ny.png",
-                "assets/skyboxes/planet1/nz.png"
+                "assets/skyboxes/landscape/px.png",
+                "assets/skyboxes/landscape/py.png",
+                "assets/skyboxes/landscape/pz.png",
+                "assets/skyboxes/landscape/nx.png",
+                "assets/skyboxes/landscape/ny.png",
+                "assets/skyboxes/landscape/nz.png"
         );
 
         glEnable(GL_TEXTURE_2D);

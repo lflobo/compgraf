@@ -1,11 +1,24 @@
 package pt.ipb.esact.compgraf.engine.obj;
 
-import static java.text.MessageFormat.format;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.jogamp.opengl.util.gl2.GLUT;
+import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+import pt.ipb.esact.compgraf.tools.GlTools;
+import pt.ipb.esact.compgraf.tools.ReleaseListener;
+import pt.ipb.esact.compgraf.tools.math.Colors;
+import pt.ipb.esact.compgraf.tools.math.GlMath;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
+import javax.media.opengl.GL2;
+import javax.vecmath.Vector3f;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Collection;
@@ -14,24 +27,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLException;
-import javax.vecmath.Vector3f;
-
-import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.GlTools;
-import pt.ipb.esact.compgraf.tools.ReleaseListener;
-import pt.ipb.esact.compgraf.tools.math.Colors;
-import pt.ipb.esact.compgraf.tools.math.GlMath;
-import pt.ipb.esact.compgraf.tools.math.Vectors;
-
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.jogamp.opengl.util.gl2.GLUT;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.text.MessageFormat.format;
 
 public class ObjLoader implements ReleaseListener {
 
@@ -75,8 +72,6 @@ public class ObjLoader implements ReleaseListener {
 	
 	private Vector3f bbMin = new Vector3f();
 
-	private DefaultGLWindow reference;
-	
 	private static final Pattern MAT_LINE_PATTERN = Pattern.compile("([^ ]*)[ ]+(.*)");
 	
 	private static final Pattern ro = Pattern.compile("^o[ ]+(.+)$");
@@ -89,30 +84,23 @@ public class ObjLoader implements ReleaseListener {
 	private static final Pattern rusemtl = Pattern.compile("^usemtl[ ]+(.+)$");
 	
 	public ObjLoader(DefaultGLWindow reference) {
-		this.reference = reference;
-		reference.addReleaseListener(this);
-	}
-	
-	public void setScale(float scale) {
+        checkNotNull(reference);
+        reference.addReleaseListener(this);
+    }
+
+    public void setScale(float scale) {
 		this.scale = scale;
 	}
 	
 	public void load(String model, String material) {
-		if(reference == null)
-			throw new GLException("The reference object cannot be null");
-		
 		// extract prefix from model
 		String prefix = "";
 		int last = model.lastIndexOf('/');
 		if(last != -1)
 			prefix = model.substring(0, last) + '/';
 		
-		InputStream modelIs = reference.getClass().getResourceAsStream(model);
-		if(modelIs == null)
-			GlTools.exit(format("Cannot open ''{0}'' (file missing?).", model));
-		
-		try (BufferedReader modelStream = new BufferedReader(new InputStreamReader(modelIs))) {
-			String line = null;
+		try (BufferedReader modelStream = new BufferedReader(new FileReader(model))) {
+            String line = null;
 			List<String> modelLines = Lists.newArrayList();
 			while((line = modelStream.readLine()) != null)
 				modelLines.add(line);
@@ -120,12 +108,8 @@ public class ObjLoader implements ReleaseListener {
 		} catch (IOException e) {
 			GlTools.exit(format("Error reading model from ''{0}'': {1}", model, e.getMessage()));
 		}
-		
-		InputStream materialIs = reference.getClass().getResourceAsStream(material);
-		if(materialIs == null)
-			GlTools.exit(format("Cannot open ''{0}'' (file missing?).", material));
-		
-		try(BufferedReader materialStream = new BufferedReader(new InputStreamReader(materialIs))) {
+
+		try(BufferedReader materialStream = new BufferedReader(new FileReader(material))) {
 			String line = null;
 			List<String> materialLines = Lists.newArrayList();
 			while((line = materialStream.readLine()) != null)
@@ -181,11 +165,11 @@ public class ObjLoader implements ReleaseListener {
 			}
 			
 			if("map_Kd".equals(prop)) {
-				material.get(currentMtl).setMapKd(reference, prefix, value);
+				material.get(currentMtl).setMapKd(prefix, value);
 			}
 
 			if("map_Bump".equals(prop)) {
-				material.get(currentMtl).setMapBump(reference, prefix, value);
+				material.get(currentMtl).setMapBump(prefix, value);
 			}
 
 			if("d".equals(prop)) {

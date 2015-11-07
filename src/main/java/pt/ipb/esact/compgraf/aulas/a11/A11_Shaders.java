@@ -38,9 +38,9 @@ public class A11_Shaders extends DefaultGLWindow {
 
 	private void configureShaders() {
 		phongShader = new Shader();
-		phongShader.load(this, "shaders/phong.vert", "shaders/phong.frag");
+		phongShader.load("assets/shaders/phong.vert", "assets/shaders/phong.frag");
 		ambientShader = new Shader();
-		ambientShader.load(this, "shaders/ambient.vert", "shaders/ambient.frag");
+		ambientShader.load("assets/shaders/ambient.vert", "assets/shaders/ambient.frag");
 	}
 
 	private void configureMaterials() {

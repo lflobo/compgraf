@@ -64,7 +64,7 @@ public class A12_Shaders2 extends DefaultGLWindow {
 
 	private void configureShaders() {
 		diffuseShader = new Shader();
-		diffuseShader.load(this, "shaders/diffuse.vert", "shaders/diffuse.frag");
+		diffuseShader.load("shaders/diffuse.vert", "shaders/diffuse.frag");
 	}
 
 	private void configureMaterials() {

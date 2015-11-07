@@ -1,6 +1,7 @@
 package pt.ipb.esact.compgraf.tools;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
@@ -42,10 +43,10 @@ public class Shader {
 	public Shader() {
 	}
 	
-	public void load(Object reference, String vertexShader, String fragmentShader) {
+	public void load(String vertexShader, String fragmentShader) {
 		GL2 gl = GlTools.gl();
-		int vertex = compile(reference, GL2.GL_VERTEX_SHADER, vertexShader);
-		int fragment = compile(reference, GL2.GL_FRAGMENT_SHADER, fragmentShader);
+		int vertex = compile(GL2.GL_VERTEX_SHADER, vertexShader);
+		int fragment = compile(GL2.GL_FRAGMENT_SHADER, fragmentShader);
 		
 		program = gl.glCreateProgram();
 		
@@ -60,11 +61,11 @@ public class Shader {
 		specularUniform = gl.glGetUniformLocation(program, UNIFORM_SPECULAR_MAP_NAME);
 	}
 	
-	public int compile(Object reference, int type, String path) {
+	public int compile(int type, String path) {
 		GL2 gl = GlTools.gl();
 		int shader = gl.glCreateShader(type);
 		
-		try (BufferedReader stream = new BufferedReader(new InputStreamReader(reference.getClass().getResourceAsStream(path)));) {
+		try (BufferedReader stream = new BufferedReader(new FileReader(path));) {
 			StringBuilder lines = new StringBuilder();
 			String line = null;
 			while((line = stream.readLine()) != null)

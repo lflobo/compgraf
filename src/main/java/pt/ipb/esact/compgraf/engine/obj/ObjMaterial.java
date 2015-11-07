@@ -65,10 +65,10 @@ public class ObjMaterial implements ReleaseListener {
 		ks = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
 	}
 
-	public void setMapKd(Object reference, String prefix, String value) {
+	public void setMapKd(String prefix, String value) {
 		mkdset = true;
 		String name = findPath(value);
-		TEX_DIFFUSE = GlTools.loadPackageTexture(reference, prefix + name);
+		TEX_DIFFUSE = GlTools.loadTexture(prefix + name);
 	}
 
 	private String findPath(String value) {
@@ -83,10 +83,10 @@ public class ObjMaterial implements ReleaseListener {
 		return value.substring(last + 1);
 	}
 
-	public void setMapBump(Object reference, String prefix, String value) {
+	public void setMapBump(String prefix, String value) {
 		mbumpset = true;
 		String name = findPath(value);
-		TEX_BUMP = GlTools.loadPackageTexture(reference, prefix + name);
+		TEX_BUMP = GlTools.loadTexture(prefix + name);
 	}
 
 	public void setD(float value) {

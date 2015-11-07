@@ -45,24 +45,31 @@ public class A09_Obj extends DefaultGLWindow {
 	
 		// Carregar os ficheiros .obj/.mtl
 		wheatley = new ObjLoader(this);
-		wheatley.load("wheatley/wheatley.obj", "wheatley/wheatley.mtl");
+		wheatley.load("assets/models/wheatley/wheatley.obj", "assets/models/wheatley/wheatley.mtl");
 		
 		moon = new ObjLoader(this);
-		moon.load("moon/moon.obj", "moon/moon.mtl");
+		moon.load("assets/models/moon/moon.obj", "assets/models/moon/moon.mtl");
 
 		glass = new ObjLoader(this);
-		glass.load("glass/glass.obj", "glass/glass.mtl");
+		glass.load("assets/models/glass/glass.obj", "assets/models/glass/glass.mtl");
 
 		miniGun = new ObjLoader(this);
 		miniGun.setScale(0.5f); // Opcionalmente definir a escala
-		miniGun.load("minigun/MiniGun.obj", "minigun/MiniGun.mtl");
+		miniGun.load("assets/models/minigun/MiniGun.obj", "assets/models/minigun/MiniGun.mtl");
 
 		floor = new ObjLoader(this);
-		floor.load("floor/floor.obj", "floor/floor.mtl");
+		floor.load("assets/models/floor/floor.obj", "assets/models/floor/floor.mtl");
 		
 		// carregar as texturas da skybox
 		skybox = new Skybox(this);
-		skybox.load("skybox/dd-px.png", "skybox/dd-py.png", "skybox/dd-pz.png", "skybox/dd-nx.png", "skybox/dd-ny.png", "skybox/dd-nz.png");
+		skybox.load(
+                "assets/skyboxes/landscape/px.png",
+                "assets/skyboxes/landscape/py.png",
+                "assets/skyboxes/landscape/pz.png",
+                "assets/skyboxes/landscape/nx.png",
+                "assets/skyboxes/landscape/ny.png",
+                "assets/skyboxes/landscape/nz.png"
+        );
 	}
 
 	private void configureMaterials() {
