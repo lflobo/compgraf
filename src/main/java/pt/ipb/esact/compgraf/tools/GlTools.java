@@ -45,6 +45,7 @@ public class GlTools {
     public static Texture loadTexture(String path) {
         Preconditions.checkNotNull(path, "The path cannot be null");
         GL2 gl = gl();
+        GLU glu = new GLU();
 
         String type = getImageType(path);
         try (FileInputStream stream = new FileInputStream(path)) {
@@ -55,6 +56,11 @@ public class GlTools {
             tex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);
             if(isAnisotropicAvailable())
                 tex.setTexParameterf(gl, GL2.GL_TEXTURE_MAX_ANISOTROPY_EXT, getMaxAnisotropy());
+
+            int i = gl.glGetError();
+            String s = glu.gluErrorString(i);
+            System.out.println(s);
+
             return tex;
         } catch (Exception e) {
             // Ocorreu um erro --> Terminar o programa

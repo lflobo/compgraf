@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a08;
+package pt.ipb.esact.compgraf.aulas.a07;
 
 import javax.media.opengl.glu.GLUquadric;
 
@@ -9,7 +9,7 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A08_Quadrics extends DefaultGLWindow {
+public class A07_Quadrics extends DefaultGLWindow {
 
 	/**
 	 * Variáveis de controlo do planeta / asteróides
@@ -25,7 +25,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 	// Rotação dos asteroides
 	float aRot0 = 0.0f;
-	float aRot0Speed = 0.5f * GL_PI;
+	float aRot0Speed = 0.05f * GL_PI;
 
 	float aRot1 = 0.0f;
 	float aRot1Speed = 0.1f * GL_PI;
@@ -35,15 +35,15 @@ public class A08_Quadrics extends DefaultGLWindow {
 	/**
 	 * Identificadores das listas gerados no método createDisplayLists();
 	 */
-	private int LIST_AST_0;
-	private int LIST_AST_1;
-	private int LIST_PLANET;
-	private int LIST_CLOUDS;
+	private int listAst0;
+	private int listAst1;
+	private int listPlanet;
+	private int listClouds;
 	
 	// Objeto que desenha uma skybox (inicializada no construtor)
 	Skybox skybox = new Skybox(this);
 	
-	public A08_Quadrics() {
+	public A07_Quadrics() {
 		super("A08 Quadrics", true);
 		setMousePan(true);
 		setMouseZoom(true);
@@ -154,7 +154,14 @@ public class A08_Quadrics extends DefaultGLWindow {
 		configureDisplayLists();
 		
 		// carregar as texturas da skybox
-		skybox.load("skybox/px.png", "skybox/py.png", "skybox/pz.png", "skybox/nx.png", "skybox/ny.png", "skybox/nz.png");
+		skybox.load(
+                "assets/skyboxes/stars/px.png",
+                "assets/skyboxes/stars/py.png",
+                "assets/skyboxes/stars/pz.png",
+                "assets/skyboxes/stars/nx.png",
+                "assets/skyboxes/stars/ny.png",
+                "assets/skyboxes/stars/nz.png"
+        );
 	}
 
 	private void configureMaterials() {
@@ -187,15 +194,15 @@ public class A08_Quadrics extends DefaultGLWindow {
 	}
 	
 	// Representam as posições (identificadores) das texturas
-	private Texture TEX_PLANET;
-	private Texture TEX_CLOUDS;
-	private Texture TEX_ASTEROIDS;
+	private Texture texPlanet;
+	private Texture texClouds;
+	private Texture texAsteroids;
 	
 	private void configureTextures() {
 		// Carregar as texturas
-		TEX_PLANET = loadPackageTexture("earth.png");
-		TEX_CLOUDS = loadPackageTexture("clouds.png");
-		TEX_ASTEROIDS = loadPackageTexture("asteroid.png");
+		texPlanet = loadTexture("assets/tex/earth.png");
+		texClouds = loadTexture("assets/tex/space/clouds.png");
+		texAsteroids = loadTexture("assets/tex/space/asteroid.png");
 		
 		// Activar as texturas
 		glEnable(GL_TEXTURE_2D);
@@ -203,18 +210,18 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 
 	private void configureDisplayLists() {
-		LIST_AST_0 = createListAsteroidBelt(1000, 2.5f, 1.6f, 0.001f, 0.02f, TEX_ASTEROIDS);
-		LIST_AST_1 = createListAsteroidBelt(2000, 4.3f, 0.5f, 0.001f, 0.02f, TEX_ASTEROIDS);
-		LIST_PLANET = createListPlanet(1.95f, TEX_PLANET);
-		LIST_CLOUDS = createListPlanet(2.0f, TEX_CLOUDS); 
+		listAst0 = createListAsteroidBelt(1000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
+		listAst1 = createListAsteroidBelt(2000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
+		listPlanet = createListPlanet(1.95f, texPlanet);
+		listClouds = createListPlanet(2.0f, texClouds);
 	}
 
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
-		TEX_ASTEROIDS.destroy(this);
-		TEX_CLOUDS.destroy(this);
-		TEX_PLANET.destroy(this);
+		texAsteroids.destroy(this);
+		texClouds.destroy(this);
+		texPlanet.destroy(this);
 	}
 	
 	@Override
@@ -229,9 +236,9 @@ public class A08_Quadrics extends DefaultGLWindow {
 		
 		// Desenhar os restantes objetos
 		drawPlanet();
-		drawAsteroids();
 		drawClouds();
-		
+		drawAsteroids();
+
 		// Mostrar FPS
 		renderText("FPS: " + (int)(1/timeElapsed()), 10, 20);
 		renderText("tecla 'd' -> desativar DLs", width - 220, 20);
@@ -246,9 +253,9 @@ public class A08_Quadrics extends DefaultGLWindow {
 			glPushMatrix();
 				glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
 				if(isKeyPressed('d'))
-					drawPlanet(1.95f, TEX_PLANET);
+					drawPlanet(1.95f, texPlanet);
 				else
-					glCallList(LIST_PLANET);
+					glCallList(listPlanet);
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -269,9 +276,9 @@ public class A08_Quadrics extends DefaultGLWindow {
 				glPushMatrix();
 					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
 					if(isKeyPressed('d'))
-						drawPlanet(2.0f, TEX_CLOUDS);
+						drawPlanet(2.0f, texClouds);
 					else
-						glCallList(LIST_CLOUDS);
+						glCallList(listClouds);
 				glPopMatrix();
 			glPopMatrix();
 		glPopAttrib();
@@ -289,16 +296,16 @@ public class A08_Quadrics extends DefaultGLWindow {
 			glPushMatrix();
 				glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
 				if(isKeyPressed('d'))
-					drawAsteroidBelt(2000, 3.5f, 0.6f, 0.001f, 0.02f, TEX_ASTEROIDS);
+					drawAsteroidBelt(2000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
 				else
-					glCallList(LIST_AST_0);
+					glCallList(listAst0);
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
 				if(isKeyPressed('d'))
-					drawAsteroidBelt(1000, 4.3f, 0.1f, 0.001f, 0.02f, TEX_ASTEROIDS);
+					drawAsteroidBelt(1000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
 				else
-					glCallList(LIST_AST_1);
+					glCallList(listAst1);
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -312,7 +319,7 @@ public class A08_Quadrics extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A08_Quadrics();
+		new A07_Quadrics();
 	}
 
 }
