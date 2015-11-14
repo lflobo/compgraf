@@ -222,7 +222,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f));
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 0.0f, 0.0f, 1.0f));
 
 		// Desenhar primeiro a skybox
 		skybox.render();
