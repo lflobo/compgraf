@@ -40,7 +40,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 	private int listPlanet;
 	private int listClouds;
 	
-	// Objeto que desenha uma skybox (inicializada no construtor)
+	// Objeto que desenha uma skybox
 	Skybox skybox = new Skybox(this);
 	
 	public A07_Quadrics() {
@@ -96,39 +96,35 @@ public class A07_Quadrics extends DefaultGLWindow {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
+        {
+            // Desenhar o planeta
+            // Criar um quadric para desenhar o planeta
+            GLUquadric quad = gluNewQuadric();
 
-		// Desenhar o planeta
-		drawPlanet(radius, texture);
-		
+            // Configurar o quad
+            gluQuadricNormals(quad, GLU_SMOOTH);
+            gluQuadricDrawStyle(quad, GLU_FILL);
+            gluQuadricTexture(quad, true);
+
+            // Utilizar a textura passada como argumento
+            texture.bind(this);
+
+            glPushMatrix();
+            // Colocar a esfera de pé
+            glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+            gluSphere(quad, radius, 60, 30);
+            glPopMatrix();
+
+            // Apagar o quad (libertar memoria)
+            gluDeleteQuadric(quad);
+        }
 		// Terminamos a lista...
 		glEndList();
 		
 		return id;
 	}
 
-	private void drawPlanet(float radius, Texture texture) {
-		// Criar um quadric para desenhar o planeta
-		GLUquadric quad = gluNewQuadric();
-		
-		// Configurar o quad
-		gluQuadricNormals(quad, GLU_SMOOTH);
-		gluQuadricDrawStyle(quad, GLU_FILL);
-		gluQuadricTexture(quad, true);
-		
-		// Utilizar a textura passada como argumento
-		texture.bind(this);
-		
-		glPushMatrix();
-			// Colocar a esfera de pé
-			glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-			gluSphere(quad, radius, 60, 30);
-		glPopMatrix();
-		
-		// Apagar o quad (libertar memoria)
-		gluDeleteQuadric(quad);
-	}
-	
-	@Override
+    @Override
 	public void init() {
 		// Definir a cor de background (RGBA={0, 0, 0, 255})
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
@@ -155,12 +151,12 @@ public class A07_Quadrics extends DefaultGLWindow {
 		
 		// carregar as texturas da skybox
 		skybox.load(
-                "assets/skyboxes/stars/px.png",
-                "assets/skyboxes/stars/py.png",
-                "assets/skyboxes/stars/pz.png",
-                "assets/skyboxes/stars/nx.png",
-                "assets/skyboxes/stars/ny.png",
-                "assets/skyboxes/stars/nz.png"
+                "assets/skyboxes/planet1/px.png",
+                "assets/skyboxes/planet1/py.png",
+                "assets/skyboxes/planet1/pz.png",
+                "assets/skyboxes/planet1/nx.png",
+                "assets/skyboxes/planet1/ny.png",
+                "assets/skyboxes/planet1/nz.png"
         );
 	}
 
@@ -252,8 +248,27 @@ public class A07_Quadrics extends DefaultGLWindow {
 			glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawPlanet(1.95f, texPlanet);
+				if(isKeyPressed('d')) {
+// Criar um quadric para desenhar o planeta
+                    GLUquadric quad = gluNewQuadric();
+
+                    // Configurar o quad
+                    gluQuadricNormals(quad, GLU_SMOOTH);
+                    gluQuadricDrawStyle(quad, GLU_FILL);
+                    gluQuadricTexture(quad, true);
+
+                    // Utilizar a textura passada como argumento
+                    texPlanet.bind(this);
+
+                    glPushMatrix();
+                    // Colocar a esfera de pé
+                    glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+                    gluSphere(quad, 1.95f, 60, 30);
+                    glPopMatrix();
+
+                    // Apagar o quad (libertar memoria)
+                    gluDeleteQuadric(quad);
+                }
 				else
 					glCallList(listPlanet);
 			glPopMatrix();
@@ -275,8 +290,27 @@ public class A07_Quadrics extends DefaultGLWindow {
 				glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 				glPushMatrix();
 					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
-					if(isKeyPressed('d'))
-						drawPlanet(2.0f, texClouds);
+					if(isKeyPressed('d')) {
+// Criar um quadric para desenhar o planeta
+                        GLUquadric quad = gluNewQuadric();
+
+                        // Configurar o quad
+                        gluQuadricNormals(quad, GLU_SMOOTH);
+                        gluQuadricDrawStyle(quad, GLU_FILL);
+                        gluQuadricTexture(quad, true);
+
+                        // Utilizar a textura passada como argumento
+                        texClouds.bind(this);
+
+                        glPushMatrix();
+                        // Colocar a esfera de pé
+                        glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+                        gluSphere(quad, 2.0f, 60, 30);
+                        glPopMatrix();
+
+                        // Apagar o quad (libertar memoria)
+                        gluDeleteQuadric(quad);
+                    }
 					else
 						glCallList(listClouds);
 				glPopMatrix();
