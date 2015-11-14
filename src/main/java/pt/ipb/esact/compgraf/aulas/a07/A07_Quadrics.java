@@ -53,46 +53,42 @@ public class A07_Quadrics extends DefaultGLWindow {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
-		
-		// Desenhar a geometria
-		drawAsteroidBelt(count, radius, thickness, sizeMin, sizeMax, texture);
-		
+        {
+            // Desenhar a geometria
+            // Criar um quadric para as esferas (asteroides)
+            GLUquadric quad = gluNewQuadric();
+
+            // Configurar o quad
+            gluQuadricNormals(quad, GLU_SMOOTH);
+            gluQuadricDrawStyle(quad, GLU_FILL);
+            gluQuadricTexture(quad, true);
+
+            // Utilizar a textura passada como argumento
+            texture.bind(this);
+
+            // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
+            for(int i=0; i< count; i++) {
+                float distance = radius + randomBinomial(thickness);
+                float alpha = randomBinomial(2.0f * GL_PI);
+                float aradius = sizeMin + random(sizeMax - sizeMin);
+                float gray = 0.5f + randomBinomial(0.25f);
+                glColor3f(gray, gray, gray);
+                glPushMatrix();
+                    glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
+                    gluSphere(quad, aradius, 10, 5);
+                glPopMatrix();
+            }
+
+            // Apagar o quad (libertar memoria)
+            gluDeleteQuadric(quad);
+        }
 		// Terminamos a lista...
 		glEndList();
 		
 		return id;
 	}
 
-	private void drawAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, Texture texture) {
-		// Criar um quadric para as esferas (asteroides)
-		GLUquadric quad = gluNewQuadric();
-		
-		// Configurar o quad
-		gluQuadricNormals(quad, GLU_SMOOTH);
-		gluQuadricDrawStyle(quad, GLU_FILL);
-		gluQuadricTexture(quad, true);
-		
-		// Utilizar a textura passada como argumento
-		texture.bind(this);
-
-		// Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
-		for(int i=0; i<count; i++) {
-			float distance = radius + randomBinomial(thickness);
-			float alpha = randomBinomial(2.0f * GL_PI);
-			float aradius = sizeMin + random(sizeMax - sizeMin);
-			float gray = 0.5f + randomBinomial(0.25f);
-			glColor3f(gray, gray, gray);
-			glPushMatrix();
-				glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
-				gluSphere(quad, aradius, 10, 5);
-			glPopMatrix();
-		}
-		
-		// Apagar o quad (libertar memoria)
-		gluDeleteQuadric(quad);
-	}
-		
-	private int createListPlanet(float radius, Texture texture) {
+    private int createListPlanet(float radius, Texture texture) {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
@@ -110,11 +106,12 @@ public class A07_Quadrics extends DefaultGLWindow {
             texture.bind(this);
 
             glPushMatrix();
-            // Colocar a esfera de pé
-            glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-            gluSphere(quad, radius, 60, 30);
-            glPopMatrix();
-
+            {
+                // Colocar a esfera de pé
+                glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+                gluSphere(quad, radius, 60, 30);
+                glPopMatrix();
+            }
             // Apagar o quad (libertar memoria)
             gluDeleteQuadric(quad);
         }
@@ -329,15 +326,67 @@ public class A07_Quadrics extends DefaultGLWindow {
 			glRotatef(toDegrees(aTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawAsteroidBelt(2000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
+				if(isKeyPressed('d')) {
+// Criar um quadric para as esferas (asteroides)
+                    GLUquadric quad = gluNewQuadric();
+
+                    // Configurar o quad
+                    gluQuadricNormals(quad, GLU_SMOOTH);
+                    gluQuadricDrawStyle(quad, GLU_FILL);
+                    gluQuadricTexture(quad, true);
+
+                    // Utilizar a textura passada como argumento
+                    texAsteroids.bind(this);
+
+                    // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
+                    for(int i=0; i< 2000; i++) {
+                        float distance = 2.5f + randomBinomial(1.6f);
+                        float alpha = randomBinomial(2.0f * GL_PI);
+                        float aradius = 0.001f + random(0.02f - 0.001f);
+                        float gray = 0.5f + randomBinomial(0.25f);
+                        glColor3f(gray, gray, gray);
+                        glPushMatrix();
+                            glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
+                            gluSphere(quad, aradius, 10, 5);
+                        glPopMatrix();
+                    }
+
+                    // Apagar o quad (libertar memoria)
+                    gluDeleteQuadric(quad);
+                }
 				else
 					glCallList(listAst0);
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawAsteroidBelt(1000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
+				if(isKeyPressed('d')) {
+// Criar um quadric para as esferas (asteroides)
+                    GLUquadric quad = gluNewQuadric();
+
+                    // Configurar o quad
+                    gluQuadricNormals(quad, GLU_SMOOTH);
+                    gluQuadricDrawStyle(quad, GLU_FILL);
+                    gluQuadricTexture(quad, true);
+
+                    // Utilizar a textura passada como argumento
+                    texAsteroids.bind(this);
+
+                    // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
+                    for(int i=0; i< 1000; i++) {
+                        float distance = 4.3f + randomBinomial(0.5f);
+                        float alpha = randomBinomial(2.0f * GL_PI);
+                        float aradius = 0.001f + random(0.02f - 0.001f);
+                        float gray = 0.5f + randomBinomial(0.25f);
+                        glColor3f(gray, gray, gray);
+                        glPushMatrix();
+                            glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
+                            gluSphere(quad, aradius, 10, 5);
+                        glPopMatrix();
+                    }
+
+                    // Apagar o quad (libertar memoria)
+                    gluDeleteQuadric(quad);
+                }
 				else
 					glCallList(listAst1);
 			glPopMatrix();
