@@ -116,7 +116,7 @@ public class FromScratchExample extends DefaultGLWindow {
 
     private void configureTextures() {
         /**
-         * 9) Carregar
+         * 9) Carregar textura
          */
         glEnable(GL_TEXTURE_2D);
         texMoon = loadTexture("assets/tex/moon.png");
