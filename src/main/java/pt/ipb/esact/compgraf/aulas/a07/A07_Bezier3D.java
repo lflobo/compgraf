@@ -37,17 +37,17 @@ public class A07_Bezier3D extends DefaultGLWindow {
 
     FloatBuffer CONTROL_POINTS = newFloatBuffer(
             // u0
-            2.0f, 6.0f, 0.0f, // v0
-            2.0f, 4.0f, 0.0f, // v1
-            2.0f, 2.0f, 0.0f, // v2
+            -2.0f, 6.0f, 0.0f, // v0
+            -2.0f, 4.0f, 0.0f, // v1
+            -2.0f, 2.0f, 0.0f, // v2
             // u1
             0.0f, 6.0f, 0.0f,  // v0
             0.0f, 4.0f, 0.0f,  // v1
             0.0f, 2.0f, 0.0f,  // v2
             // u2
-            -2.0f, 6.0f, 0.0f,  // v0
-            -2.0f, 4.0f, 0.0f,  // v1
-            -2.0f, 2.0f, 0.0f   // v2
+            2.0f, 6.0f, 0.0f,  // v0
+            2.0f, 4.0f, 0.0f,  // v1
+            2.0f, 2.0f, 0.0f   // v2
     );
 
     private static final float U_MIN = 0.0f;
@@ -70,9 +70,6 @@ public class A07_Bezier3D extends DefaultGLWindow {
         // Activar o teste de profundidade
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
-        glEnable(GL_CULL_FACE);
-
-        glCullFace(GL_BACK);
 
         // Configurar as luzes
         configureLighting();

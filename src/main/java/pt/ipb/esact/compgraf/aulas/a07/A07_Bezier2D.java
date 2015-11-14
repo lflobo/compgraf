@@ -81,10 +81,21 @@ public class A07_Bezier2D extends DefaultGLWindow {
                 CONTROL_POINTS        // Pontos de controlo
         );
 
-        // Desenhar a curva de bezier
+        // Desenhar a curva de bezier  (com recurso a evalMesh)
         int partitions = 100;
         glMapGrid1f(partitions, U_MIN, U_MAX);
         glEvalMesh1(GL_LINE, 0, partitions);
+
+        // Desenha com recurso a primitiva GL_LINE_STRIP
+        /*
+        glBegin(GL_LINE_STRIP);
+        {
+            for (float i = U_MIN; i < U_MAX; i++)
+                // equivalente a glVertex com a cordenada na % i da curva
+                glEvalCoord1f(i);
+        }
+        glEnd ();
+        */
 
         // Desenhar os pontos de controlo
         if (showControlLines) {
