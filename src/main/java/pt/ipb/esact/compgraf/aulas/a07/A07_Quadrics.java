@@ -40,7 +40,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 	private int listPlanet;
 	private int listClouds;
 	
-	// Objeto que desenha uma skybox
+	// Objeto que desenha uma skybox (inicializada no construtor)
 	Skybox skybox = new Skybox(this);
 	
 	public A07_Quadrics() {
@@ -53,75 +53,82 @@ public class A07_Quadrics extends DefaultGLWindow {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
-        {
-            // Desenhar a geometria
-            // Criar um quadric para as esferas (asteroides)
-            GLUquadric quad = gluNewQuadric();
-
-            // Configurar o quad
-            gluQuadricNormals(quad, GLU_SMOOTH);
-            gluQuadricDrawStyle(quad, GLU_FILL);
-            gluQuadricTexture(quad, true);
-
-            // Utilizar a textura passada como argumento
-            texture.bind(this);
-
-            // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
-            for(int i=0; i< count; i++) {
-                float distance = radius + randomBinomial(thickness);
-                float alpha = randomBinomial(2.0f * GL_PI);
-                float aradius = sizeMin + random(sizeMax - sizeMin);
-                float gray = 0.5f + randomBinomial(0.25f);
-                glColor3f(gray, gray, gray);
-                glPushMatrix();
-                    glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
-                    gluSphere(quad, aradius, 10, 5);
-                glPopMatrix();
-            }
-
-            // Apagar o quad (libertar memoria)
-            gluDeleteQuadric(quad);
-        }
+		
+		// Desenhar a geometria
+		drawAsteroidBelt(count, radius, thickness, sizeMin, sizeMax, texture);
+		
 		// Terminamos a lista...
 		glEndList();
 		
 		return id;
 	}
 
-    private int createListPlanet(float radius, Texture texture) {
+	private void drawAsteroidBelt(int count, float radius, float thickness, float sizeMin, float sizeMax, Texture texture) {
+		// Criar um quadric para as esferas (asteroides)
+		GLUquadric quad = gluNewQuadric();
+		
+		// Configurar o quad
+		gluQuadricNormals(quad, GLU_SMOOTH);
+		gluQuadricDrawStyle(quad, GLU_FILL);
+		gluQuadricTexture(quad, true);
+		
+		// Utilizar a textura passada como argumento
+		texture.bind(this);
+
+		// Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
+		for(int i=0; i<count; i++) {
+			float distance = radius + randomBinomial(thickness);
+			float alpha = randomBinomial(2.0f * GL_PI);
+			float aradius = sizeMin + random(sizeMax - sizeMin);
+			float gray = 0.5f + randomBinomial(0.25f);
+			glColor3f(gray, gray, gray);
+			glPushMatrix();
+				glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
+				gluSphere(quad, aradius, 10, 5);
+			glPopMatrix();
+		}
+		
+		// Apagar o quad (libertar memoria)
+		gluDeleteQuadric(quad);
+	}
+		
+	private int createListPlanet(float radius, Texture texture) {
 		// Criar uma Display List
 		int id = glGenLists(1);
 		glNewList(id, GL_COMPILE);
-        {
-            // Desenhar o planeta
-            // Criar um quadric para desenhar o planeta
-            GLUquadric quad = gluNewQuadric();
 
-            // Configurar o quad
-            gluQuadricNormals(quad, GLU_SMOOTH);
-            gluQuadricDrawStyle(quad, GLU_FILL);
-            gluQuadricTexture(quad, true);
-
-            // Utilizar a textura passada como argumento
-            texture.bind(this);
-
-            glPushMatrix();
-            {
-                // Colocar a esfera de pé
-                glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-                gluSphere(quad, radius, 60, 30);
-                glPopMatrix();
-            }
-            // Apagar o quad (libertar memoria)
-            gluDeleteQuadric(quad);
-        }
+		// Desenhar o planeta
+		drawPlanet(radius, texture);
+		
 		// Terminamos a lista...
 		glEndList();
 		
 		return id;
 	}
 
-    @Override
+	private void drawPlanet(float radius, Texture texture) {
+		// Criar um quadric para desenhar o planeta
+		GLUquadric quad = gluNewQuadric();
+		
+		// Configurar o quad
+		gluQuadricNormals(quad, GLU_SMOOTH);
+		gluQuadricDrawStyle(quad, GLU_FILL);
+		gluQuadricTexture(quad, true);
+		
+		// Utilizar a textura passada como argumento
+		texture.bind(this);
+		
+		glPushMatrix();
+			// Colocar a esfera de pé
+			glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
+			gluSphere(quad, radius, 60, 30);
+		glPopMatrix();
+		
+		// Apagar o quad (libertar memoria)
+		gluDeleteQuadric(quad);
+	}
+	
+	@Override
 	public void init() {
 		// Definir a cor de background (RGBA={0, 0, 0, 255})
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
@@ -148,12 +155,12 @@ public class A07_Quadrics extends DefaultGLWindow {
 		
 		// carregar as texturas da skybox
 		skybox.load(
-                "assets/skyboxes/planet1/px.png",
-                "assets/skyboxes/planet1/py.png",
-                "assets/skyboxes/planet1/pz.png",
-                "assets/skyboxes/planet1/nx.png",
-                "assets/skyboxes/planet1/ny.png",
-                "assets/skyboxes/planet1/nz.png"
+                "assets/skyboxes/stars/px.png",
+                "assets/skyboxes/stars/py.png",
+                "assets/skyboxes/stars/pz.png",
+                "assets/skyboxes/stars/nx.png",
+                "assets/skyboxes/stars/ny.png",
+                "assets/skyboxes/stars/nz.png"
         );
 	}
 
@@ -222,7 +229,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Reposicionar a luz
-		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 0.0f, 0.0f, 1.0f));
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-10.0f, 20.0f, -10.0f, 1.0f));
 
 		// Desenhar primeiro a skybox
 		skybox.render();
@@ -245,27 +252,8 @@ public class A07_Quadrics extends DefaultGLWindow {
 			glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d')) {
-// Criar um quadric para desenhar o planeta
-                    GLUquadric quad = gluNewQuadric();
-
-                    // Configurar o quad
-                    gluQuadricNormals(quad, GLU_SMOOTH);
-                    gluQuadricDrawStyle(quad, GLU_FILL);
-                    gluQuadricTexture(quad, true);
-
-                    // Utilizar a textura passada como argumento
-                    texPlanet.bind(this);
-
-                    glPushMatrix();
-                    // Colocar a esfera de pé
-                    glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-                    gluSphere(quad, 1.95f, 60, 30);
-                    glPopMatrix();
-
-                    // Apagar o quad (libertar memoria)
-                    gluDeleteQuadric(quad);
-                }
+				if(isKeyPressed('d'))
+					drawPlanet(1.95f, texPlanet);
 				else
 					glCallList(listPlanet);
 			glPopMatrix();
@@ -287,27 +275,8 @@ public class A07_Quadrics extends DefaultGLWindow {
 				glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
 				glPushMatrix();
 					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
-					if(isKeyPressed('d')) {
-// Criar um quadric para desenhar o planeta
-                        GLUquadric quad = gluNewQuadric();
-
-                        // Configurar o quad
-                        gluQuadricNormals(quad, GLU_SMOOTH);
-                        gluQuadricDrawStyle(quad, GLU_FILL);
-                        gluQuadricTexture(quad, true);
-
-                        // Utilizar a textura passada como argumento
-                        texClouds.bind(this);
-
-                        glPushMatrix();
-                        // Colocar a esfera de pé
-                        glRotatef(90.0f, -1.0f, 0.0f, 0.0f);
-                        gluSphere(quad, 2.0f, 60, 30);
-                        glPopMatrix();
-
-                        // Apagar o quad (libertar memoria)
-                        gluDeleteQuadric(quad);
-                    }
+					if(isKeyPressed('d'))
+						drawPlanet(2.0f, texClouds);
 					else
 						glCallList(listClouds);
 				glPopMatrix();
@@ -326,67 +295,15 @@ public class A07_Quadrics extends DefaultGLWindow {
 			glRotatef(toDegrees(aTilt), 0.0f, 0.0f, 1.0f);
 			glPushMatrix();
 				glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d')) {
-// Criar um quadric para as esferas (asteroides)
-                    GLUquadric quad = gluNewQuadric();
-
-                    // Configurar o quad
-                    gluQuadricNormals(quad, GLU_SMOOTH);
-                    gluQuadricDrawStyle(quad, GLU_FILL);
-                    gluQuadricTexture(quad, true);
-
-                    // Utilizar a textura passada como argumento
-                    texAsteroids.bind(this);
-
-                    // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
-                    for(int i=0; i< 2000; i++) {
-                        float distance = 2.5f + randomBinomial(1.6f);
-                        float alpha = randomBinomial(2.0f * GL_PI);
-                        float aradius = 0.001f + random(0.02f - 0.001f);
-                        float gray = 0.5f + randomBinomial(0.25f);
-                        glColor3f(gray, gray, gray);
-                        glPushMatrix();
-                            glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
-                            gluSphere(quad, aradius, 10, 5);
-                        glPopMatrix();
-                    }
-
-                    // Apagar o quad (libertar memoria)
-                    gluDeleteQuadric(quad);
-                }
+				if(isKeyPressed('d'))
+					drawAsteroidBelt(2000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
 				else
 					glCallList(listAst0);
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d')) {
-// Criar um quadric para as esferas (asteroides)
-                    GLUquadric quad = gluNewQuadric();
-
-                    // Configurar o quad
-                    gluQuadricNormals(quad, GLU_SMOOTH);
-                    gluQuadricDrawStyle(quad, GLU_FILL);
-                    gluQuadricTexture(quad, true);
-
-                    // Utilizar a textura passada como argumento
-                    texAsteroids.bind(this);
-
-                    // Para cada asteroide gerar posicao/angulo aleatorio dentro de um disco
-                    for(int i=0; i< 1000; i++) {
-                        float distance = 4.3f + randomBinomial(0.5f);
-                        float alpha = randomBinomial(2.0f * GL_PI);
-                        float aradius = 0.001f + random(0.02f - 0.001f);
-                        float gray = 0.5f + randomBinomial(0.25f);
-                        glColor3f(gray, gray, gray);
-                        glPushMatrix();
-                            glTranslatef(distance * sinf(alpha), 0.0f, distance * cosf(alpha));
-                            gluSphere(quad, aradius, 10, 5);
-                        glPopMatrix();
-                    }
-
-                    // Apagar o quad (libertar memoria)
-                    gluDeleteQuadric(quad);
-                }
+				if(isKeyPressed('d'))
+					drawAsteroidBelt(1000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
 				else
 					glCallList(listAst1);
 			glPopMatrix();
