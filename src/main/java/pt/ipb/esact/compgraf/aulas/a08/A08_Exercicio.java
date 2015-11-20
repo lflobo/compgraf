@@ -1,13 +1,13 @@
-package pt.ipb.esact.compgraf.aulas.a09;
+package pt.ipb.esact.compgraf.aulas.a08;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A09_Exercicio extends DefaultGLWindow {
+public class A08_Exercicio extends DefaultGLWindow {
 
-	public A09_Exercicio() {
-		super("A09 Obj", true);
+	public A08_Exercicio() {
+		super("A08 Obj", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -49,9 +49,6 @@ public class A09_Exercicio extends DefaultGLWindow {
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
-		// Este é o array com o RGB da luz ambiente
-		// Este é o array com o RGB da luz difusa
-		// Este é o array com o RGB da luz especular
 		// Configurar e Activar a Luz 0
 		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.2f, 0.2f, 0.2f, 1.0f));		// Componente ambiente
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
@@ -63,7 +60,7 @@ public class A09_Exercicio extends DefaultGLWindow {
 
 	@Override
 	public void release() {
-		// Libertar as texturas (GPU)z
+		// Libertar as texturas (GPU)
 	}
 	
 	// Variavel para a rotação do wheatley
@@ -99,7 +96,7 @@ public class A09_Exercicio extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A09_Exercicio();
+		new A08_Exercicio();
 	}
 
 }

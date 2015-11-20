@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a09;
+package pt.ipb.esact.compgraf.aulas.a08;
 
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
@@ -6,7 +6,7 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A09_Obj extends DefaultGLWindow {
+public class A08_Obj extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
@@ -19,8 +19,8 @@ public class A09_Obj extends DefaultGLWindow {
 
 	private ObjLoader glass;
 
-	public A09_Obj() {
-		super("A09 Obj", true);
+	public A08_Obj() {
+		super("A08 Obj", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -89,12 +89,9 @@ public class A09_Obj extends DefaultGLWindow {
 		// Definição do Modelo de luz para a luz ambiente
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, newFloatBuffer(0.1f, 0.1f, 0.1f, 1.0f));
 
-		// Este é o array com o RGB da luz ambiente
-		// Este é o array com o RGB da luz difusa
-		// Este é o array com o RGB da luz especular
 		// Configurar e Activar a Luz 0
 		glLightfv(GL_LIGHT0, GL_AMBIENT, newFloatBuffer(0.2f, 0.2f, 0.2f, 1.0f));		// Componente ambiente
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.4f, 0.4f, 0.4f, 1.0f));		// Componente difusa
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newFloatBuffer(0.8f, 0.8f, 0.8f, 1.0f));		// Componente difusa
 		glLightfv(GL_LIGHT0, GL_SPECULAR, newFloatBuffer(0.5f, 0.5f, 0.5f, 1.0f));		// Componente especular
 
 		// Activação da luz 0
@@ -106,7 +103,7 @@ public class A09_Obj extends DefaultGLWindow {
 		// Libertar as texturas (GPU)z
 	}
 	
-	// Variavel para a rotação do wheatley
+	// Variavel para a rotação da lua
 	private float angle = 0.0f;
 
 	void updateRotation() {
@@ -115,12 +112,11 @@ public class A09_Obj extends DefaultGLWindow {
 		angle %= 2.0f * GL_PI;
 	}
 
-	
-	@Override
+    @Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		// Reposicionar a luz
+
+    	// Reposicionar a luz
 		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 3.0f, 0.0f, 1.0f));
 		
 		// Cor por omissão do cenário
@@ -172,7 +168,7 @@ public class A09_Obj extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A09_Obj();
+		new A08_Obj();
 	}
 
 }

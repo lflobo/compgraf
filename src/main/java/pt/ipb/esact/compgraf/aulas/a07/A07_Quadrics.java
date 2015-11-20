@@ -30,7 +30,8 @@ public class A07_Quadrics extends DefaultGLWindow {
 	float aRot1 = 0.0f;
 	float aRot1Speed = 0.1f * GL_PI;
 
-	float aTilt = 0.05f * GL_PI;
+	float aTilt0 = 0.05f * GL_PI;
+    float aTilt1 = 0.10f * GL_PI;
 
 	/**
 	 * Identificadores das listas gerados no método createDisplayLists();
@@ -42,8 +43,8 @@ public class A07_Quadrics extends DefaultGLWindow {
 	
 	// Objeto que desenha uma skybox (inicializada no construtor)
 	Skybox skybox = new Skybox(this);
-	
-	public A07_Quadrics() {
+
+    public A07_Quadrics() {
 		super("A08 Quadrics", true);
 		setMousePan(true);
 		setMouseZoom(true);
@@ -249,19 +250,23 @@ public class A07_Quadrics extends DefaultGLWindow {
 		pRot %= 2.0f * GL_PI;
 
 		glPushMatrix();
-			glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
-			glPushMatrix();
-				glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawPlanet(1.95f, texPlanet);
-				else
-					glCallList(listPlanet);
-			glPopMatrix();
+        {
+            glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
+            glPushMatrix();
+            {
+                glRotatef(-toDegrees(pRot), 0.0f, 1.0f, 0.0f);
+                if (isKeyPressed('d'))
+                    drawPlanet(1.95f, texPlanet);
+                else
+                    glCallList(listPlanet);
+            }
+            glPopMatrix();
+        }
 		glPopMatrix();
 	}
 	
 	private void drawClouds() {
-		cRot += cRotSpeed * timeElapsed();
+		cRot -= cRotSpeed * timeElapsed();
 		cRot %= 2.0f * GL_PI;
 
 		glPushAttrib(GL_DEPTH_BITS | GL_ENABLE_BIT);
@@ -272,14 +277,18 @@ public class A07_Quadrics extends DefaultGLWindow {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 			glPushMatrix();
-				glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
-				glPushMatrix();
-					glRotatef(toDegrees(cRot), 0.0f, 1.0f, 0.0f);
-					if(isKeyPressed('d'))
-						drawPlanet(2.0f, texClouds);
-					else
-						glCallList(listClouds);
-				glPopMatrix();
+            {
+                glRotatef(-toDegrees(pTilt), 0.0f, 0.0f, 1.0f);
+                glPushMatrix();
+                {
+                    glRotatef(-toDegrees(cRot), 0.0f, 1.0f, 0.0f);
+                    if (isKeyPressed('d'))
+                        drawPlanet(2.0f, texClouds);
+                    else
+                        glCallList(listClouds);
+                }
+                glPopMatrix();
+            }
 			glPopMatrix();
 		glPopAttrib();
 	}
@@ -291,24 +300,28 @@ public class A07_Quadrics extends DefaultGLWindow {
 		aRot1 += aRot1Speed * timeElapsed();
 		aRot1 %= 2.0f * GL_PI;
 
-		glPushMatrix();
-			glRotatef(toDegrees(aTilt), 0.0f, 0.0f, 1.0f);
-			glPushMatrix();
-				glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawAsteroidBelt(2000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
-				else
-					glCallList(listAst0);
-			glPopMatrix();
-			glPushMatrix();
-				glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
-				if(isKeyPressed('d'))
-					drawAsteroidBelt(1000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
-				else
-					glCallList(listAst1);
-			glPopMatrix();
-		glPopMatrix();
-	}
+        glPushMatrix();
+        {
+            glRotatef(toDegrees(aTilt0), 0.0f, 0.0f, 1.0f);
+            glRotatef(toDegrees(aRot0), 0.0f, 1.0f, 0.0f);
+            if (isKeyPressed('d'))
+                drawAsteroidBelt(2000, 2.5f, 1.6f, 0.001f, 0.02f, texAsteroids);
+            else
+                glCallList(listAst0);
+        }
+        glPopMatrix();
+
+        glPushMatrix();
+        {
+            glRotatef(toDegrees(aTilt1), 0.0f, 0.0f, 1.0f);
+            glRotatef(toDegrees(aRot1), 0.0f, 1.0f, 0.0f);
+            if (isKeyPressed('d'))
+                drawAsteroidBelt(1000, 4.3f, 0.5f, 0.001f, 0.02f, texAsteroids);
+            else
+                glCallList(listAst1);
+        }
+        glPopMatrix();
+    }
 
 	@Override
 	public void resize(int width, int height) {
