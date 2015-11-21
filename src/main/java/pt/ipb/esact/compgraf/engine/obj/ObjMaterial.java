@@ -22,6 +22,7 @@ public class ObjMaterial implements ReleaseListener {
 	
 	FloatBuffer ka = FloatBuffer.allocate(4);
 	FloatBuffer kd = FloatBuffer.allocate(4);
+	FloatBuffer ke = FloatBuffer.allocate(4);
 	FloatBuffer ks = FloatBuffer.allocate(4);
 
 	private boolean kaset;
@@ -29,6 +30,8 @@ public class ObjMaterial implements ReleaseListener {
 	private boolean ksset;
 
 	private boolean kdset;
+
+    private boolean keset;
 
 	private boolean nsset;
 
@@ -46,23 +49,28 @@ public class ObjMaterial implements ReleaseListener {
 	
 	private Texture TEX_DIFFUSE;
 
-	public ObjMaterial(String name) {
+    public ObjMaterial(String name) {
 		this.name = name;
 	}
 	
 	public void setKa(float r, float g, float b) {
 		kaset = true;
-		ka = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
+		ka = FloatBuffer.wrap(new float[] {r, g, b, 1.0f});
 	}
 
 	public void setKd(float r, float g, float b) {
 		kdset = true;
-		kd = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
+		kd = FloatBuffer.wrap(new float[] {r, g, b, 1.0f});
 	}
 
 	public void setKs(float r, float g, float b) {
 		ksset = true;
-		ks = FloatBuffer.wrap(new float[] {r, b, b, 1.0f});
+		ks = FloatBuffer.wrap(new float[] {r, g, b, 1.0f});
+	}
+
+	public void setKe(float r, float g, float b) {
+		keset = true;
+		ke = FloatBuffer.wrap(new float[] {r, g, b, 1.0f});
 	}
 
 	public void setMapKd(String prefix, String value) {
@@ -129,8 +137,10 @@ public class ObjMaterial implements ReleaseListener {
 			gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, ks);
 		if(nsset)
 			gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, ns);
+        if(keset)
+            gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, ke);
 
-		if(dset && d < 1.0f) {
+        if(dset && d < 1.0f) {
 			gl.glEnable(GL2.GL_BLEND);
 			gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 		} else {

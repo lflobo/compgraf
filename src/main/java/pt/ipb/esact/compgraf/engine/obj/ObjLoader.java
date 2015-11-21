@@ -164,6 +164,13 @@ public class ObjLoader implements ReleaseListener {
 				material.get(currentMtl).setKs(r, g, b);
 			}
 			
+			if("Ke".equals(prop)) {
+				float r = GlMath.clamp(Float.parseFloat(values.get(0)), 0.0f, 1.0f);
+				float g = GlMath.clamp(Float.parseFloat(values.get(1)), 0.0f, 1.0f);
+				float b = GlMath.clamp(Float.parseFloat(values.get(2)), 0.0f, 1.0f);
+				material.get(currentMtl).setKe(r, g, b);
+			}
+
 			if("map_Kd".equals(prop)) {
 				material.get(currentMtl).setMapKd(prefix, value);
 			}
