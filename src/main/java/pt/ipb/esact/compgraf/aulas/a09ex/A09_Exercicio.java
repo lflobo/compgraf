@@ -1,21 +1,15 @@
-package pt.ipb.esact.compgraf.aulas.a10ex;
+package pt.ipb.esact.compgraf.aulas.a09ex;
 
 import java.nio.FloatBuffer;
 
-import pt.ipb.esact.compgraf.engine.Skybox;
-import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
-import pt.ipb.esact.compgraf.tools.Camera;
-import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-import com.jogamp.opengl.util.texture.Texture;
-
-public class A10_Exercicio extends DefaultGLWindow {
+public class A09_Exercicio extends DefaultGLWindow {
 
 	private int sphereDisplayList;
 
-	public A10_Exercicio() {
-		super("A10 Exercicio", true);
+	public A09_Exercicio() {
+		super("A09 Exercicio", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -150,7 +144,7 @@ public class A10_Exercicio extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A10_Exercicio();
+		new A09_Exercicio();
 	}
 
 }

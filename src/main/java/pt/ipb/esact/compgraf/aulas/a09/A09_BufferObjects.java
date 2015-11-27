@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a10;
+package pt.ipb.esact.compgraf.aulas.a09;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -9,12 +9,12 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A10_BufferObjects extends DefaultGLWindow {
+public class A09_BufferObjects extends DefaultGLWindow {
 
 	private Texture TEX_CUBE; 
 	
-	public A10_BufferObjects() {
-		super("A10 Buffer Objects", true);
+	public A09_BufferObjects() {
+		super("A09 Buffer Objects", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -216,7 +216,7 @@ public class A10_BufferObjects extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A10_BufferObjects();
+		new A09_BufferObjects();
 	}
 
 }

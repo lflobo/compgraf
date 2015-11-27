@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a10;
+package pt.ipb.esact.compgraf.aulas.a09;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -7,15 +7,15 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A10_VertexArrays extends DefaultGLWindow {
+public class A09_VertexArrays extends DefaultGLWindow {
 
 	// Array com a posição da luz
 	private FloatBuffer vertices;
 	private IntBuffer indices;
 	private FloatBuffer colors;
 	
-	public A10_VertexArrays() {
-		super("A10 Vertex Arrays", true);
+	public A09_VertexArrays() {
+		super("A09 Vertex Arrays", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -171,7 +171,7 @@ public class A10_VertexArrays extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A10_VertexArrays();
+		new A09_VertexArrays();
 	}
 
 }
