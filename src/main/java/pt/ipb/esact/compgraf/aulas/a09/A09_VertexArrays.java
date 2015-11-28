@@ -77,7 +77,7 @@ public class A09_VertexArrays extends DefaultGLWindow {
 		// Preparar os vertices
 		vertices = newDirectFloatBuffer(
 			// Face frontal
-			 1.0f, -1.0f,  1.0f, // front-bottom-right - index: 0 
+			 1.0f, -1.0f,  1.0f, // front-bottom-right - index: 0
 			 1.0f,  1.0f,  1.0f, // front-top-right    - index: 1
 			-1.0f,  1.0f,  1.0f, // front-top-left     - index: 2
 			-1.0f, -1.0f,  1.0f, // front-bottom-left  - index: 3
@@ -155,9 +155,9 @@ public class A09_VertexArrays extends DefaultGLWindow {
 			
 			// Mover a coordenada z dos primeiros 4 vertices
 			vertices.put(2,  vertices.get(2) + increment * timeElapsed());
-			vertices.put(5,  vertices.get(2) + increment * timeElapsed());
-			vertices.put(8,  vertices.get(2) + increment * timeElapsed());
-			vertices.put(11, vertices.get(2) + increment * timeElapsed());
+			vertices.put(5,  vertices.get(5) + increment * timeElapsed());
+			vertices.put(8,  vertices.get(8) + increment * timeElapsed());
+			vertices.put(11, vertices.get(11) + increment * timeElapsed());
 		}
 	}
 
