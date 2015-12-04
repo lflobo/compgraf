@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a11;
+package pt.ipb.esact.compgraf.aulas.a10;
 
 import javax.vecmath.Vector3f;
 
@@ -8,7 +8,7 @@ import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
-public class A11_Movement extends DefaultGLWindow {
+public class A10_Movement extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
@@ -33,8 +33,8 @@ public class A11_Movement extends DefaultGLWindow {
 	private float orientation = 0.0f;
 	
 	// skybox
-	public A11_Movement() {
-		super("A12 Movement", true);
+	public A10_Movement() {
+		super("A10 Movement", true);
 		setMouseZoom(true);
 	}
 	
@@ -220,7 +220,7 @@ public class A11_Movement extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A11_Movement();
+		new A10_Movement();
 	}
 
 }

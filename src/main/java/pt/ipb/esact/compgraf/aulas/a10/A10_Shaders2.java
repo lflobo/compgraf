@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a11;
+package pt.ipb.esact.compgraf.aulas.a10;
 
 import javax.vecmath.Vector3f;
 
@@ -9,7 +9,7 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
-public class A11_Shaders2 extends DefaultGLWindow {
+public class A10_Shaders2 extends DefaultGLWindow {
 
 	// .obj loaders
 	private ObjLoader wheatley;
@@ -35,8 +35,8 @@ public class A11_Shaders2 extends DefaultGLWindow {
 	private Shader diffuseShader;
 	
 	// skybox
-	public A11_Shaders2() {
-		super("A11 Movement", true);
+	public A10_Shaders2() {
+		super("A10 Movement", true);
 		setMouseZoom(true);
 	}
 	
@@ -245,7 +245,7 @@ public class A11_Shaders2 extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A11_Shaders2();
+		new A10_Shaders2();
 	}
 
 }

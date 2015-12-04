@@ -1,19 +1,19 @@
-package pt.ipb.esact.compgraf.aulas.a11;
+package pt.ipb.esact.compgraf.aulas.a10;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.Shader;
 
-public class A11_Shaders extends DefaultGLWindow {
+public class A10_Shaders extends DefaultGLWindow {
 
 	// .obj loaders
 	private Shader phongShader;
 	private Shader ambientShader;
 	
 	// skybox
-	public A11_Shaders() {
-		super("A11 Shaders", true);
+	public A10_Shaders() {
+		super("A10 Shaders", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -106,7 +106,7 @@ public class A11_Shaders extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A11_Shaders();
+		new A10_Shaders();
 	}
 
 }
