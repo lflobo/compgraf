@@ -3,10 +3,7 @@ package pt.ipb.esact.compgraf.aulas.a10;
 import javax.vecmath.Vector3f;
 
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
-import pt.ipb.esact.compgraf.tools.Camera;
-import pt.ipb.esact.compgraf.tools.Cameras;
-import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.Shader;
+import pt.ipb.esact.compgraf.tools.*;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
 import java.awt.event.KeyEvent;
@@ -148,6 +145,8 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		// Atualizar a Camera se houver movimento/rotação
 		if(isMoved || isRotated)
 			updateCameraPosition();
+
+        renderText("" + orientation, 10, 20);
 	}
 	
 	/**
@@ -158,7 +157,8 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		if(isKeyPressed("left")) {
 			// Aumentar o valor do ângulo da orientação
 			orientation += MAX_ANGULAR_VELOCITY * timeElapsed();
-			// Aplicar esse ângulo ao vetor FORWARD atual
+
+            // Aplicar esse ângulo ao vetor FORWARD atual
 			forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
 			
 			// foi gerado movimento
@@ -197,32 +197,29 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		velocity.set(0, 0, 0);
 		
 		// Dar um passo para a esquerda
-		if(isKeyPressed('a')) {
+		if(isKeyPressed('a') || isKeyPressed('d')) {
 			// Calcular o vector LEFT com base no vector FORWARD
-			Vector3f left = GlMath.rotate(90.0f, GlMath.VECTOR_UP, forward);
+			Vector3f strafe = GlMath.rotate(90.0f, GlMath.VECTOR_UP, forward);
+
 			// Adicionar esse movimento ao vetor velocidade
-			velocity.add(left);
+			velocity.add(strafe);
+
+            // O strafe é para a direita, negar a 'esquerda'
+            if(isKeyPressed('d'))
+                velocity.negate();
 		}
 		
-		if(isKeyPressed('d'))  {
-			// Calcular o vector LEFT com base no vector FORWARD
-			Vector3f right = GlMath.rotate(-90.0f, GlMath.VECTOR_UP, forward);
-			// Adicionar esse movimento ao vetor velocidade
-			velocity.add(right);
-		}
-		
-		if(isKeyPressed('w'))  {
+
+		if(isKeyPressed('w') || isKeyPressed('s'))  {
 			// Adicionar o vetor FORWARD ao vetor velocidade
 			velocity.add(forward);
+
+            // o movimento é para trás, negar o 'forward'
+            if(isKeyPressed('s'))
+                velocity.negate();
 		}
 		
-		if(isKeyPressed('s'))  {
-			// Adicionar o vetor FORWARD (negado) ao vetor velocidade
-			velocity.add(forward);
-			velocity.negate();
-		}
-		
-		// Aplicar a MAX_VELOCITY definida ao vetor velocidade 
+		// Aplicar a MAX_VELOCITY definida ao vetor velocidade
 		velocity.scale(timeElapsed() * MAX_LINEAR_VELOCITY);
 
 		// Somar essa velocidade à nossa posição atual
@@ -242,7 +239,7 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		camera.eye = new Vector3f(position);
 		camera.eye.sub(forward);
 		camera.eye.y += 1.0f;
-		
+
 		// Olhar um pouco à frente do wheatley
 		camera.at = new Vector3f(position);
 		camera.at.add(forward);
