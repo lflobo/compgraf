@@ -9,6 +9,8 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.Shader;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
 
+import java.awt.event.KeyEvent;
+
 public class A10_Shaders2 extends DefaultGLWindow {
 
 	// .obj loaders
@@ -172,7 +174,16 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		return false;
 	}
 
-	/**
+    @Override
+    protected void onKeyUp(KeyEvent e) {
+        if(e.getKeyChar() == 'c') {
+            System.out.println("Recompiling shader...");
+            diffuseShader.load("assets/shaders/diffuse.vert", "assets/shaders/diffuse.frag");
+            configureLighting();
+        }
+    }
+
+    /**
 	 * Efetua os cálculos da velocidade com base no user input
 	 * @return @c TRUE no caso de ser gerado movimento (velocity>0)
 	 */
