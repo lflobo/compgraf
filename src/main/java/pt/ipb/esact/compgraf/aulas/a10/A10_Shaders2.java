@@ -142,8 +142,8 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		floor.render();
 		
 		// Atualizar o Movimento
-		boolean isMoved = updateRotation();
-		boolean isRotated = updateMovement();
+		boolean isRotated = updateRotation();
+		boolean isMoved = updateMovement();
 		
 		// Atualizar a Camera se houver movimento/rotação
 		if(isMoved || isRotated)
