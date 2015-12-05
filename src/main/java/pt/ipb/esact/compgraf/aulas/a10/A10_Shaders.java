@@ -5,6 +5,8 @@ import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.Shader;
 
+import java.awt.event.KeyEvent;
+
 public class A10_Shaders extends DefaultGLWindow {
 
 	// .obj loaders
@@ -96,8 +98,18 @@ public class A10_Shaders extends DefaultGLWindow {
 		glPopMatrix();
 		
 	}
-	
-	@Override
+
+    @Override
+    protected void onKeyUp(KeyEvent e) {
+        if(e.getKeyChar() == 'c') {
+            System.out.println("Recompiling shader...");
+            phongShader.load("assets/shaders/phong.vert", "assets/shaders/phong.frag");
+            ambientShader.load("assets/shaders/ambient.vert", "assets/shaders/ambient.frag");
+            configureLighting();
+        }
+    }
+
+    @Override
 	public void resize(int width, int height) {
 		setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
 		Cameras.setCurrent(new Camera(0, 1, 3));
