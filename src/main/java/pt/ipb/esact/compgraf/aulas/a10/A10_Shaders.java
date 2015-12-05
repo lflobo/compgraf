@@ -82,7 +82,7 @@ public class A10_Shaders extends DefaultGLWindow {
 		// Posicionar as luzes
 		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 5.0f, 1.0f));
 
-		// Desenhar o Wheatley
+		// Desenhar o Donut
 		glPushMatrix();
 			glTranslatef(-2.0f, 0.0f, 0.0f);
 			phongShader.bind();

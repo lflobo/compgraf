@@ -111,7 +111,9 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		// Libertar as texturas (GPU)z
 		diffuseShader.release();
 	}
-	
+
+    float spotx = 0.0f;
+
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -121,11 +123,14 @@ public class A10_Shaders2 extends DefaultGLWindow {
 			diffuseShader.bind();
 		else
 			diffuseShader.unbind();
+
+        spotx += GL_PI * timeElapsed();
+        spotx %= GL_PI * 2.0;
 		
 		// Posicionar as luzes e ajustar a direção do SPOT
-		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
-		glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(0, -1, 0));
+        glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(sinf(spotx), -1, 0));
 
 		// Desenhar o Wheatley
 		glPushMatrix();
