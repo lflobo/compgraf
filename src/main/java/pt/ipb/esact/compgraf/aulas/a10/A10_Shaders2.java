@@ -36,7 +36,7 @@ public class A10_Shaders2 extends DefaultGLWindow {
 	
 	// skybox
 	public A10_Shaders2() {
-		super("A10 Movement", true);
+		super("A10 Shaders 2", true);
 		setMouseZoom(true);
 	}
 	
