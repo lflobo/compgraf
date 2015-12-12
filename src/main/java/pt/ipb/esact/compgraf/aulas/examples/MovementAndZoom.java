@@ -233,33 +233,42 @@ public class MovementAndZoom extends DefaultGLWindow {
 
     float zoom = 0.0f;
 
-	private void updateCameraPosition() {
-		// Obter a camera atual
-		Camera camera = Cameras.getCurrent();
+    float timer = 0.0f;
 
-        if(isKeyPressed('z')) {
+	private void updateCameraPosition() {
+
+        timer += timeElapsed();
+
+        if(timer >= 4.0f) {
             float increment = 5.0f;
-            if(isShiftPressed())
+            if (isShiftPressed())
                 increment *= -1;
             zoom += increment * timeElapsed();
-            if(zoom > 9.0f ) zoom = 9.0f;
-            if(zoom < 0.0f ) zoom = 0.0f;
+            if (zoom > 9.0f) zoom = 9.0f;
+            if (zoom < 0.0f) zoom = 0.0f;
+
         }
 
-		// O novo eye da camera vai ser relativa à posição do wheatley
-		// Movê-lo para trás na direção do "FORWARD"
-		// Um pouco para cima (y+)
-		camera.eye = new Vector3f(position);
-		camera.eye.sub(forward);
-		camera.eye.y += 10.0f - zoom;
+        // Obter a camera atual
+        Camera camera = Cameras.getCurrent();
 
-		// Olhar um pouco à frente do wheatley
-		camera.at = new Vector3f(position);
-		camera.at.add(forward);
-		
-		// Forçar a atualização da camera
-		setupCamera();
-	}
+        if (isKeyPressed('z')) {
+        }
+
+        // O novo eye da camera vai ser relativa à posição do wheatley
+        // Movê-lo para trás na direção do "FORWARD"
+        // Um pouco para cima (y+)
+        camera.eye = new Vector3f(position);
+        camera.eye.sub(forward);
+        camera.eye.y += 10.0f - zoom;
+
+        // Olhar um pouco à frente do wheatley
+        camera.at = new Vector3f(position);
+        camera.at.add(forward);
+
+        // Forçar a atualização da camera
+        setupCamera();
+    }
 
 	@Override
 	public void resize(int width, int height) {

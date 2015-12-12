@@ -13,7 +13,11 @@ public class GlMath {
 	public static float clamp(float value, float min, float max) {
 		return Math.max(min, Math.min(max, value));
 	}
-	
+
+	public static int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(max, value));
+	}
+
 	public static Vector3f rotate(float angle, Vector3f axis, Vector3f vector) {
 		Quat4f q = new Quat4f();
 		q.set(new AxisAngle4f(axis, (float) Math.toRadians(angle)));

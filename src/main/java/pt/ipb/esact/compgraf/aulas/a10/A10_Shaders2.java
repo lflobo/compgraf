@@ -2,6 +2,7 @@ package pt.ipb.esact.compgraf.aulas.a10;
 
 import javax.vecmath.Vector3f;
 
+import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
@@ -13,8 +14,13 @@ public class A10_Shaders2 extends DefaultGLWindow {
 	// .obj loaders
 	private ObjLoader wheatley;
 	private ObjLoader floor;
-	
-	// Vetores de movimento
+
+    float spotx = 0.0f;
+
+    Skybox currentSkybox;
+    float timer = 0.0f;
+
+    // Vetores de movimento
 	
 	// Limites de velocidade (linear e angular)
 	private static final float MAX_LINEAR_VELOCITY = 3.0f;
@@ -32,8 +38,10 @@ public class A10_Shaders2 extends DefaultGLWindow {
 	// Armazena a orientação atual do personagem
 	private float orientation = 0.0f;
 	private Shader diffuseShader;
-	
-	// skybox
+    private Skybox skybox1;
+    private Skybox skybox2;
+
+    // skybox
 	public A10_Shaders2() {
 		super("A10 Shaders 2", true);
 		setMouseZoom(true);
@@ -55,10 +63,33 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		configureMaterials();
 		configureModels();
 		configureShaders();
+        configureSkyboxes();
+    }
 
-	}
-	
-	private void configureShaders() {
+    private void configureSkyboxes() {
+        skybox1 = new Skybox(this);
+        skybox1.load(
+                "assets/skyboxes/landscape/px.png",
+                "assets/skyboxes/landscape/py.png",
+                "assets/skyboxes/landscape/pz.png",
+                "assets/skyboxes/landscape/nx.png",
+                "assets/skyboxes/landscape/ny.png",
+                "assets/skyboxes/landscape/nz.png"
+        );
+        skybox2 = new Skybox(this);
+        skybox2.load(
+                "assets/skyboxes/planet1/px.png",
+                "assets/skyboxes/planet1/py.png",
+                "assets/skyboxes/planet1/pz.png",
+                "assets/skyboxes/planet1/nx.png",
+                "assets/skyboxes/planet1/ny.png",
+                "assets/skyboxes/planet1/nz.png"
+        );
+
+        currentSkybox = skybox1;
+    }
+
+    private void configureShaders() {
 		diffuseShader = new Shader();
 		diffuseShader.load("assets/shaders/diffuse.vert", "assets/shaders/diffuse.frag");
 	}
@@ -109,34 +140,41 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		diffuseShader.release();
 	}
 
-    float spotx = 0.0f;
-
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		// se a tecla 'f' está premida desativa o shader
-		if(!isKeyPressed('f'))
-			diffuseShader.bind();
-		else
-			diffuseShader.unbind();
+		if(timer >= 4.0) {
+            if(currentSkybox.equals(skybox1))
+                currentSkybox = skybox2;
+            else
+                currentSkybox = skybox1;
+            timer = 0.0f;
+        }
 
         spotx += GL_PI * timeElapsed();
         spotx %= GL_PI * 2.0;
-		
+
+
 		// Posicionar as luzes e ajustar a direção do SPOT
         glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
         glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer(0.0f, 5.0f, 0.0f, 1.0f));
         glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(sinf(spotx), -1, 0));
 
-		// Desenhar o Wheatley
+        currentSkybox.render();
+
+        diffuseShader.bind();
+
+        // Desenhar o Wheatley
 		glPushMatrix();
 			glTranslatef(position.x, position.y, position.z);
 			glRotatef(orientation, 0, 1, 0);
 			wheatley.render();
+            wheatley.drawBoundingBox();
 		glPopMatrix();
 
-		floor.render();
+//		floor.render();
 		
 		// Atualizar o Movimento
 		boolean isRotated = updateRotation();
@@ -146,8 +184,10 @@ public class A10_Shaders2 extends DefaultGLWindow {
 		if(isMoved || isRotated)
 			updateCameraPosition();
 
-        renderText("" + orientation, 10, 20);
-	}
+        diffuseShader.unbind();
+
+        timer += timeElapsed();
+    }
 	
 	/**
 	 * Atualiza a orientação do objeto
