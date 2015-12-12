@@ -87,25 +87,26 @@ public class A11_Board extends DefaultGLWindow {
     private void createBoardList() {
         boardDl = glGenLists(1);
         glNewList(boardDl, GL_COMPILE);
+        {
+            glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT);
+            {
+                glEnable(GL_TEXTURE_2D);
 
-        glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT);
-        glEnable(GL_TEXTURE_2D);
-
-        for (int row = 0; row < CUBES_PER_ROW; row++) {
-            for (int col = 0; col < CUBES_PER_ROW; col++) {
-                float x = xStart + (float) row * CUBE_SIZE;
-                float z = zStart + (float) col * CUBE_SIZE;
-                glPushMatrix();
-                {
-                    glTranslatef(x, 0.0f, z);
-                    cube.render();
+                for (int row = 0; row < CUBES_PER_ROW; row++) {
+                    for (int col = 0; col < CUBES_PER_ROW; col++) {
+                        float x = xStart + (float) row * CUBE_SIZE;
+                        float z = zStart + (float) col * CUBE_SIZE;
+                        glPushMatrix();
+                        {
+                            glTranslatef(x, 0.0f, z);
+                            cube.render();
+                        }
+                        glPopMatrix();
+                    }
                 }
-                glPopMatrix();
             }
+            glPopAttrib();
         }
-
-        glPopAttrib();
-
         glEndList();
     }
 
