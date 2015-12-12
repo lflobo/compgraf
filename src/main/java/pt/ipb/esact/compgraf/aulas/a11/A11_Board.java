@@ -190,6 +190,10 @@ public class A11_Board extends DefaultGLWindow {
     }
 
     private void move(int rows, int cols) {
+        // Não permitir mais movimento - previne diagonais
+        if(!arrived)
+            return;
+
         int targetRow = currentRow + rows;
         if(targetRow >= 0 && targetRow < CUBES_PER_ROW)
             currentRow += rows;
