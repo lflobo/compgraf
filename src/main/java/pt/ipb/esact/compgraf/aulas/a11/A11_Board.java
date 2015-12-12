@@ -2,6 +2,7 @@ package pt.ipb.esact.compgraf.aulas.a11;
 
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
+import pt.ipb.esact.compgraf.tools.math.GlMath;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
@@ -25,9 +26,13 @@ public class A11_Board extends DefaultGLWindow {
     private static final float CUBE_SIZE = 1.0f;
 
     // Cubos por linha
-    private static final int CUBES_PER_ROW = 11;
+    private static final int CUBES_PER_ROW = 33;
 
     Vector2f[] obstaculos = new Vector2f[] {
+            new Vector2f(1, 1),
+            new Vector2f(1, 2),
+            new Vector2f(1, 3),
+            new Vector2f(2, 3),
             new Vector2f(4, 4),
             new Vector2f(7, 2),
             new Vector2f(7, 3),
@@ -45,7 +50,7 @@ public class A11_Board extends DefaultGLWindow {
     private ObjLoader sphere;
 
     // Vetores de movimento
-    Vector3f position = new Vector3f(-.5f, 0, -.5f);
+    Vector3f position;
     Vector3f velocity = new Vector3f(0, 0, 0);
 
     // Display lists
@@ -56,8 +61,8 @@ public class A11_Board extends DefaultGLWindow {
     private float zStart = xStart;
 
     // Linha e colunas atuais (controladas pelas teclas)
-    private int currentRow = CUBES_PER_ROW / 2;
-    private int currentCol = CUBES_PER_ROW / 2;
+    private int currentRow = 0;
+    private int currentCol = 0;
 
     // Flag que determina se a esfera está no centro do cubo
     private boolean arrived = true;
@@ -66,6 +71,19 @@ public class A11_Board extends DefaultGLWindow {
     // skybox
     public A11_Board() {
         super("A11 Board", true);
+        setMousePan(true);
+
+        // posicao inicial do character
+        position = rowColVector(currentRow, currentCol);
+
+        // camera
+        Cameras.setCurrent(new Camera(0, 3, 3));
+    }
+
+    private Vector3f rowColVector(int row, int col) {
+        float x = xStart + (float) col * CUBE_SIZE;
+        float z = zStart + (float) row * CUBE_SIZE;
+        return new Vector3f(x, 0, z);
     }
 
     @Override
@@ -102,11 +120,10 @@ public class A11_Board extends DefaultGLWindow {
         {
             for (int row = 0; row < CUBES_PER_ROW; row++) {
                 for (int col = 0; col < CUBES_PER_ROW; col++) {
-                    float x = xStart + (float) row * CUBE_SIZE;
-                    float z = zStart + (float) col * CUBE_SIZE;
+                    Vector3f p = rowColVector(row, col);
                     glPushMatrix();
                     {
-                        glTranslatef(x, 0.0f, z);
+                        glTranslatef(p.x, p.y, p.z);
                         cube.render();
                     }
                     glPopMatrix();
@@ -117,9 +134,8 @@ public class A11_Board extends DefaultGLWindow {
                 glPushMatrix();
                 {
                     Vector2f obstaculo = obstaculos[o];
-                    float x = xStart + (float) obstaculo.x * CUBE_SIZE;
-                    float z = zStart + (float) obstaculo.y * CUBE_SIZE;
-                    glTranslatef(x, CUBE_SIZE, z);
+                    Vector3f p = rowColVector((int) obstaculo.y, (int) obstaculo.x);
+                    glTranslatef(p.x, CUBE_SIZE, p.z);
                     cube.render();
                 }
                 glPopMatrix();
@@ -183,7 +199,7 @@ public class A11_Board extends DefaultGLWindow {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Posicionar as luzes e ajustar a direção do SPOT
-        glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(-.5f, 20.0f, -.5f, 1f));
+        glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(position.x, 10.0f, position.z, 1f));
         glLightfv(GL_LIGHT1, GL_POSITION, newFloatBuffer(-.5f, 5.0f, -.5f, 1f));
         glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, newFloatBuffer(0, -1, 0));
 
@@ -206,7 +222,19 @@ public class A11_Board extends DefaultGLWindow {
 
     private void updateCamera() {
         // Olhar para o personagem (sphere)
-        Cameras.getCurrent().at = new Vector3f(position);
+        Camera camera = Cameras.getCurrent();
+
+        // Calcular a diferença gerada pelo movimento
+        Vector3f movement = new Vector3f();
+        movement.sub(position, camera.at);
+
+        // Adicionar esse movimento à posição da camera (eye)
+        camera.eye.add(movement);
+
+        // "Olhar" para a nova posição
+        camera.at = new Vector3f(position);
+
+        // Atualizar a projeção
         setupCamera();
     }
 
@@ -252,9 +280,7 @@ public class A11_Board extends DefaultGLWindow {
 
     private void updateMovement() {
         // Calcular o target com base na row/col atuais
-        float z = zStart + (float) currentRow * CUBE_SIZE;
-        float x = xStart + (float) currentCol * CUBE_SIZE;
-        Vector3f target = new Vector3f(x, 0, z);
+        Vector3f target = rowColVector(currentRow, currentCol);
 
         // A distancia é o vetor entre postition <-> target
         Vector3f distance = new Vector3f();
@@ -297,14 +323,12 @@ public class A11_Board extends DefaultGLWindow {
     public void resize(int width, int height) {
         // Perspective
         setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
-        Cameras.setCurrent(new Camera(0, 5, 5));
 
         // Ortho
         /*
         setProjectionOrtho(width, height, 10.0f, 0.001f, 500.0f);
         Cameras.setCurrent(new Camera(5, 5, 5));
         */
-
 
         setupCamera();
     }
