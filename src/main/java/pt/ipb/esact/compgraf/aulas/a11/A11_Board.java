@@ -211,7 +211,7 @@ public class A11_Board extends DefaultGLWindow {
     }
 
     private void move(int rows, int cols) {
-        // Não permitir mais movimento - previne diagonais
+        // Não permitir mais movimento - apenas uma ordem de movimento de cada vez
         if(!arrived)
             return;
 
