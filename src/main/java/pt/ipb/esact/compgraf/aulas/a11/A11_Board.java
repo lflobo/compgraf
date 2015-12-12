@@ -3,8 +3,11 @@ package pt.ipb.esact.compgraf.aulas.a11;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
 
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class A11_Board extends DefaultGLWindow {
 
@@ -23,6 +26,15 @@ public class A11_Board extends DefaultGLWindow {
 
     // Cubos por linha
     private static final int CUBES_PER_ROW = 11;
+
+    Vector2f[] obstaculos = new Vector2f[] {
+            new Vector2f(4, 4),
+            new Vector2f(7, 2),
+            new Vector2f(7, 3),
+            new Vector2f(6, 3),
+            new Vector2f(5, 3),
+            new Vector2f(4, 3),
+    };
 
     /**
      * Fim da parametrização
@@ -100,6 +112,19 @@ public class A11_Board extends DefaultGLWindow {
                     glPopMatrix();
                 }
             }
+
+            for(int o=0; o<obstaculos.length; o++) {
+                glPushMatrix();
+                {
+                    Vector2f obstaculo = obstaculos[o];
+                    float x = xStart + (float) obstaculo.x * CUBE_SIZE;
+                    float z = zStart + (float) obstaculo.y * CUBE_SIZE;
+                    glTranslatef(x, CUBE_SIZE, z);
+                    cube.render();
+                }
+                glPopMatrix();
+            }
+
         }
         glEndList();
     }
@@ -175,13 +200,14 @@ public class A11_Board extends DefaultGLWindow {
         glPopMatrix();
 
         renderText("row: " + currentRow + ", col: " + currentCol, 10, 20);
-        renderText("arrived: " + arrived, 10, 30);
-        renderText("position: " + position, 10, 40);
+        renderText("arrived: " + arrived, 10, 40);
+        renderText("position: " + position, 10, 60);
     }
 
     private void updateCamera() {
+        // Olhar para o personagem (sphere)
         Cameras.getCurrent().at = new Vector3f(position);
-
+        setupCamera();
     }
 
     private void move(int rows, int cols) {
@@ -190,10 +216,20 @@ public class A11_Board extends DefaultGLWindow {
             return;
 
         int targetRow = currentRow + rows;
+        int targetCol = currentCol + cols;
+
+        // verificar obstaculos
+        for(int o=0; o<obstaculos.length; o++) {
+            Vector2f obstaculo = obstaculos[o];
+            if (targetCol == obstaculo.x && targetRow == obstaculo.y) {
+                MediaPlayer.playSound("assets/audio/laugh.wav");
+                return;
+            }
+        }
+
         if(targetRow >= 0 && targetRow < CUBES_PER_ROW)
             currentRow += rows;
 
-        int targetCol = currentCol + cols;
         if(targetCol >= 0 && targetCol < CUBES_PER_ROW)
             currentCol += cols;
     }
@@ -225,11 +261,12 @@ public class A11_Board extends DefaultGLWindow {
         distance.sub(target, position);
 
         // Quando a distância é nula, não há movimento
-        if (distance.length() == 0)
+        float distanceSquared = distance.lengthSquared();
+        if (distanceSquared == 0)
             return;
 
         // Quando a distância é menor que a margem chegámos!
-        arrived = distance.length() < ARRIVE_MARGIN;
+        arrived = distanceSquared < ARRIVE_MARGIN * ARRIVE_MARGIN;
 
         // Se já chegámos...
         if (arrived) {
