@@ -77,11 +77,6 @@ public class A12_Planets extends DefaultGLWindow {
         );
     }
 
-    private void configureMaterials() {
-        glEnable(GL_COLOR_MATERIAL);
-        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    }
-
     private void configureLighting() {
         // Ativar a Lighting globalmente
         glEnable(GL_LIGHTING);
