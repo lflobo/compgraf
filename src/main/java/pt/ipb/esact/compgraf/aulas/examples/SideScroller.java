@@ -12,16 +12,18 @@ import java.awt.event.KeyEvent;
 public class SideScroller extends DefaultGLWindow {
 
 	// .obj loaders
-	private ObjLoader wheatley;
+	private ObjLoader character;
 	private ObjLoader floor;
 
-	// Vetores de movimento
+    // Acelerações
+    Vector3f jumpAcc = new Vector3f(0, 30, 0);
+    Vector3f gravityAcc = new Vector3f(0, -10, 0);
 
 	// Limites de velocidade (linear e angular)
 	private static final float MAX_LINEAR_VELOCITY = 10.0f;
 
 	// Armazena a posição atual do personagem
-	Vector3f position = new Vector3f(0, 1, 0);
+	Vector3f position = new Vector3f(0, 0, 0);
 
 	// Armazena o vetor "FORWARD" da personagem
 	Vector3f forward = GlMath.VECTOR_FORWARD;
@@ -54,9 +56,11 @@ public class SideScroller extends DefaultGLWindow {
 	}
 
 	private void configureModels() {
-		wheatley = new ObjLoader(this);
-		wheatley.load("assets/models/wheatley/wheatley.obj", "assets/models/wheatley/wheatley.mtl");
-		floor = new ObjLoader(this);
+		character = new ObjLoader(this);
+        character.setScale(0.4f);
+		character.load("assets/models/minigun/MiniGun.obj", "assets/models/minigun/MiniGun.mtl");
+
+        floor = new ObjLoader(this);
 		floor.load("assets/models/floor/floor.obj", "assets/models/floor/floor.mtl");
 	}
 
@@ -100,7 +104,7 @@ public class SideScroller extends DefaultGLWindow {
 		// Desenhar o Wheatley
 		glPushMatrix();
 			glTranslatef(position.x, position.y, position.z);
-			wheatley.render();
+			character.render();
 		glPopMatrix();
 
 		floor.render();
@@ -110,27 +114,15 @@ public class SideScroller extends DefaultGLWindow {
 
         // Atualizar a Camera se houver movimento/rotação
         updateCameraPosition();
-        handleJump();
 	}
 
-    private float jumpTime  = 0;
+    private float jumpTime = 0;
 
     @Override
     protected void onKeyDown(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-            jumpTime = 0.5f;
+        if(e.getKeyCode() == KeyEvent.VK_SPACE && position.y == 0) {
+            jumpTime = 0.2f;
         }
-    }
-
-    private void handleJump() {
-        renderText("jump: " + jumpTime, 10, 20);
-        if(jumpTime > 0) {
-            jumpTime -= timeElapsed();
-        }
-
-        if(jumpTime<0)
-            jumpTime = 0;
-
     }
 
     /**
@@ -155,21 +147,44 @@ public class SideScroller extends DefaultGLWindow {
 		// Aplicar a MAX_VELOCITY definida ao vetor velocidade 
 		velocity.scale(timeElapsed() * MAX_LINEAR_VELOCITY);
 
-		// Somar essa velocidade à nossa posição atual
-		position.add(velocity);
+        // Aplicar a força do salto
+        if(jumpTime > 0) {
+            jumpTime -= timeElapsed();
+
+            Vector3f jumpAccVector = new Vector3f(jumpAcc);
+            jumpAccVector.scale(timeElapsed());
+            velocity.add(jumpAccVector);
+
+            if(jumpTime < 0)
+                jumpTime = 0;
+        }
+
+        // Aplicar __SEMPRE__ a força da gravidade
+        if(position.y > 0) {
+            Vector3f gravityAccVector = new Vector3f(gravityAcc);
+            gravityAccVector.scale(timeElapsed());
+            velocity.add(gravityAccVector);
+        }
+
+        // Somar essa velocidade à nossa posição atual
+        position.add(velocity);
+
+        // Não pode passar do chão
+        if(position.y < 0)
+            position.y = 0;
     }
 	
 	private void updateCameraPosition() {
 		// Obter a camera atual
 		Camera camera = Cameras.getCurrent();
 		
-		// O novo eye da camera vai ser relativa à posição do wheatley
+		// O novo eye da camera vai ser relativa à posição do character
 		// Movê-lo para trás na direção do "FORWARD"
 		// Um pouco para cima (y+)
 		camera.eye = new Vector3f(position);
 		camera.eye.x -= 5f;
 
-		// Olhar um pouco à frente do wheatley
+		// Olhar um pouco à frente do character
 		camera.at = new Vector3f(position);
 
 		// Forçar a atualização da camera
