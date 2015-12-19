@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.io.FileInputStream;
 import java.nio.FloatBuffer;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.glu.GLU;
@@ -59,7 +60,8 @@ public class GlTools {
 
             int i = gl.glGetError();
             String s = glu.gluErrorString(i);
-            System.out.println(s);
+            if(i != GL.GL_NO_ERROR)
+                System.out.println(s);
 
             return tex;
         } catch (Exception e) {

@@ -351,7 +351,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 	public void setupCamera() {
 		// Use the current camera
 		Camera camera = Cameras.getCurrent();
-		
+
 		// Mudar para a matriz de MODELVIEW
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

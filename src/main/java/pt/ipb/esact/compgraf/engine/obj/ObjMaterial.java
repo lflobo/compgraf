@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.media.opengl.GL2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.tools.GlTools;
 import pt.ipb.esact.compgraf.tools.ReleaseListener;
 import pt.ipb.esact.compgraf.tools.Shader;
@@ -15,6 +17,8 @@ import com.jogamp.opengl.util.texture.Texture;
 
 
 public class ObjMaterial implements ReleaseListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(ObjMaterial.class);
 
 	private String name;
 
@@ -45,9 +49,10 @@ public class ObjMaterial implements ReleaseListener {
 	
 	private boolean mbumpset;
 	
-	private Texture TEX_BUMP;
+	private Texture textBump;
 	
-	private Texture TEX_DIFFUSE;
+	private Texture texDiffuse;
+    private String diffuseName;
 
     public ObjMaterial(String name) {
 		this.name = name;
@@ -75,8 +80,8 @@ public class ObjMaterial implements ReleaseListener {
 
 	public void setMapKd(String prefix, String value) {
 		mkdset = true;
-		String name = findPath(value);
-		TEX_DIFFUSE = GlTools.loadTexture(prefix + name);
+		diffuseName = findPath(value);
+		texDiffuse = GlTools.loadTexture(prefix + diffuseName);
 	}
 
 	private String findPath(String value) {
@@ -94,7 +99,7 @@ public class ObjMaterial implements ReleaseListener {
 	public void setMapBump(String prefix, String value) {
 		mbumpset = true;
 		String name = findPath(value);
-		TEX_BUMP = GlTools.loadTexture(prefix + name);
+		textBump = GlTools.loadTexture(prefix + name);
 	}
 
 	public void setD(float value) {
@@ -126,7 +131,6 @@ public class ObjMaterial implements ReleaseListener {
 			if(dset && d < 1.0f && !(mkdset || mbumpset))
 				kd.put(3, d);
 			gl.glColor4fv(kd);
-//			logger.info("{} --> {}", name, debugBuffer("kd", kd));
 		}
 		
 		if(kaset)
@@ -141,10 +145,7 @@ public class ObjMaterial implements ReleaseListener {
             gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, ke);
 
         if(dset && d < 1.0f) {
-			gl.glEnable(GL2.GL_BLEND);
-			gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		} else {
-			gl.glDisable(GL2.GL_BLEND);
+            enableBlend(gl);
 		}
 
 		if(mkdset || mbumpset) {
@@ -153,29 +154,37 @@ public class ObjMaterial implements ReleaseListener {
 
 		if(mbumpset) {
 			gl.glActiveTexture(Shader.NORMAL_MAP_INDEX);
-			TEX_BUMP.bind(gl);
+			textBump.bind(gl);
 		}
 
 		if(mkdset) {
 			gl.glActiveTexture(Shader.DIFFUSE_MAP_INDEX);
-			TEX_DIFFUSE.bind(gl);
+			texDiffuse.bind(gl);
+            if(diffuseName.toLowerCase().endsWith("png")) {
+                enableBlend(gl);
+            }
 		}
 
 		if(!mkdset && !mbumpset)
 			gl.glDisable(GL2.GL_TEXTURE_2D);
 	}
 
-	@Override
+    private void enableBlend(GL2 gl) {
+        gl.glEnable(GL2.GL_BLEND);
+        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    @Override
 	public String toString() {
-		return "ObjMaterial [name=" + name + ", textureIds=" + textureIds + ", ka=" + ka + ", kd=" + kd + ", ks=" + ks + ", kaset=" + kaset + ", ksset=" + ksset + ", kdset=" + kdset + ", nsset=" + nsset + ", dset=" + dset + ", ns=" + ns + ", d=" + d + ", mkdset=" + mkdset + ", mbumpset=" + mbumpset + ", TEX_BUMP=" + TEX_BUMP + ", TEX_DIFFUSE=" + TEX_DIFFUSE + "]";
+		return "ObjMaterial [name=" + name + ", textureIds=" + textureIds + ", ka=" + ka + ", kd=" + kd + ", ks=" + ks + ", kaset=" + kaset + ", ksset=" + ksset + ", kdset=" + kdset + ", nsset=" + nsset + ", dset=" + dset + ", ns=" + ns + ", d=" + d + ", mkdset=" + mkdset + ", mbumpset=" + mbumpset + ", textBump=" + textBump + ", texDiffuse=" + texDiffuse + "]";
 	}
 
 	@Override
 	public void release(GL2 gl) {
-		if(TEX_DIFFUSE != null)
-			TEX_DIFFUSE.destroy(gl);
-		if(TEX_BUMP != null)
-			TEX_BUMP.destroy(gl);
+		if(texDiffuse != null)
+			texDiffuse.destroy(gl);
+		if(textBump != null)
+			textBump.destroy(gl);
 	}
 	
 	
