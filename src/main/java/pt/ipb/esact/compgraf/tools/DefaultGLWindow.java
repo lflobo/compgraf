@@ -259,6 +259,7 @@ public abstract class DefaultGLWindow extends GLUTWrapper implements GLListener,
 		keymap.put("right", KeyEvent.VK_RIGHT);
 		keymap.put("up", KeyEvent.VK_UP);
 		keymap.put("down", KeyEvent.VK_DOWN);
+		keymap.put("space", KeyEvent.VK_SPACE);
 	}
 
 	public void addReleaseListener(ReleaseListener listener) {
