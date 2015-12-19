@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 public class A12_Planets extends DefaultGLWindow {
 
     private final Camera defaultCamera;
-    private final Camera earthCamera;
+    private final Camera followCamera;
 
     private ObjLoader earthClouds;
     private ObjLoader earth;
@@ -37,7 +37,7 @@ public class A12_Planets extends DefaultGLWindow {
         Cameras.setCurrent(defaultCamera);
 
         // Camera da terra
-        earthCamera = new Camera(EARTH_DISTANCE * 1.1f, 0, 0);
+        followCamera = new Camera(EARTH_DISTANCE * 1.1f, 0, 0);
     }
 
     @Override
@@ -279,9 +279,9 @@ public class A12_Planets extends DefaultGLWindow {
     }
 
     private void followPlanet(float radius, float trl, float up) {
-        earthCamera.eye = GlMath.polarToVector(radius * 1.1f, trl, 0);
-        earthCamera.eye.y = up;
-        Cameras.setCurrent(earthCamera);
+        followCamera.eye = GlMath.polarToVector(radius * 1.1f, trl, 0);
+        followCamera.eye.y = up;
+        Cameras.setCurrent(followCamera);
         setupCamera();
     }
 
