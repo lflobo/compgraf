@@ -21,7 +21,6 @@ public class A12_Planets extends DefaultGLWindow {
     private ObjLoader mercury;
     private ObjLoader moon;
     private Skybox skybox;
-    private Shader shader;
 
     public static void main(String[] args) {
         new A12_Planets();
