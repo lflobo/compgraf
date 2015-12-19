@@ -37,7 +37,7 @@ public class A12_Planets extends DefaultGLWindow {
         Cameras.setCurrent(defaultCamera);
 
         // Camera da terra
-        earthCamera = new Camera(EARTH_DISTANCE + 5f, 0, 0);
+        earthCamera = new Camera(EARTH_DISTANCE * 1.1f, 0, 0);
     }
 
     @Override
