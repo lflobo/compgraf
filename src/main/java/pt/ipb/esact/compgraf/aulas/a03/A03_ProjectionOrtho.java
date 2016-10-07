@@ -46,13 +46,13 @@ public class A03_ProjectionOrtho extends DefaultGLWindow {
 		 // prevenir divisão por 0!
 		if (height == 0) height = 1;
 
-		/**
+		/*
 		 * O meu viewport terá inicio no ponto 0/0
 		 * e o tamanho da janela (width x height)
 		 */
 		glViewport(0, 0, width, height);
 
-		/**
+		/*
 		 * Mudar para a matiz de PROJECTION - a partir
 		 * daqui as transformações serão aplicadas na matriz de projeção (alias observador) 
 		 */
@@ -63,7 +63,7 @@ public class A03_ProjectionOrtho extends DefaultGLWindow {
 		float aspect = (float) width / (float) height;
 		float depth = 1000;
 		
-		/**
+		/*
 		 * Configurar a projecção Ortogonal
 		 */
 		glOrtho(
