@@ -70,14 +70,16 @@ public class A04_SmoothFlat extends DefaultGLWindow {
 		glShadeModel(GL_FLAT);
 		glPushMatrix();
 			glTranslatef(-35.0f, 0.0f, 0.0f);
-			glutSolidSphere(30.0f, 32, 32);
+            glRotatef(90.0f, 1f, 0f, 0f);
+			glutSolidSphere(30.0f, 32, 16);
 		glPopMatrix();
 
 		// Desenhar esfera com SMOOTH shading (á direita)
 		glShadeModel(GL_SMOOTH);
 		glPushMatrix();
 			glTranslatef(35.0f, 0.0f, 0.0f);
-			glutSolidSphere(30.0f, 32, 32);
+            glRotatef(90.0f, 1f, 0f, 0f);
+			glutSolidSphere(30.0f, 32, 16);
 		glPopMatrix();
 
 	}
