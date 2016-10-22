@@ -35,9 +35,11 @@ public class A04_RGBColorSpace extends DefaultGLWindow {
 		// Desenhar as linhas do RGB Space a Branco
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glPushMatrix(); // Isolar o mundo das nossas trasnforms
-			// Colocar o cubo encostado ao xyz=0
-			glTranslatef(0.5f, 0.5f, 0.5f);
-			glutWireCube(1.0f);
+        {
+            // Colocar o cubo encostado ao xyz=0
+            glTranslatef(0.5f, 0.5f, 0.5f);
+            glutWireCube(1.0f);
+        }
 		glPopMatrix();
 
 		// Incrementar o valor da cor azul em 0.2f por segundo
@@ -46,17 +48,19 @@ public class A04_RGBColorSpace extends DefaultGLWindow {
 
 		// Usar GL_QUADS (hint: desenhar os vertices em CW - Clock Wise)
 		glBegin(GL_QUADS);
-			glColor3f(1.0f, 0.0f, blue);
-			glVertex3f(1.0f, 0.0f, blue);
+        {
+            glColor3f(1.0f, 0.0f, blue);
+            glVertex3f(1.0f, 0.0f, blue);
 
-			glColor3f(0.0f, 0.0f, blue);
-			glVertex3f(0.0f, 0.0f, blue);
+            glColor3f(0.0f, 0.0f, blue);
+            glVertex3f(0.0f, 0.0f, blue);
 
-			glColor3f(0.0f, 1.0f, blue);
-			glVertex3f(0.0f, 1.0f, blue);
+            glColor3f(0.0f, 1.0f, blue);
+            glVertex3f(0.0f, 1.0f, blue);
 
-			glColor3f(1.0f, 1.0f, blue);
-			glVertex3f(1.0f, 1.0f, blue);
+            glColor3f(1.0f, 1.0f, blue);
+            glVertex3f(1.0f, 1.0f, blue);
+        }
 		glEnd();
 	}
 
