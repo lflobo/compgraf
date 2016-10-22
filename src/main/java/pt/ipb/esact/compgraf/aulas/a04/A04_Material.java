@@ -25,7 +25,7 @@ public class A04_Material extends DefaultGLWindow {
 		configureLighting();
 	}
 
-	private void configureLighting() {
+    void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 
