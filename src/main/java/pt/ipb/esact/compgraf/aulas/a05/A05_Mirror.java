@@ -126,7 +126,8 @@ public class A05_Mirror extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Desenhar a luz invertida
-		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, -20.0f, 0.0f, 1.0f));
+		glLightfv(GL_LIGHT0, GL_POSITION,
+                newFloatBuffer(0.0f, -20.0f, 0.0f, 1.0f));
 
 		// Desenhar objetos invertidos
 		glPushMatrix();
@@ -143,7 +144,8 @@ public class A05_Mirror extends DefaultGLWindow {
 		glPopMatrix();
 		
 		// Desenhar a luz no sítio certo
-		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 20.0f, 0.0f, 1.0f));
+		glLightfv(GL_LIGHT0, GL_POSITION,
+                newFloatBuffer(0.0f, 20.0f, 0.0f, 1.0f));
 
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -152,7 +154,7 @@ public class A05_Mirror extends DefaultGLWindow {
 			glDepthMask(false); // Desativar teste de profundidade
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
+			glColor4f(0.5f, 0.5f, 0.5f, 0.2f);
 			demo().drawFloor(30.0f, 10);
 
 		glPopAttrib();

@@ -1,18 +1,12 @@
 package pt.ipb.esact.compgraf.aulas.a05;
 
-import java.nio.FloatBuffer;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 public class A05_Fog extends DefaultGLWindow {
 
-	// Posições da luz (normal e invertida)
-	FloatBuffer positionLitght0 = newFloatBuffer(0.0f, 20.0f, 0.0f, 1.0f);
-	FloatBuffer positionLitght0Inverted = newFloatBuffer(0.0f, -20.0f, 0.0f, 1.0f);
-	
-	public A05_Fog() {
+    public A05_Fog() {
 		super("A05 Fog", true);
 		setMousePan(true);
 		setMouseZoom(true);
@@ -151,7 +145,7 @@ public class A05_Fog extends DefaultGLWindow {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Desenhar a luz invertida
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0Inverted);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, -20.0f, 0.0f, 1.0f));
 
 		// Desenhar objetos invertidos
 		glPushMatrix();
@@ -168,7 +162,7 @@ public class A05_Fog extends DefaultGLWindow {
 		glPopMatrix();
 		
 		// Desenhar a luz no sítio certo
-		glLightfv(GL_LIGHT0, GL_POSITION, positionLitght0);
+		glLightfv(GL_LIGHT0, GL_POSITION, newFloatBuffer(0.0f, 20.0f, 0.0f, 1.0f));
 		
 		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
 		
