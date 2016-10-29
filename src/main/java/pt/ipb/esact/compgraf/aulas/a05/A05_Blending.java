@@ -1,10 +1,10 @@
 package pt.ipb.esact.compgraf.aulas.a05;
 
-import java.awt.event.KeyEvent;
-
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
+
+import java.awt.event.KeyEvent;
 
 public class A05_Blending extends DefaultGLWindow {
 
@@ -147,12 +147,8 @@ public class A05_Blending extends DefaultGLWindow {
 			// Desenhar depois objetos transparentes
 			drawWorld();
 
-            if(transOn) {
-                glDisable(GL_BLEND);
-            }
-
 		glPopAttrib();
-		
+
 		renderText("t - toggle transparency", 10, 20);
 	}
 	
