@@ -67,6 +67,7 @@ public class A06_Anisotropic extends DefaultGLWindow {
 		FloatBuffer values = FloatBuffer.allocate(1);
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, values);
 		maxAnisotropy = values.get(0);
+        currentAnisotropy = maxAnisotropy;
 
 		System.out.println("Max anisotropy is: " + maxAnisotropy);
 	}
@@ -113,20 +114,20 @@ public class A06_Anisotropic extends DefaultGLWindow {
 
 			// Calcular um valor para o incremento
 			float increment = (maxAnisotropy - minAnisotropy) / 10.0f;
-			
+
 			// decrementar no caso de ser 'o', incrementar no caso de ser 'p'
 			currentAnisotropy += e.getKeyChar() == 'o' ? -increment : increment;
-			
+
 			// fazer o clamp do valore entre (maxAnisotropy e minAnisotropy)
 			currentAnisotropy = Math.max(minAnisotropy,
 				Math.min(maxAnisotropy, currentAnisotropy)
 			);
-			
+
 			// Definira a anisotropia para a única textura que temos
 			texBrick.setTexParameterf(this, GL_TEXTURE_MAX_ANISOTROPY_EXT, currentAnisotropy);
 		}
 	}
-	
+
 	@Override
 	public void release() {
 		// Libertar as texturas (GPU)
