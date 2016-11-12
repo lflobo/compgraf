@@ -41,12 +41,12 @@ public class A05_Triangle extends DefaultGLWindow {
 		configureTextures();
 	}
 
-	private void configureMaterials() {
+	private void  configureMaterials() {
 		// Configurar Color Tracking
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 		glMateriali(GL_FRONT, GL_SHININESS, 100);
-		
+
 		// Especularidade do material definida explicitamente
 		glMaterialfv(GL_FRONT, GL_SPECULAR, newFloatBuffer(1.0f, 1.0f, 1.0f, 1.0f));
 	}
@@ -62,7 +62,8 @@ public class A05_Triangle extends DefaultGLWindow {
 	private void configureTextures() {
 		// Ativar as texturas globalmente
 		glEnable(GL_TEXTURE_2D);
-		try (InputStream stream = fileStream("assets/tex/stone.png")) {
+
+        try (InputStream stream = fileStream("assets/tex/stone.png")) {
             texStone = TextureIO.newTexture(stream, true, TextureIO.PNG);
 		} catch (Exception e) {
 			// Ocorreu um erro --> Terminar o programa
@@ -100,7 +101,7 @@ public class A05_Triangle extends DefaultGLWindow {
 			// Vertice superior
 			glTexCoord2f(0.5f, 1.0f);
 			glVertex3f(0, 1.87f, 0);
-			
+
 			// Vertice inferior esquerdo
 			glTexCoord2f(0.0f, 0.0f);
 			glVertex3f(-1, 0.1f, 0);
