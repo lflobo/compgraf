@@ -107,6 +107,10 @@ public class A06_Anisotropic extends DefaultGLWindow {
 	@Override
 	protected void onKeyUp(KeyEvent e) {
 		if(e.getKeyChar() == 'o' || e.getKeyChar() == 'p') {
+            // não fazer nada se não temos suporte para anisotropia
+            if(!anisotropicAvailable)
+                return;
+
 			// Calcular um valor para o incremento
 			float increment = (maxAnisotropy - minAnisotropy) / 10.0f;
 			
