@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.a07x;
 
 import javax.media.opengl.glu.GLUquadric;
 
@@ -9,7 +9,7 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A07_Quadrics extends DefaultGLWindow {
+public class A08_Quadrics extends DefaultGLWindow {
 
 	/**
 	 * Variáveis de controlo do planeta / asteróides
@@ -44,7 +44,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 	// Objeto que desenha uma skybox (inicializada no construtor)
 	Skybox skybox = new Skybox(this);
 
-    public A07_Quadrics() {
+    public A08_Quadrics() {
 		super("A08 Quadrics", true);
 		setMousePan(true);
 		setMouseZoom(true);
@@ -332,7 +332,7 @@ public class A07_Quadrics extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A07_Quadrics();
+		new A08_Quadrics();
 	}
 
 }

@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.a07x;
 
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
@@ -7,7 +7,7 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A07_Bezier2D extends DefaultGLWindow {
+public class A08_Bezier2D extends DefaultGLWindow {
 
     /**
      * Configuração da curva de bezier
@@ -30,8 +30,8 @@ public class A07_Bezier2D extends DefaultGLWindow {
     // Final da curva
     private static final float U_MAX = 100.0f;
 
-    public A07_Bezier2D() {
-        super("A07 Bezier 2D", true);
+    public A08_Bezier2D() {
+        super("A08 Bezier 2D", true);
         setMousePan(true);
         setMouseZoom(true);
     }
@@ -143,7 +143,7 @@ public class A07_Bezier2D extends DefaultGLWindow {
 
     // Função main confere capacidade de executável ao .java atual
     public static void main(String[] args) {
-        new A07_Bezier2D();
+        new A08_Bezier2D();
     }
 
 }

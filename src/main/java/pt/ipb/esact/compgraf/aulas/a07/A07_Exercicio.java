@@ -1,13 +1,13 @@
-package pt.ipb.esact.compgraf.aulas.a08;
+package pt.ipb.esact.compgraf.aulas.a07;
 
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A08_Exercicio extends DefaultGLWindow {
+public class A07_Exercicio extends DefaultGLWindow {
 
-	public A08_Exercicio() {
-		super("A08 Obj", true);
+	public A07_Exercicio() {
+		super("A07 Obj", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -96,7 +96,7 @@ public class A08_Exercicio extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A08_Exercicio();
+		new A07_Exercicio();
 	}
 
 }
