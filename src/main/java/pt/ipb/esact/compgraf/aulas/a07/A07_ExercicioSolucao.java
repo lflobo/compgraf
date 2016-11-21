@@ -131,16 +131,6 @@ public class A07_ExercicioSolucao extends DefaultGLWindow {
         // Libertar as texturas (GPU)
     }
 
-    // Variavel para a rotação do wheatley
-    private float angle = 0.0f;
-
-    void updateRotation() {
-        // Actualizar o Angulo de Rotacao
-        angle += GL_PI / 10.0f * timeElapsed();
-        angle %= 2.0f * GL_PI;
-    }
-
-
     @Override
     public void render(int width, int height) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -206,8 +196,6 @@ public class A07_ExercicioSolucao extends DefaultGLWindow {
         }
         glPopMatrix();
 
-        updateRotation();
-
     }
 
     private void drawDesk() {
@@ -215,7 +203,7 @@ public class A07_ExercicioSolucao extends DefaultGLWindow {
 
         glPushMatrix();
         {
-            glTranslatef(0.8f, 1.16f, 0);
+            glTranslatef(0.8f, 1.18f, 0);
             glRotatef(-15, 0, 1, 0);
             monitor.render();
         }
@@ -223,8 +211,8 @@ public class A07_ExercicioSolucao extends DefaultGLWindow {
 
         glPushMatrix();
         {
-            glTranslatef(0.0f, 1.16f, 0);
-            glRotatef(toDegrees(angle), 0, 1, 0);
+            glTranslatef(0.0f, 1.18f, 0);
+            glRotatef(-90, 0, 1, 0);
             computador.render();
         }
         glPopMatrix();
