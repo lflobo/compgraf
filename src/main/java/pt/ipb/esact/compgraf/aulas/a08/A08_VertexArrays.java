@@ -77,13 +77,13 @@ public class A08_VertexArrays extends DefaultGLWindow {
         // Preparar os vertices
         vertices = newDirectFloatBuffer(
                 // Face frontal
-                1.0f, -1.0f, 1.0f, // front-bottom-right - index: 0
-                1.0f, 1.0f, 1.0f, // front-top-right    - index: 1
-                -1.0f, 1.0f, 1.0f, // front-top-left     - index: 2
+                1.0f, -1.0f, 1.0f,  // front-bottom-right - index: 0
+                1.0f, 1.0f, 1.0f,   // front-top-right    - index: 1
+                -1.0f, 1.0f, 1.0f,  // front-top-left     - index: 2
                 -1.0f, -1.0f, 1.0f, // front-bottom-left  - index: 3
 
                 1.0f, -1.0f, -1.0f, // back-bottom-right  - index: 4
-                1.0f, 1.0f, -1.0f, // back-top-right     - index: 5
+                1.0f, 1.0f, -1.0f,  // back-top-right     - index: 5
                 -1.0f, 1.0f, -1.0f, // back-top-left      - index: 6
                 -1.0f, -1.0f, -1.0f // back-bottom-left   - index: 7
         );
