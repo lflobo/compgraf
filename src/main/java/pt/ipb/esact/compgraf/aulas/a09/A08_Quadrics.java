@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a08;
+package pt.ipb.esact.compgraf.aulas.a09;
 
 import javax.media.opengl.glu.GLUquadric;
 
