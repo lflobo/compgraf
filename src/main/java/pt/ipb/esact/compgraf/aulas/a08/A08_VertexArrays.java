@@ -101,15 +101,15 @@ public class A08_VertexArrays extends DefaultGLWindow {
 
         // Cores dos vertices
         colors = newDirectFloatBuffer(
-                1.0f, 0.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 0.0f, 1.0f,
-                1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 0.0f, // cor do vertex: 0
+                0.0f, 1.0f, 0.0f, // cor do vertex: 1
+                0.0f, 0.0f, 1.0f, // cor do vertex: 2
+                1.0f, 1.0f, 1.0f, // cor do vertex: 3
 
-                1.0f, 0.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
-                0.0f, 0.0f, 1.0f,
-                1.0f, 1.0f, 1.0f
+                1.0f, 0.0f, 0.0f, // cor do vertex: 4
+                0.0f, 1.0f, 0.0f, // cor do vertex: 5
+                0.0f, 0.0f, 1.0f, // cor do vertex: 6
+                1.0f, 1.0f, 1.0f  // cor do vertex: 7
         );
     }
 
