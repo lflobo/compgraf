@@ -49,13 +49,11 @@ public class A09_Planet extends DefaultGLWindow {
             float distance = radius + randomBinomial(thickness);
             float alpha = randomBinomial(2.0f * GL_PI);
             float aradius = sizeMin + random(sizeMax - sizeMin);
-            float gray = 0.5f + randomBinomial(0.25f);
-            glColor3f(gray, gray, gray);
-            glPushMatrix();
-
-            vectors.add(new Vector4f(distance * sinf(alpha), 0.0f, distance * cosf(alpha), aradius));
-
-            glPopMatrix();
+            vectors.add(new Vector4f(
+                    distance * sinf(alpha),
+                    0.0f,
+                    distance * cosf(alpha), aradius
+            ));
         }
 
         return vectors;

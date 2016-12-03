@@ -131,7 +131,7 @@ public class A09_Shaders2 extends DefaultGLWindow {
     @Override
     public void render(int width, int height) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        System.out.println(timeElapsed());
 
         spotx += GL_PI * timeElapsed();
         spotx %= GL_PI * 2.0;
@@ -190,6 +190,7 @@ public class A09_Shaders2 extends DefaultGLWindow {
         if (isKeyPressed("right")) {
             // Aumentar o valor do ângulo da orientação
             orientation -= MAX_ANGULAR_VELOCITY * timeElapsed();
+
             // Aplicar esse ângulo ao vetor FORWARD atual
             forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
 
@@ -243,7 +244,7 @@ public class A09_Shaders2 extends DefaultGLWindow {
         }
 
         // Aplicar a MAX_VELOCITY definida ao vetor velocidade
-        velocity.scale(timeElapsed() * MAX_LINEAR_VELOCITY);
+        velocity.scale(MAX_LINEAR_VELOCITY * timeElapsed());
 
         // Somar essa velocidade à nossa posição atual
         position.add(velocity);
