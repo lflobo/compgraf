@@ -7,5 +7,6 @@ void main()
     gl_BackSecondaryColor = gl_SecondaryColor;
 
     /* transform vector to display coordinates */
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    vec4 myVertex = gl_Vertex;
+	gl_Position = gl_ModelViewProjectionMatrix * myVertex;
 }

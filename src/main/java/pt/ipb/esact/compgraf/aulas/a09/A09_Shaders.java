@@ -72,7 +72,7 @@ public class A09_Shaders extends DefaultGLWindow {
 
     @Override
     public void release() {
-        // Libertar as texturas (GPU)z
+        // Libertar as texturas (GPU)
     }
 
     @Override
@@ -88,11 +88,9 @@ public class A09_Shaders extends DefaultGLWindow {
         glPushMatrix();
         {
             glTranslatef(-2.0f, 0.0f, 0.0f);
-            if (!isKeyPressed('s'))
-                phongShader.bind();
+            phongShader.bind();
             glutSolidTorus(0.5f, 1.0f, 10, 30);
-            if (!isKeyPressed('s'))
-                phongShader.unbind();
+            phongShader.unbind();
         }
         glPopMatrix();
 
