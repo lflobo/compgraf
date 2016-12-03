@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a07;
+package pt.ipb.esact.compgraf.aulas.extra;
 
 import java.nio.FloatBuffer;
 
@@ -8,7 +8,7 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
 import com.jogamp.opengl.util.texture.Texture;
 
-public class A07_Bezier3D extends DefaultGLWindow {
+public class A08_Bezier3D extends DefaultGLWindow {
 
     /**
      * Configuração do Bezier 3D
@@ -56,8 +56,8 @@ public class A07_Bezier3D extends DefaultGLWindow {
     private static final float V_MIN = 0.0f;
     private static final float V_MAX = 100.0f;
 
-    public A07_Bezier3D() {
-        super("A07 Bezier 3D", true);
+    public A08_Bezier3D() {
+        super("A08 Bezier 3D", true);
         setMousePan(true);
         setMouseZoom(true);
     }
@@ -230,7 +230,7 @@ public class A07_Bezier3D extends DefaultGLWindow {
 
     // Função main confere capacidade de executável ao .java atual
     public static void main(String[] args) {
-        new A07_Bezier3D();
+        new A08_Bezier3D();
     }
 
 }

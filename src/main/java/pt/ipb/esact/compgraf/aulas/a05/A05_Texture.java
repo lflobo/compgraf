@@ -89,10 +89,10 @@ public class A05_Texture extends DefaultGLWindow {
 	private Texture createTexture(String name) {
 		try(InputStream stream = fileStream(name)) {
             Texture tex = TextureIO.newTexture(stream, true, TextureIO.PNG);
-			tex.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			tex.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			tex.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			tex.setTexParameteri(this, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			tex.setTexParameteri(this, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			tex.setTexParameteri(this, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			tex.setTexParameteri(this, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			return tex;
 		} catch (Exception e) {
 			// Ocorreu um erro --> Terminar o programa

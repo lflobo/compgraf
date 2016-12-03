@@ -25,7 +25,7 @@ public class A04_Material extends DefaultGLWindow {
 		configureLighting();
 	}
 
-	private void configureLighting() {
+    void configureLighting() {
 		// Ativar a Lighting globalmente
 		glEnable(GL_LIGHTING);
 
@@ -52,7 +52,7 @@ public class A04_Material extends DefaultGLWindow {
 		// Limpar os buffers de cor e profundidade
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// Usar a cor em cima com cor do material
+		// Configurar a componente ambiente/difusa do material do objeto
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, newFloatBuffer(1.0f, 1.0f, 0.0f, 1.0f));
 		glMateriali(GL_FRONT, GL_SHININESS, 64);
 

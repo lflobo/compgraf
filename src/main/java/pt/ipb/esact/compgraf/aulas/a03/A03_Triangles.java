@@ -22,6 +22,9 @@ public class A03_Triangles extends DefaultGLWindow {
 		
 		// Activar o teste de profundidade (ignorar para já)
 		glEnable(GL_DEPTH_TEST);
+
+//        glEnable(GL_CULL_FACE);
+//        glCullFace(GL_BACK);
 	}
 
 	@Override

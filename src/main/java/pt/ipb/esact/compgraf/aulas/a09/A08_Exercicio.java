@@ -1,15 +1,15 @@
-package pt.ipb.esact.compgraf.aulas.a09ex;
+package pt.ipb.esact.compgraf.aulas.a09;
 
 import java.nio.FloatBuffer;
 
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 
-public class A09_Exercicio extends DefaultGLWindow {
+public class A08_Exercicio extends DefaultGLWindow {
 
 	private int sphereDisplayList;
 
-	public A09_Exercicio() {
-		super("A09 Exercicio", true);
+	public A08_Exercicio() {
+		super("A08 Exercicio", true);
 		setMousePan(true);
 		setMouseZoom(true);
 	}
@@ -144,7 +144,7 @@ public class A09_Exercicio extends DefaultGLWindow {
 
 	// Função main confere capacidade de executável ao .java atual
 	public static void main(String[] args) {
-		new A09_Exercicio();
+		new A08_Exercicio();
 	}
 
 }

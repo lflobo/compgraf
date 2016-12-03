@@ -38,7 +38,7 @@ public class Exercicio4 extends DefaultGLWindow {
     }
 
     private void setupObjectMaterial() {
-        // Configurar aqui as propriedades do material do avião
+        // Configurar aqui as propriedades do material dos objetos
     }
 
     @Override
