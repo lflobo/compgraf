@@ -79,16 +79,16 @@ public class A05_Texture extends DefaultGLWindow {
 		*/
 
 		// Carregar as texturas
-		textStone = createTexture("assets/tex/stone.png");
-		textBrick = createTexture("assets/tex/brick.png");
-		texFloor = createTexture("assets/tex/floor.png");
-		texCeiling = createTexture("assets/tex/ceiling.png");
-		textMoon = createTexture("assets/tex/moon.png");
+		textStone = createTexture("assets/tex/stone.png", TextureIO.PNG);
+		textBrick = createTexture("assets/tex/brick.png", TextureIO.PNG);
+		texFloor = createTexture("assets/tex/floor.png", TextureIO.PNG);
+		texCeiling = createTexture("assets/tex/ceiling.png", TextureIO.PNG);
+		textMoon = createTexture("assets/tex/moon.jpg", TextureIO.JPG);
 	}
 
-	private Texture createTexture(String name) {
+	private Texture createTexture(String name, String suffix) {
 		try(InputStream stream = fileStream(name)) {
-            Texture tex = TextureIO.newTexture(stream, true, TextureIO.PNG);
+            Texture tex = TextureIO.newTexture(stream, true, suffix);
 			tex.setTexParameteri(this, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			tex.setTexParameteri(this, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			tex.setTexParameteri(this, GL_TEXTURE_WRAP_S, GL_REPEAT);

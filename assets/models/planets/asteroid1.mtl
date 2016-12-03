@@ -1,7 +1,7 @@
-# Blender MTL File: 'moon.blend'
+# Blender MTL File: 'asteroid1.blend'
 # Material Count: 1
 
-newmtl mat_moon
+newmtl ast_mat
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd moon.jpg
+map_Kd asteroid.png

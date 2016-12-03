@@ -1,4 +1,4 @@
-package pt.ipb.esact.compgraf.aulas.a09;
+package pt.ipb.esact.compgraf.aulas.extra;
 
 import java.nio.FloatBuffer;
 
@@ -124,8 +124,8 @@ public class A08_Exercicio extends DefaultGLWindow {
 		// II f) Desenhar o wheatley
 		
 		// II h) desenhar aqui a display list 'sphereDisplayList'
-		
-		/**
+
+		/*
 		 * II
 		 * 	a) criar 2 planos
 		 *  c) aplicar as texturas a cada plano

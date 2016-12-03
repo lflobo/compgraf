@@ -46,7 +46,7 @@ public class A08_BufferObjects extends DefaultGLWindow {
 
     private void configureTextures() {
         // Carregar as texturas
-        TEX_CUBE = loadTexture("assets/tex/moon.png");
+        TEX_CUBE = loadTexture("assets/tex/moon.jpg");
 
         // Activar as texturas
         glEnable(GL_TEXTURE_2D);

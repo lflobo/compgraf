@@ -119,7 +119,7 @@ public class FromScratchExample extends DefaultGLWindow {
          * 9) Carregar textura
          */
         glEnable(GL_TEXTURE_2D);
-        texMoon = loadTexture("assets/tex/moon.png");
+        texMoon = loadTexture("assets/tex/moon.jpg");
     }
 
     @Override
@@ -153,7 +153,7 @@ public class FromScratchExample extends DefaultGLWindow {
         if (skybox != null)
             skybox.render();
 
-        // Se foi carregada a textura 'moon.png' usá-la
+        // Se foi carregada a textura 'moon.jpg' usá-la
         if (texMoon != null)
             texMoon.bind(this);
 
