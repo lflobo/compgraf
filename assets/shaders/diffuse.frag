@@ -9,7 +9,7 @@ void main (void)
 
 	vec3 N = normalize(normal);
 
-	 vec4 base = texture2D(diffuse_map, gl_TexCoord[0].st);
+	vec4 base = texture2D(diffuse_map, gl_TexCoord[0].st);
 
 	for(int i=0; i<MAX_LIGHTS; i++) {
 		vec3 spotDir = gl_LightSource[i].spotDirection.xyz;
