@@ -74,7 +74,7 @@ public class A09_Shaders extends DefaultGLWindow {
 	public void release() {
 		// Libertar as texturas (GPU)z
 	}
-		
+
 	@Override
 	public void render(int width, int height) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

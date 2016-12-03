@@ -112,7 +112,7 @@ public class Shader {
 		GL2 gl = GlTools.gl();
 		if(!linked)
 			logger.warn("Shader program is not linked");
-		return gl.glGetAttribLocation(program, name);
+        return gl.glGetAttribLocation(program, name);
 	}
 	
 	public void setAttributeValue(int location, float value) {
@@ -159,17 +159,19 @@ public class Shader {
 		GL2 gl = GlTools.gl();
 		if(!linked)
 			logger.warn("Shader program is not linked");
-		return gl.glGetUniformLocation(program, name);
+        return gl.glGetUniformLocation(program, name);
 	}
 	
 	public void setUniformValue(int location, float value) {
 		GL2 gl = GlTools.gl();
 		if(location != -1)
-			gl.glVertexAttrib1f(location, value);
+			gl.glUniform1f(location, value);
 	}
 
 	public void setUniformValue(String name, float value) {
-		setUniformValue(uniformLocation(name), value);
+        int location = uniformLocation(name);
+//        logger.info("uniform({}) = {}", location, value);
+        setUniformValue(location, value);
 	}
 	
 	public void setUniformValue(int location, float x, float y) {
