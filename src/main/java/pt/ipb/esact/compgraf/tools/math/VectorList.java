@@ -28,7 +28,7 @@ public class VectorList extends ArrayList<Vector3f> {
 	 */
 	Vector3f normalVector() {
 		if(size() < 3)
-			return Vectors.ORIGIN;
+			return Vectors.origin();
 
 		Vector3f v1 = get(0);
 		Vector3f v2 = get(1);
@@ -47,7 +47,7 @@ public class VectorList extends ArrayList<Vector3f> {
 	 */
 	public Vector3f centroid() {
 		if(size() < 3)
-			return Vectors.ORIGIN;
+			return Vectors.origin();
 
 		Vector3f v1 = get(0);
 		Vector3f v2 = get(1);

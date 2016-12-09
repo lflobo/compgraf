@@ -7,11 +7,11 @@ import javax.vecmath.Vector3f;
 
 public class Vectors {
 
-	public static final Vector3f ZERO = new Vector3f();
-	public static final Vector3f ORIGIN = new Vector3f(0.0f, 0.0f, 0.0f);
-	public static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
-	public static final Vector3f LEFT = new Vector3f(-1.0f, 0.0f, 0.0f);
-	public static final Vector3f FORWARD = new Vector3f(0.0f, 0.0f, 1.0f);
+//	public static final Vector3f ZERO = new Vector3f();
+//	public static final Vector3f ORIGIN = new Vector3f(0.0f, 0.0f, 0.0f);
+//	public static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
+//	public static final Vector3f LEFT = new Vector3f(-1.0f, 0.0f, 0.0f);
+//	public static final Vector3f FORWARD = new Vector3f(0.0f, 0.0f, 1.0f);
 
 	public static Vector3f add(Vector3f v1, Vector3f v2) {
 		Vector3f v = new Vector3f(v1);
@@ -36,15 +36,19 @@ public class Vectors {
 	}
 
 	public static boolean isOrigin(Vector3f n) {
-		return n.equals(ORIGIN);
+		return n.equals(zero());
 	}
 
-	public static void paint(Vector3f v) {
-		paint(v, Vectors.ZERO, Colors.WHITE);
+    public static Vector3f zero() {
+        return new Vector3f();
+    }
+
+    public static void paint(Vector3f v) {
+		paint(v, Vectors.zero(), Colors.WHITE);
 	}
 
 	public static void paint(Vector3f v, Color4f color) {
-		paint(v, Vectors.ZERO, color);
+		paint(v, Vectors.zero(), color);
 	}
 	
 	public static void mult(Vector3f v, float scalar) {
@@ -82,4 +86,15 @@ public class Vectors {
 		gl.glPopAttrib();
 	}
 
+    public static Vector3f origin() {
+        return zero();
+    }
+
+    public static Vector3f up() {
+        return new Vector3f(0, 1, 0);
+    }
+
+    public static Vector3f forward() {
+        return new Vector3f(0, 0, 1);
+    }
 }

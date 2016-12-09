@@ -90,7 +90,7 @@ public class MenuExample extends DefaultGLWindow {
 
 	private void configureModels() {
 		obj = new ObjLoader(this);
-		obj.load("wheatley/wheatley.obj", "wheatley/wheatley.mtl");
+		obj.load("assets/models/wheatley/wheatley.obj", "assets/models/wheatley/wheatley.mtl");
 	}
 
 	private void configureMaterials() {

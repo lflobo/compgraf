@@ -180,8 +180,9 @@ public class A09_Movement extends DefaultGLWindow {
 
         if (isKeyPressed('s')) {
             // Adicionar o vetor FORWARD (negado) ao vetor velocidade
-            velocity.add(forward);
-            velocity.negate();
+            Vector3f backward = new Vector3f(forward);
+            backward.negate();
+            velocity.add(backward);
         }
 
         // Aplicar a MAX_VELOCITY definida ao vetor velocidade

@@ -8,9 +8,9 @@ public class Camera {
 
 	public Vector3f eye = new Vector3f(0.0f, 1.0f, 1.0f);
 	
-	public Vector3f at = Vectors.ORIGIN;
+	public Vector3f at = Vectors.origin();
 	
-	public Vector3f up = Vectors.UP;
+	public Vector3f up = Vectors.up();
 	
 	public Camera() {
 	}

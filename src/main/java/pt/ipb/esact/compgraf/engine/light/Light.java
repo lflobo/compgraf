@@ -25,7 +25,7 @@ public class Light {
 		setAmbient(gl, Colors.LOW_AMBIENT);
 		setDiffuse(gl, Colors.MEDIUM_DIFFUSE);
 		setSpecular(gl, Colors.WHITE);
-		setPosition(gl, new Vector4f(Vectors.ORIGIN));
+		setPosition(gl, new Vector4f(Vectors.origin()));
 		setEnabled(gl, true);
 	}
 	
