@@ -7,6 +7,7 @@ import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import pt.ipb.esact.compgraf.tools.math.GlMath;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 public class A09_Movement extends DefaultGLWindow {
 
@@ -24,7 +25,7 @@ public class A09_Movement extends DefaultGLWindow {
     private Vector3f position = new Vector3f(0, 1, 0);
 
     // Armazena o vetor "FORWARD" da personagem
-    private Vector3f forward = GlMath.VECTOR_FORWARD;
+    private Vector3f forward = Vectors.forward();
 
     // Armazena a velocidade atual do personagem
     private Vector3f velocity = new Vector3f(0, 0, 0);
@@ -129,7 +130,7 @@ public class A09_Movement extends DefaultGLWindow {
             // Aumentar o valor do ângulo da orientação
             orientation += MAX_ANGULAR_VELOCITY * timeElapsed();
             // Aplicar esse ângulo ao vetor FORWARD atual
-            forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
+            forward = GlMath.rotate(orientation, Vectors.up(), Vectors.forward());
 
             // foi gerado movimento
             return true;
@@ -139,7 +140,7 @@ public class A09_Movement extends DefaultGLWindow {
             // Aumentar o valor do ângulo da orientação
             orientation -= MAX_ANGULAR_VELOCITY * timeElapsed();
             // Aplicar esse ângulo ao vetor FORWARD atual
-            forward = GlMath.rotate(orientation, GlMath.VECTOR_UP, GlMath.VECTOR_FORWARD);
+            forward = GlMath.rotate(orientation, Vectors.up(), Vectors.forward());
 
             // foi gerado movimento
             return true;
@@ -161,14 +162,14 @@ public class A09_Movement extends DefaultGLWindow {
         // Dar um passo para a esquerda
         if (isKeyPressed('a')) {
             // Calcular o vector LEFT com base no vector FORWARD
-            Vector3f left = GlMath.rotate(90.0f, GlMath.VECTOR_UP, forward);
+            Vector3f left = GlMath.rotate(90.0f, Vectors.up(), forward);
             // Adicionar esse movimento ao vetor velocidade
             velocity.add(left);
         }
 
         if (isKeyPressed('d')) {
             // Calcular o vector LEFT com base no vector FORWARD
-            Vector3f right = GlMath.rotate(-90.0f, GlMath.VECTOR_UP, forward);
+            Vector3f right = GlMath.rotate(-90.0f, Vectors.up(), forward);
             // Adicionar esse movimento ao vetor velocidade
             velocity.add(right);
         }

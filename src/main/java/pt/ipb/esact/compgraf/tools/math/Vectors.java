@@ -97,4 +97,8 @@ public class Vectors {
     public static Vector3f forward() {
         return new Vector3f(0, 0, 1);
     }
+
+    public static Vector3f down() {
+        return new Vector3f(0, -1, 0);
+    }
 }

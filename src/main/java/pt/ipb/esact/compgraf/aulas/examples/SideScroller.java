@@ -4,7 +4,7 @@ import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
-import pt.ipb.esact.compgraf.tools.math.GlMath;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
@@ -26,7 +26,7 @@ public class SideScroller extends DefaultGLWindow {
 	Vector3f position = new Vector3f(0, 0, 0);
 
 	// Armazena o vetor "FORWARD" da personagem
-	Vector3f forward = GlMath.VECTOR_FORWARD;
+	Vector3f forward = Vectors.forward();
 
 	// Armazena a velocidade atual do personagem
 	Vector3f velocity = new Vector3f(0, 0, 0);

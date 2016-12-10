@@ -8,9 +8,6 @@ import javax.vecmath.Vector3f;
 
 public class GlMath {
 
-    public static final Vector3f VECTOR_UP = new Vector3f(0, 1, 0);
-    public static final Vector3f VECTOR_FORWARD = new Vector3f(0, 0, 1);
-
     public static float clamp(float value, float min, float max) {
         return Math.max(min, Math.min(max, value));
     }
