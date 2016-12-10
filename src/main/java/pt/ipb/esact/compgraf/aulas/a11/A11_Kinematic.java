@@ -4,7 +4,9 @@ import pt.ipb.esact.compgraf.engine.light.Light;
 import pt.ipb.esact.compgraf.engine.movement.Kinematic;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
+import pt.ipb.esact.compgraf.tools.math.Colors;
 
+import javax.vecmath.Color4f;
 import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
 
@@ -84,6 +86,12 @@ public class A11_Kinematic extends DefaultGLWindow {
                 MediaPlayer.getInstance().play("assets/audio/doorclose.mp3", 800);
         }
 
+        if(e.getKeyChar() == 'x') {
+            spotlight.setSpotCutoff(50f);
+            spotlight.setSpotExponent(1f);
+            spotlight.setup();
+        }
+
     }
 
     private void configureModels() {
@@ -139,14 +147,15 @@ public class A11_Kinematic extends DefaultGLWindow {
 
         pointlight = new Light(GL_LIGHT0);
         pointlight.setPosition(0.0f, 2.0f, 0.0f);
+        pointlight.setDiffuse(Colors.BLUE);
         pointlight.setup();
 
         spotlight = new Light(GL_LIGHT1);
+        spotlight.setDiffuse(1.0f, 1.0f, 0.0f);
         spotlight.setPosition(-0.3f, 1.9f, 1.0f);
         spotlight.setSpotExponent(5.0f);
         spotlight.setSpotCutoff(25.0f);
         spotlight.setSpotDirection(new Vector3f(-1f, -1f, 0));
-        spotlight.setEnabled(false);
 
         spotlight.setup();
 
@@ -157,12 +166,11 @@ public class A11_Kinematic extends DefaultGLWindow {
         // Libertar as texturas (GPU)z
     }
 
-    float doorAngle = 0.0f;
-
     @Override
     public void render(int width, int height) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Obter o input do utilizador
         kinematic.handleInput(this);
         boolean moved = kinematic.update(timeElapsed());
         if (moved)
@@ -197,6 +205,8 @@ public class A11_Kinematic extends DefaultGLWindow {
         }
         glPopMatrix();
     }
+
+    private float doorAngle = 0.0f;
 
     private void drawDoorSystem() {
         // keep rotating until we reach 90deg
