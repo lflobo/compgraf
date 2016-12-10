@@ -2,6 +2,8 @@ package pt.ipb.esact.compgraf.aulas.a09;
 
 import javax.vecmath.Vector3f;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.engine.Skybox;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
@@ -11,6 +13,8 @@ import pt.ipb.esact.compgraf.tools.math.Vectors;
 import java.awt.event.KeyEvent;
 
 public class A09_Shaders2 extends DefaultGLWindow {
+
+    private static final Logger logger = LoggerFactory.getLogger(A09_Shaders2.class);
 
     // .obj loaders
     private ObjLoader wheatley;
@@ -132,7 +136,6 @@ public class A09_Shaders2 extends DefaultGLWindow {
     @Override
     public void render(int width, int height) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        System.out.println(timeElapsed());
 
         spotx += GL_PI * timeElapsed();
         spotx %= GL_PI * 2.0;
@@ -206,7 +209,7 @@ public class A09_Shaders2 extends DefaultGLWindow {
     @Override
     protected void onKeyUp(KeyEvent e) {
         if (e.getKeyChar() == 'c') {
-            System.out.println("Recompiling shader...");
+            logger.info("Recompiling shader...");
             diffuseShader.load("assets/shaders/diffuse.vert", "assets/shaders/diffuse.frag");
             configureLighting();
         }

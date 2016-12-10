@@ -14,12 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//class ClipData {
-//    int size;
-//    byte[] audio;
-//    AudioFormat audioFormat;
-//}
-
 public class MediaPlayer {
 
     private static final Logger logger = LoggerFactory.getLogger(MediaPlayer.class);

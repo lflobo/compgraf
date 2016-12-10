@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.a09;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -8,6 +10,8 @@ import pt.ipb.esact.compgraf.tools.Shader;
 import java.awt.event.KeyEvent;
 
 public class A09_Shaders extends DefaultGLWindow {
+
+    private static final Logger logger = LoggerFactory.getLogger(A09_Shaders.class);
 
     // .obj loaders
     private Shader phongShader;
@@ -110,7 +114,7 @@ public class A09_Shaders extends DefaultGLWindow {
     @Override
     protected void onKeyUp(KeyEvent e) {
         if (e.getKeyChar() == 'c') {
-            System.out.println("Recompiling shader...");
+            logger.info("Recompiling shader...");
             phongShader.load("assets/shaders/phong.vert", "assets/shaders/phong.frag");
             ambientShader.load("assets/shaders/ambient.vert", "assets/shaders/ambient.frag");
             configureLighting();

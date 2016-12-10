@@ -1,23 +1,25 @@
 package pt.ipb.esact.compgraf.tools;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.io.FileInputStream;
-import java.nio.FloatBuffer;
+import com.google.common.base.Preconditions;
+import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.gl2.GLUgl2;
-
-import com.google.common.base.Preconditions;
-import com.jogamp.opengl.util.awt.TextRenderer;
-import com.jogamp.opengl.util.gl2.GLUT;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
+import java.awt.*;
+import java.io.FileInputStream;
+import java.nio.FloatBuffer;
 
 public class GlTools {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlTools.class);
 
 	private static boolean anisotropicAvailable = false;
 	
@@ -61,7 +63,7 @@ public class GlTools {
             int i = gl.glGetError();
             String s = glu.gluErrorString(i);
             if(i != GL.GL_NO_ERROR)
-                System.out.println(s);
+                logger.error(s);
 
             return tex;
         } catch (Exception e) {
@@ -132,7 +134,7 @@ public class GlTools {
 	}
 
 	public static void exit(String error) {
-		System.out.println(error);
+		logger.error(error);
 		System.exit(0);		
 	}
 

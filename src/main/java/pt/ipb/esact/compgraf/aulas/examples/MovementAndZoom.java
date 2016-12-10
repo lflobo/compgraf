@@ -1,5 +1,7 @@
 package pt.ipb.esact.compgraf.aulas.examples;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
@@ -12,6 +14,8 @@ import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
 
 public class MovementAndZoom extends DefaultGLWindow {
+
+    private static final Logger logger = LoggerFactory.getLogger(MovementAndZoom.class);
 
     // .obj loaders
     private ObjLoader wheatley;
@@ -186,7 +190,7 @@ public class MovementAndZoom extends DefaultGLWindow {
     @Override
     protected void onKeyUp(KeyEvent e) {
         if (e.getKeyChar() == 'c') {
-            System.out.println("Recompiling shader...");
+            logger.info("Recompiling shader...");
             diffuseShader.load("assets/shaders/diffuse.vert", "assets/shaders/diffuse.frag");
             configureLighting();
         }

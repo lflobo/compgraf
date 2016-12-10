@@ -3,6 +3,8 @@ package pt.ipb.esact.compgraf.aulas.a06;
 import java.awt.event.KeyEvent;
 import java.nio.FloatBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.ipb.esact.compgraf.tools.Camera;
 import pt.ipb.esact.compgraf.tools.Cameras;
 import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
@@ -10,6 +12,8 @@ import pt.ipb.esact.compgraf.tools.DefaultGLWindow;
 import com.jogamp.opengl.util.texture.Texture;
 
 public class A06_Anisotropic extends DefaultGLWindow {
+
+    private static final Logger logger = LoggerFactory.getLogger(A06_Anisotropic.class);
 
 	// Representam as posições (identificadores) das texturas
 	private Texture texBrick;
@@ -69,7 +73,7 @@ public class A06_Anisotropic extends DefaultGLWindow {
 		maxAnisotropy = values.get(0);
         currentAnisotropy = maxAnisotropy;
 
-		System.out.println("Max anisotropy is: " + maxAnisotropy);
+		logger.error("Max anisotropy is: " + maxAnisotropy);
 	}
 
 	private void configureMaterials() {
