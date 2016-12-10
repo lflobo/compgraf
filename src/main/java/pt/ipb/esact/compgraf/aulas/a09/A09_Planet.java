@@ -52,7 +52,8 @@ public class A09_Planet extends DefaultGLWindow {
             vectors.add(new Vector4f(
                     distance * sinf(alpha),
                     0.0f,
-                    distance * cosf(alpha), aradius
+                    distance * cosf(alpha),
+                    aradius
             ));
         }
 
