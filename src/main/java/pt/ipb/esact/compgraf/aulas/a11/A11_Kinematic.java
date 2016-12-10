@@ -4,7 +4,6 @@ import pt.ipb.esact.compgraf.engine.light.Light;
 import pt.ipb.esact.compgraf.engine.movement.Kinematic;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
-import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
@@ -42,7 +41,7 @@ public class A11_Kinematic extends DefaultGLWindow {
 
     // skybox
     private A11_Kinematic() {
-        super("A09 Movement", true);
+        super("A11 Kinematic", true);
         setMouseZoom(true);
         setMousePan(true);
     }
@@ -167,7 +166,7 @@ public class A11_Kinematic extends DefaultGLWindow {
         kinematic.handleInput(this);
         boolean moved = kinematic.update(timeElapsed());
         if (moved)
-            updateWheatleyCamera();
+            updateCameras();
 
         // Posicionar as luzes e ajustar a direção do SPOT
         spotlight.position();
@@ -224,7 +223,7 @@ public class A11_Kinematic extends DefaultGLWindow {
         glPopMatrix();
     }
 
-    private void updateWheatleyCamera() {
+    private void updateCameras() {
 
         // O novo eye da camera vai ser relativa à posição do wheatley
         // Um pouco para cima (y+)
@@ -276,7 +275,7 @@ public class A11_Kinematic extends DefaultGLWindow {
         wheatleyCamera = new Camera();
 
         Cameras.setCurrent(wheatleyCamera);
-        updateWheatleyCamera();
+        updateCameras();
 
         setupCamera();
     }
