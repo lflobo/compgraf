@@ -71,13 +71,13 @@ public class AudioStartStop extends DefaultGLWindow {
     protected void onKeyUp(KeyEvent e) {
         switch (e.getKeyChar()) {
             case 'p': {
-                if (player != null)
+                if (player != null && !player.isComplete())
                     player.close();
                 player = MediaPlayer.getInstance().play("assets/audio/elevator-music.mp3");
             }
             break;
             case 's': {
-                if (player != null)
+                if (player != null && !player.isComplete())
                     player.close();
             }
             break;
