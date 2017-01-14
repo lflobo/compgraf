@@ -24,8 +24,8 @@ public class MediaPlayer {
 
     private ExecutorService executorService;
 
-    private MediaPlayer() {
-        executorService = Executors.newFixedThreadPool(10);
+    public MediaPlayer() {
+        this.executorService = Executors.newFixedThreadPool(10);
     }
 
     public static MediaPlayer getInstance() {
@@ -35,10 +35,18 @@ public class MediaPlayer {
     }
 
     public Player play(final String path) {
-        return play(path, 0);
+        return play(path, 0, false);
+    }
+
+    public Player loop(final String path) {
+        return play(path, 0, true);
     }
 
     public Player play(final String path, final long delay) {
+        return play(path, delay, false);
+    }
+
+    public Player play(final String path, final long delay, final boolean loop) {
         if (!playerCache.containsKey(path))
             try {
                 playerCache.put(path, Files.readAllBytes(Paths.get(path)));
@@ -47,25 +55,53 @@ public class MediaPlayer {
             }
 
         try (ByteArrayInputStream bis = new ByteArrayInputStream(playerCache.get(path))) {
-            final Player player = new Player(bis);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    if (player != null) {
-                        try {
-                            Thread.sleep(delay);
-                            player.play();
-                        } catch (JavaLayerException | InterruptedException e) {
-                            GlTools.exit(e.getMessage());
-                        }
-                    }
-                }
-            });
-            return player;
+            if (loop)
+                return submitLoop(bis, delay);
+            else
+                return submit(bis, delay);
         } catch (JavaLayerException | IOException e) {
             GlTools.exit(e.getMessage());
             return null;
         }
+    }
+
+    private Player submit(ByteArrayInputStream bis, final long delay) throws JavaLayerException {
+        final Player player = new Player(bis);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (player != null) {
+                    try {
+                        if (delay > 0)
+                            Thread.sleep(delay);
+                        player.play();
+                    } catch (JavaLayerException | InterruptedException e) {
+                        GlTools.exit(e.getMessage());
+                    }
+                }
+            }
+        });
+        return player;
+
+    }
+
+    private Player submitLoop(ByteArrayInputStream bis, final long delay) throws JavaLayerException {
+        final LoopPlayer player = new LoopPlayer(bis);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (player != null) {
+                    try {
+                        if (delay > 0)
+                            Thread.sleep(delay);
+                        player.play();
+                    } catch (JavaLayerException | InterruptedException e) {
+                        GlTools.exit(e.getMessage());
+                    }
+                }
+            }
+        });
+        return player;
     }
 
 }

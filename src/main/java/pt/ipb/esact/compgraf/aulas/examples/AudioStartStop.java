@@ -66,6 +66,7 @@ public class AudioStartStop extends DefaultGLWindow {
     }
 
     Player player = null;
+    Player loop = null;
 
     @Override
     protected void onKeyUp(KeyEvent e) {
@@ -76,9 +77,17 @@ public class AudioStartStop extends DefaultGLWindow {
                 player = MediaPlayer.getInstance().play("assets/audio/elevator-music.mp3");
             }
             break;
+            case 'l': {
+                if (loop != null && !loop.isComplete())
+                    loop.close();
+                loop = MediaPlayer.getInstance().loop("assets/audio/pop.mp3");
+            }
+            break;
             case 's': {
                 if (player != null && !player.isComplete())
                     player.close();
+                if (loop != null && !loop.isComplete())
+                    loop.close();
             }
         }
     }
@@ -93,7 +102,8 @@ public class AudioStartStop extends DefaultGLWindow {
         wheatley.render();
 
         renderText("Press 'p' to play", 10, 20);
-        renderText("Press 's' to stop", 10, 30);
+        renderText("Press 'l' to loop", 10, 30);
+        renderText("Press 's' to stop", 10, 40);
     }
 
     @Override
