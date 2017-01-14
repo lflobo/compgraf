@@ -65,14 +65,14 @@ public class AudioStartStop extends DefaultGLWindow {
         setupCamera();
     }
 
-    Player player;
+    Player player = null;
 
     @Override
     protected void onKeyUp(KeyEvent e) {
         switch (e.getKeyChar()) {
             case 'p': {
                 if (player != null && !player.isComplete())
-                    player.close();
+                    return;
                 player = MediaPlayer.getInstance().play("assets/audio/elevator-music.mp3");
             }
             break;
@@ -80,7 +80,6 @@ public class AudioStartStop extends DefaultGLWindow {
                 if (player != null && !player.isComplete())
                     player.close();
             }
-            break;
         }
     }
 
