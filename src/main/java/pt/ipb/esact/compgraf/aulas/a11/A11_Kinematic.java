@@ -5,8 +5,8 @@ import pt.ipb.esact.compgraf.engine.movement.Kinematic;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
 import pt.ipb.esact.compgraf.tools.math.Colors;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
-import javax.vecmath.Color4f;
 import javax.vecmath.Vector3f;
 import java.awt.event.KeyEvent;
 
@@ -39,7 +39,15 @@ public class A11_Kinematic extends DefaultGLWindow {
 
     private ObjLoader door;
 
-    private boolean openDoor;
+    private static float COLLIDER_DISTANCE = 1.0f;
+
+    private Vector3f doorCenter = new Vector3f(0, 1, 3);
+
+    private boolean playerNearDoor = false;
+
+    private boolean openDoor = false;
+
+    private boolean closeDoor = false;
 
     // skybox
     private A11_Kinematic() {
@@ -78,15 +86,17 @@ public class A11_Kinematic extends DefaultGLWindow {
             setupCamera();
         }
 
-        if (e.getKeyChar() == 'o') {
+        if (e.getKeyChar() == 'o' && playerNearDoor) {
             openDoor = !openDoor;
             if (openDoor)
                 MediaPlayer.getInstance().play("assets/audio/doorcreek.mp3");
-            else
+
+            closeDoor = !openDoor;
+            if (closeDoor)
                 MediaPlayer.getInstance().play("assets/audio/doorclose.mp3", 800);
         }
 
-        if(e.getKeyChar() == 'x') {
+        if (e.getKeyChar() == 'x') {
             spotlight.setSpotCutoff(50f);
             spotlight.setSpotExponent(1f);
             spotlight.setup();
@@ -172,7 +182,15 @@ public class A11_Kinematic extends DefaultGLWindow {
 
         // Obter o input do utilizador
         kinematic.handleInput(this);
+
+        // apurar o movimento
         boolean moved = kinematic.update(timeElapsed());
+
+        // verificar a condição da colisão
+        playerNearDoor =
+                Vectors.sub(kinematic.getPosition(), doorCenter).lengthSquared()
+                        < COLLIDER_DISTANCE * COLLIDER_DISTANCE;
+
         if (moved)
             updateCameras();
 
@@ -194,6 +212,9 @@ public class A11_Kinematic extends DefaultGLWindow {
         drawWalls();
 
         floor.render();
+
+        if (playerNearDoor)
+            renderText("Press O to open door", 10, 20);
     }
 
     private void drawPainting() {
@@ -206,7 +227,7 @@ public class A11_Kinematic extends DefaultGLWindow {
         glPopMatrix();
     }
 
-    private float doorAngle = 0.0f;
+    private float doorAngle = 10.0f;
 
     private void drawDoorSystem() {
         // keep rotating until we reach 90deg
@@ -215,7 +236,7 @@ public class A11_Kinematic extends DefaultGLWindow {
         }
 
         // keep rotating until we reach 0deg
-        if (!openDoor && doorAngle > 0) {
+        if (closeDoor && doorAngle >= 0) {
             doorAngle -= 90 * timeElapsed();
         }
 
@@ -281,7 +302,7 @@ public class A11_Kinematic extends DefaultGLWindow {
     public void resize(int width, int height) {
         setProjectionPerspective(width, height, 100.0f, 0.001f, 500.0f);
 
-        hoverCamera = new Camera(0, 5, -5);
+        hoverCamera = new Camera(0, 5, -6);
         wheatleyCamera = new Camera();
 
         Cameras.setCurrent(wheatleyCamera);

@@ -3,6 +3,7 @@ package pt.ipb.esact.compgraf.aulas.a11;
 import pt.ipb.esact.compgraf.engine.light.Light;
 import pt.ipb.esact.compgraf.engine.obj.ObjLoader;
 import pt.ipb.esact.compgraf.tools.*;
+import pt.ipb.esact.compgraf.tools.math.Vectors;
 
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
@@ -180,8 +181,7 @@ public class A11_Board extends DefaultGLWindow {
         Camera camera = Cameras.getCurrent();
 
         // Calcular a diferença gerada pelo movimento
-        Vector3f movement = new Vector3f();
-        movement.sub(position, camera.at);
+        Vector3f movement = Vectors.sub(position, camera.at);
 
         // Adicionar esse movimento à posição da camera (eye)
         camera.eye.add(movement);
@@ -238,8 +238,7 @@ public class A11_Board extends DefaultGLWindow {
         Vector3f target = rowColVector(currentRow, currentCol);
 
         // A distancia é o vetor entre postition <-> target
-        Vector3f distance = new Vector3f();
-        distance.sub(target, position);
+        Vector3f distance = Vectors.sub(target, position);
 
         // Quando a distância é nula, não há movimento
         float distanceSquared = distance.lengthSquared();
